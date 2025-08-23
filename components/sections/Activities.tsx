@@ -31,10 +31,10 @@ export default function ActivitiesSection() {
   return (
     <section
       id="activities-section"
-      className="relative flex flex-col mt-8 sm:mt-16 px-4 py-8 sm:px-64 sm:py-24 gap-8 sm:gap-16 bg-zinc-200"
+      className="relative flex flex-col mt-8 sm:mt-16 px-4 py-8 sm:px-64 sm:py-24 gap-8 sm:gap-16 overflow-hidden bg-zinc-200"
     >
       <h2
-        className={`absolute left-1/2 [top:-4%] sm:[top:-6%] transform -translate-x-1/2 whitespace-nowrap overflow-hidden text-4xl sm:text-8xl font-semibold ${cormorantGaramond.className} text-amber-500`}
+        className={`absolute left-1/2 [top:-4%] sm:[top:-6%] transform -translate-x-1/2 whitespace-nowrap text-4xl sm:text-8xl font-semibold ${cormorantGaramond.className} text-amber-500`}
         style={{
           transform: `translateX(${translateX}%) translateX(-50%)`,
         }}
