@@ -39,7 +39,7 @@ export default function Navbar() {
           : "text-white border-white bg-transparent"
       )}
     >
-      <Link href="/" className="flex items-center gap-4">
+      <Link href="/" className="flex items-center gap-2 sm:gap-4">
         <Image
           priority
           src="/Images/brand-logo.png"
@@ -52,7 +52,7 @@ export default function Navbar() {
           )}
         />
         <p
-          className={`hidden sm:block leading-tight text-xl ${cormorantGaramond.className}`}
+          className={`leading-tight text-md sm:text-xl ${cormorantGaramond.className}`}
         >
           Gold Coast Morib <br /> International Resort
         </p>
