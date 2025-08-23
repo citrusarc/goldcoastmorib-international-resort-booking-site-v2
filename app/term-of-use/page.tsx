@@ -9,9 +9,10 @@ export default function TermOfUsePage() {
         and the terms of use. If under any kind of ailments that you do not
         agree with every little thing that is contained in the abiding by terms,
         we request you to avoid our website. The terms reviewed in the record
-        like 'us' or 'we' is referring to the web site's owner. Once more the
-        term 'you' explain the practical visitor that will definitely utilize
-        our site for the feature of gathering information.
+        like $apos;us$apos; or $apos;we$apos; is referring to the web
+        site$apos;s owner. Once more the term $apos;you$apos; explain the
+        practical visitor that will definitely utilize our site for the feature
+        of gathering information.
       </p>
 
       <div>

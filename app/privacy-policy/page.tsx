@@ -74,17 +74,17 @@ export default function PrivacyPolicyPage() {
       <div>
         <h2>Third party use of personal details</h2>
         <p>
-          There are certain personal info’s that are required for the hotel to
-          know, so regarding improve the quality of services that we give to our
-          customers. Additionally this is done with a sight to decorate a big
-          quantity of knowledge and information pertaining to the tourist of the
-          and in connection with the hospitality. The primary aim of the resort
-          is to supply you with the best solutions and thus providing excellent
-          aid to your journeying demands. All the personal information that is
-          obtained or gathered by the hotel is only in the reach to the people
-          that are licensed to gather the said info. These individuals are
-          normally licensed to take care of the info that is required for the
-          purposes and the needs that are discussed in this statement of the
+          There are certain personal info&apos;s that are required for the hotel
+          to know, so regarding improve the quality of services that we give to
+          our customers. Additionally this is done with a sight to decorate a
+          big quantity of knowledge and information pertaining to the tourist of
+          the and in connection with the hospitality. The primary aim of the
+          resort is to supply you with the best solutions and thus providing
+          excellent aid to your journeying demands. All the personal information
+          that is obtained or gathered by the hotel is only in the reach to the
+          people that are licensed to gather the said info. These individuals
+          are normally licensed to take care of the info that is required for
+          the purposes and the needs that are discussed in this statement of the
           policy. For example the 3rd celebration individuals could get the
           details and the resort may give it to them so that these individuals,
           acquired by the resort, may organize specific solutions like the
