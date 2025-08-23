@@ -39,17 +39,20 @@ export default function Navbar() {
           : "text-white border-white bg-transparent"
       )}
     >
-      <Link href="/" className="flex items-center gap-4">
+      <Link
+        href="/"
+        className={clsx(
+          "flex items-center gap-4",
+          openMobileMenu && "invisible"
+        )}
+      >
         <Image
           priority
           src="/Images/brand-logo.png"
           alt="Gold Coast Morib International Resort Logo"
           width={56}
           height={56}
-          className={clsx(
-            "w-12 h-12 md:w-14 md:h-14",
-            openMobileMenu && "invisible"
-          )}
+          className="w-12 h-12 md:w-14 md:h-14"
         />
         <p
           className={`leading-tight text-lg sm:text-xl ${cormorantGaramond.className}`}
