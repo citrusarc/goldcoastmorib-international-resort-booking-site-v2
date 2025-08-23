@@ -39,7 +39,7 @@ export default function Navbar() {
           : "text-white border-white bg-transparent"
       )}
     >
-      <Link href="/" className="flex items-center gap-2 sm:gap-4">
+      <Link href="/" className="flex items-center gap-4">
         <Image
           priority
           src="/Images/brand-logo.png"
@@ -52,7 +52,7 @@ export default function Navbar() {
           )}
         />
         <p
-          className={`leading-tight text-md sm:text-xl ${cormorantGaramond.className}`}
+          className={`leading-tight text-lg sm:text-xl ${cormorantGaramond.className}`}
         >
           Gold Coast Morib <br /> International Resort
         </p>
@@ -63,7 +63,7 @@ export default function Navbar() {
             <Link
               key={item.id}
               href={item.href}
-              className="hover:text-blue-500"
+              className="hover:text-amber-500"
             >
               {item.name}
             </Link>
@@ -71,7 +71,7 @@ export default function Navbar() {
           <Link href="/">
             <button
               className={clsx(
-                "px-4 py-2 hover:text-white hover:bg-blue-500",
+                "px-4 py-2 hover:text-white hover:bg-amber-500",
                 scroll ? "text-white bg-zinc-800" : "text-zinc-800 bg-white"
               )}
             >
@@ -122,13 +122,13 @@ export default function Navbar() {
                 key={item.id}
                 href={item.href}
                 onClick={() => setOpenMobileMenu(false)}
-                className="hover:text-blue-500"
+                className="hover:text-amber-500"
               >
                 {item.name}
               </Link>
             ))}
             <Link href="/" onClick={() => setOpenMobileMenu(false)}>
-              <button className="px-4 py-2 text-white bg-zinc-800 hover:bg-blue-500 w-full">
+              <button className="px-4 py-2 text-white bg-zinc-800 hover:bg-amber-500 w-full">
                 Book Now
               </button>
             </Link>

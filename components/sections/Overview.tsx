@@ -1,7 +1,33 @@
+import Image from "next/image";
+
+import { cormorantGaramond } from "@/config/fonts";
+
 export default function OverviewSection() {
   return (
-    <div className="flex flex-col sm:flex-row mt-0 sm:mt-16 gap-16">
-      <div>Test</div>
-    </div>
+    <section className="flex flex-col sm:flex-row mt-8 sm:mt-16 p-4 sm:py-24 sm:px-64 gap-8 sm:gap-16">
+      <div className="flex flex-col gap-4">
+        <span className="text-lg sm:text-xl text-amber-500">
+          Gold Coast Morib
+        </span>
+        <h2
+          className={`text-4xl sm:text-6xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
+        >
+          Seaside Gem on Selangor&apos;s Tranquil Coast
+        </h2>
+        <p className="text-zinc-500">
+          Wake up to the gentle rhythm of the waves, unwind in your private
+          jacuzzi, and create unforgettable moments with the kids at the on-site
+          water theme park.
+        </p>
+      </div>
+      <div className="relative w-full sm:w-1/2 h-72">
+        <Image
+          fill
+          src="/Images/hero-banner-1.png"
+          alt="Gold Coast Morib International Resort Overview"
+          className="object-cover"
+        />
+      </div>
+    </section>
   );
 }

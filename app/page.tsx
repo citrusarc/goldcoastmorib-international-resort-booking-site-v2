@@ -1,5 +1,7 @@
 import Navbar from "@/components/ui/Navbar";
 import HeroSection from "@/components/sections/Hero";
+import OverviewSection from "@/components/sections/Overview";
+import ActivitiesSection from "@/components/sections/Activities";
 
 export default function Home() {
   return (
@@ -7,17 +9,11 @@ export default function Home() {
       <main>
         <Navbar />
         <HeroSection />
+        <OverviewSection />
+        <ActivitiesSection />
       </main>
       <footer>
-        <div>
-          Footer<div>Footer</div>
-          Footer<div>Footer</div>
-          Footer<div>Footer</div>
-          Footer<div>Footer</div>
-          Footer<div>Footer</div>
-          Footer<div>Footer</div>
-          Footer<div>Footer</div>
-        </div>
+        <div>Footer</div>
       </footer>
     </div>
   );
