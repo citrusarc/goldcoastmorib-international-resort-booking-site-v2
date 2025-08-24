@@ -52,7 +52,7 @@ export default function Navbar() {
           alt="Gold Coast Morib International Resort Logo"
           width={56}
           height={56}
-          className="w-12 h-12 md:w-14 md:h-14"
+          className="w-12 h-12 sm:w-14 sm:h-14"
         />
         <p
           className={`leading-tight text-lg sm:text-xl ${cormorantGaramond.className}`}
