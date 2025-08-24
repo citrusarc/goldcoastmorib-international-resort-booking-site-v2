@@ -76,7 +76,9 @@ export default function Navbar() {
             <button
               className={clsx(
                 "px-4 py-2 hover:text-white hover:bg-amber-500",
-                scroll ? "text-white bg-zinc-800" : "text-zinc-800 bg-white"
+                scroll || !isHome
+                  ? "text-white bg-zinc-800"
+                  : "text-zinc-800 bg-white"
               )}
             >
               Book Now
