@@ -1,8 +1,14 @@
+import { cormorantGaramond } from "@/config/fonts";
+
 export default function PrivacyPolicyPage() {
   return (
-    <div>
-      <h1>Privacy Policy</h1>
-      <p>
+    <section className="flex flex-col p-4 sm:px-64 sm:py-24 gap-8 sm:gap-16">
+      <h1
+        className={`text-4xl sm:text-6xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
+      >
+        Privacy Policy
+      </h1>
+      <p className="text-zinc-500">
         The personal privacy policy primarily refers to the record that the site
         visitors to this web site have to get their details regarding the
         solutions given. Also the privacy policy makes it possible for the
@@ -22,8 +28,10 @@ export default function PrivacyPolicyPage() {
       </p>
 
       <div>
-        <h2>How to use cookies</h2>
-        <p>
+        <h2 className="text-lg font-semibold text-zinc-800">
+          How to use cookies
+        </h2>
+        <p className="text-zinc-500">
           Once more these cookies enable the website to tweak their policy
           declarations based upon the assessment of the site visitors to the
           websites. Also it allows the web site to discover or to know whether
@@ -40,8 +48,10 @@ export default function PrivacyPolicyPage() {
       </div>
 
       <div>
-        <h2>Use of individual details</h2>
-        <p>
+        <h2 className="text-lg font-semibold text-zinc-800">
+          Use of individual details
+        </h2>
+        <p className="text-zinc-500">
           Likewise there is specific personal information that we have the
           tendency to gather from you. The visitors to our website usually offer
           various kinds of details. This is gathered by the web site in a number
@@ -72,8 +82,10 @@ export default function PrivacyPolicyPage() {
       </div>
 
       <div>
-        <h2>Third party use of personal details</h2>
-        <p>
+        <h2 className="text-lg font-semibold text-zinc-800">
+          Third party use of personal details
+        </h2>
+        <p className="text-zinc-500">
           There are certain personal info&apos;s that are required for the hotel
           to know, so regarding improve the quality of services that we give to
           our customers. Additionally this is done with a sight to decorate a
@@ -97,8 +109,10 @@ export default function PrivacyPolicyPage() {
       </div>
 
       <div>
-        <h2>Sharing of personal details</h2>
-        <p>
+        <h2 className="text-lg font-semibold text-zinc-800">
+          Sharing of personal details
+        </h2>
+        <p className="text-zinc-500">
           There are certain circumstances when we will share the individual
           information you would give us with in order to work out a deal the
           company of the resort like your credit card supplier. The resort may
@@ -110,8 +124,10 @@ export default function PrivacyPolicyPage() {
       </div>
 
       <div>
-        <h2>Usage of exterior links on the web site</h2>
-        <p>
+        <h2 className="text-lg font-semibold text-zinc-800">
+          Usage of exterior links on the web site
+        </h2>
+        <p className="text-zinc-500">
           There are many hyperlinks in the web site of the hotel that will
           certainly enable the visitor to the site to leave the site. Yet there
           might be particular linked sites that might operate on your info
@@ -126,6 +142,6 @@ export default function PrivacyPolicyPage() {
           hotel to you.
         </p>
       </div>
-    </div>
+    </section>
   );
 }

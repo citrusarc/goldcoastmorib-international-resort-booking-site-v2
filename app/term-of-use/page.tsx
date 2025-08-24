@@ -1,8 +1,14 @@
+import { cormorantGaramond } from "@/config/fonts";
+
 export default function TermOfUsePage() {
   return (
-    <div>
-      <h1>Term Of Use</h1>
-      <p>
+    <section className="flex flex-col p-4 sm:px-64 sm:py-24 gap-8 sm:gap-16">
+      <h1
+        className={`text-4xl sm:text-6xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
+      >
+        Term Of Use
+      </h1>
+      <p className="text-zinc-500">
         We welcome you to our internet site. If you wish to continue to be to
         visit or scan the internet site that we created then it usually
         indicates that you are wanting to abide by the adhering to affliction
@@ -16,8 +22,8 @@ export default function TermOfUsePage() {
       </p>
 
       <div>
-        <h2>Regards to use</h2>
-        <p>
+        <h2 className="text-lg font-semibold text-zinc-800">Regards to use</h2>
+        <p className="text-zinc-500">
           There is numerous general in developments that is offered in the
           website. And all these specifics can change anytime without any sort
           of notified. The site furthermore supervises the disposition of
@@ -42,8 +48,10 @@ export default function TermOfUsePage() {
       </div>
 
       <div>
-        <h2>Allow and characteristics of the website</h2>
-        <p>
+        <h2 className="text-lg font-semibold text-zinc-800">
+          Allow and characteristics of the website
+        </h2>
+        <p className="text-zinc-500">
           There are many items in the product of the site to which only we have
           the licensing of. The style, appearance, look, as well as the graphics
           of the web site are featured in this. If without adhering or keeping
@@ -60,8 +68,10 @@ export default function TermOfUsePage() {
       </div>
 
       <div>
-        <h2>Urls to numerous other websites</h2>
-        <p>
+        <h2 className="text-lg font-semibold text-zinc-800">
+          Urls to numerous other websites
+        </h2>
+        <p className="text-zinc-500">
           Internet site could also take advantage of and consist of a number of
           links of various kinds of various other websites. These internet links
           assure that you offer your details and improve your advantage. Yet it
@@ -76,8 +86,10 @@ export default function TermOfUsePage() {
       </div>
 
       <div>
-        <h2>Certified use of the web website</h2>
-        <p>
+        <h2 className="text-lg font-semibold text-zinc-800">
+          Certified use of the web website
+        </h2>
+        <p className="text-zinc-500">
           Our website is totally thought the use that is simply legal and the
           use will only refer to the obtainment of the several in build-ups
           offered in the web website. Getting of the details for the net site is
@@ -99,8 +111,8 @@ export default function TermOfUsePage() {
       </div>
 
       <div>
-        <h2>Copyright</h2>
-        <p>
+        <h2 className="text-lg font-semibold text-zinc-800">Copyright</h2>
+        <p className="text-zinc-500">
           Not minimized to the text but in the incorporation of it, the internet
           website that we have in fact created is safeguarded under legislation
           of the state. You will need to agree when looking at to our web site
@@ -114,8 +126,8 @@ export default function TermOfUsePage() {
       </div>
 
       <div>
-        <h2>Shooting</h2>
-        <p>
+        <h2 className="text-lg font-semibold text-zinc-800">Shooting</h2>
+        <p className="text-zinc-500">
           By wrecking all the files and the products used from the remedy you
           may effortlessly finish the regards to service use at any moment more
           suitable to you. If there exist a third event suspension or additional
@@ -132,6 +144,6 @@ export default function TermOfUsePage() {
           circumstances.
         </p>
       </div>
-    </div>
+    </section>
   );
 }

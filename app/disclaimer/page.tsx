@@ -1,8 +1,14 @@
+import { cormorantGaramond } from "@/config/fonts";
+
 export default function DisclaimerPage() {
   return (
-    <div>
-      <h1>Disclaimer</h1>
-      <p>
+    <section className="flex flex-col p-4 sm:px-64 sm:py-24 gap-8 sm:gap-16">
+      <h1
+        className={`text-4xl sm:text-6xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
+      >
+        Disclaimer
+      </h1>
+      <p className="text-zinc-500">
         This website site consists mainly of links to sites that cater for
         online travel bookings, hotel information and hotel review sites and as
         such these sites are out of our control and therefore the content could
@@ -26,6 +32,6 @@ export default function DisclaimerPage() {
         posted on website, please contact us and we will respond promptly and
         take action.
       </p>
-    </div>
+    </section>
   );
 }

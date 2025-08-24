@@ -16,6 +16,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const navItems = siteConfig.navItems.filter((item) => !item.status?.isHidden);
+  const isHome = pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,7 +35,7 @@ export default function Navbar() {
     <nav
       className={clsx(
         "sticky top-0 z-50 flex p-4 sm:py-6 sm:px-24 items-center justify-between w-full transition-colors duration-300",
-        scroll || openMobileMenu
+        scroll || openMobileMenu || !isHome
           ? "text-zinc-800 border-zinc-800 bg-white"
           : "text-white border-white bg-transparent"
       )}
