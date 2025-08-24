@@ -4,7 +4,7 @@ import { cormorantGaramond } from "@/config/fonts";
 
 export default function OverviewSection() {
   return (
-    <section className="flex flex-col sm:flex-row mt-8 sm:mt-16 p-4 sm:py-24 sm:px-64 gap-8 sm:gap-16">
+    <section className="flex flex-col sm:flex-row mt-8 sm:mt-16 p-4 sm:px-64 sm:py-24 gap-8 sm:gap-16">
       <div className="flex flex-col gap-4">
         <span className="text-lg sm:text-xl text-amber-500">
           Gold Coast Morib

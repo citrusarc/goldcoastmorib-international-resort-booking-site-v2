@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import { cormorantGaramond } from "@/config/fonts";
 import ImageCarousel from "../ui/ImageCarousel";
 
-export default function ActivitiesSection() {
+export default function HighlightSection() {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
@@ -44,7 +43,7 @@ export default function ActivitiesSection() {
         </h2>
         <div className="flex flex-col gap-4">
           <span className="text-lg sm:text-xl text-amber-500">
-            Feel the Moment
+            Feel The Moment
           </span>
           <h2
             className={`relative inline-block w-fit px-2 text-4xl sm:text-6xl font-semibold ${cormorantGaramond.className}`}

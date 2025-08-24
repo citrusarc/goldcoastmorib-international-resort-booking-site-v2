@@ -1,3 +1,3 @@
 export default function TheResortPage() {
-  return <div>The ResortPage</div>;
+  return <div>The Resort Page</div>;
 }

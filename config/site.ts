@@ -22,6 +22,12 @@ export const siteConfig = {
       href: "/rooms-suites",
       status: { ...defaultStatus },
     },
+    {
+      id: "activities",
+      name: "Activities",
+      href: "/activities",
+      status: { ...defaultStatus },
+    },
   ] satisfies (ItemStatus | NavItem)[],
   footerItems: [
     {
@@ -36,6 +42,13 @@ export const siteConfig = {
       category: "explore",
       name: "Rooms & Suites",
       href: "/rooms-suites",
+      status: { ...defaultStatus },
+    },
+    {
+      id: "activities",
+      category: "explore",
+      name: "Activities",
+      href: "/activities",
       status: { ...defaultStatus },
     },
     {
