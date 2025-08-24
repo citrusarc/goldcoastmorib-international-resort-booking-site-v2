@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import { cormorantGaramond } from "@/config/fonts";
-import ImageCarousel from "../ui/ImageCarousel";
+import ImageAutoCarousel from "../ui/ImageAutoCarousel";
 
 export default function HighlightSection() {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -65,7 +65,7 @@ export default function HighlightSection() {
             sharing.
           </p>
         </div>
-        <ImageCarousel
+        <ImageAutoCarousel
           images={[
             "/Images/hero-banner-1.png",
             "/Images/hero-banner-1.png",

@@ -30,3 +30,14 @@ export type FooterItem = {
   rel?: string;
   status?: ItemStatus;
 };
+
+export interface CarouselItem {
+  name: string;
+  src: string;
+}
+
+export interface AutoCarouselItem {
+  images: string[];
+  interval?: number;
+  className?: string;
+}

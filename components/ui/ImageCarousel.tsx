@@ -1,54 +1,52 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import Image from "next/image";
+import { CarouselItem } from "@/types";
 
-interface CarouselProps {
-  images: string[];
-  interval?: number;
-  className?: string;
+interface ImageCarouselProps {
+  items: CarouselItem[];
 }
 
-export default function ImageCarousel({
-  images,
-  interval = 3000,
-  className,
-}: CarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, interval);
-
-    return () => clearInterval(timer);
-  }, [images.length, interval]);
+export default function ImageCarousel({ items }: ImageCarouselProps) {
+  const [activeIndex, setActiveIndex] = useState<number>(0);
 
   return (
-    <div className={`relative overflow-hidden ${className}`}>
-      <AnimatePresence initial={false}>
-        {images.map((src, index) => {
-          if (index !== currentIndex) return null;
-          return (
-            <motion.div
-              key={index}
-              className="absolute inset-0"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ duration: 1, ease: "easeInOut" }}
+    <div className="flex flex-col sm:flex-row gap-8 w-full items-center justify-center">
+      <div className="relative w-full sm:w-4xl h-96 sm:h-120 overflow-hidden">
+        <div
+          className="flex transition-transform duration-500 ease-in-out h-full"
+          style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+        >
+          {items.map((item) => (
+            <div
+              key={item.name}
+              className="flex-shrink-0 w-full h-full relative"
             >
               <Image
                 fill
-                src={src}
-                alt={`carousel-${index}`}
-                className="object-cover"
+                src={item.src}
+                alt={item.name}
+                className="object-cover object-center"
               />
-            </motion.div>
-          );
-        })}
-      </AnimatePresence>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-row sm:flex-col gap-4">
+        {items.map((item, index) => (
+          <p
+            key={item.name}
+            className={`cursor-pointer ${
+              activeIndex === index ? "text-amber-500" : "text-zinc-500"
+            }`}
+            onClick={() => setActiveIndex(index)}
+          >
+            {item.name}
+          </p>
+        ))}
+      </div>
     </div>
   );
 }
