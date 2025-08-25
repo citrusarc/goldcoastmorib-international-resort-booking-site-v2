@@ -10,7 +10,67 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Gold Coast Morib International Resort",
-  description: "Gold Coast Morib",
+  description:
+    "Experience luxury and comfort at Gold Coast Morib International Resort, your perfect beachfront getaway in Malaysia.",
+  keywords: [
+    "Gold Coast Morib",
+    "Gold Coast Morib International Resort",
+    "Morib resort",
+    "beachfront resort Malaysia",
+    "family resort Selangor",
+    "holiday resort Morib",
+  ],
+  authors: [{ name: "Gold Coast Morib International Resort" }],
+  creator: "Gold Coast Morib International Resort",
+  publisher: "Gold Coast Morib International Resort",
+  metadataBase: new URL(
+    "https://goldcoastmorib-international-resort.vercel.app"
+  ),
+  alternates: {
+    canonical: "https://goldcoastmorib-international-resort.vercel.app",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://goldcoastmorib-international-resort.vercel.app",
+    title: "Gold Coast Morib International Resort",
+    description:
+      "Enjoy a beachfront escape with family-friendly amenities, water park fun, and unforgettable holidays at Gold Coast Morib International Resort.",
+    siteName: "Gold Coast Morib International Resort",
+    images: [
+      {
+        url: "https://goldcoastmorib-international-resort.vercel.app/banner.png",
+        width: 1200,
+        height: 630,
+        alt: "Gold Coast Morib International Resort beachfront view",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Gold Coast Morib International Resort",
+    description:
+      "Discover the perfect beachfront holiday at Gold Coast Morib International Resort in Malaysia.",
+    images: [
+      "https://goldcoastmorib-international-resort.vercel.app/banner.png",
+    ],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
+  },
+  category: "Travel & Hospitality",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
