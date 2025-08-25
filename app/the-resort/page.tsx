@@ -99,7 +99,7 @@ export default function TheResortPage() {
             offering local flavors and international cuisine.
           </p>
         </div>
-        <div className="border-t w-full" />
+        <div className="w-full border-t border-zinc-800" />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
           <div className="relative w-full h-96">
             <Image
