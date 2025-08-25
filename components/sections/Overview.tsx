@@ -1,10 +1,19 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 import { cormorantGaramond } from "@/config/fonts";
 
 export default function OverviewSection() {
   return (
-    <section className="flex flex-col sm:flex-row mt-8 sm:mt-16 p-4 sm:px-64 sm:py-24 gap-8 sm:gap-16">
+    <motion.section
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+      viewport={{ once: true, amount: 0.2 }}
+      className="flex flex-col sm:flex-row mt-8 sm:mt-16 p-4 sm:px-64 sm:py-24 gap-8 sm:gap-16"
+    >
       <div className="flex flex-col gap-4">
         <span className="text-lg sm:text-xl text-amber-500">
           Gold Coast Morib
@@ -28,6 +37,6 @@ export default function OverviewSection() {
           className="object-cover"
         />
       </div>
-    </section>
+    </motion.section>
   );
 }

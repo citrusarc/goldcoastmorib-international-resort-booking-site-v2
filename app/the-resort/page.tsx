@@ -10,18 +10,31 @@ import ImageCarousel from "@/components/ui/ImageCarousel";
 import { CarouselItem } from "@/types";
 
 const roomsData: CarouselItem[] = [
-  { name: "Room 1", src: "/Images/hero-banner-1.png" },
-  { name: "Room 2", src: "/Images/hero-banner-1.png" },
-  { name: "Room 3", src: "/Images/hero-banner-1.png" },
+  { name: "Studio Suite", src: "/Images/hero-banner-1.png" },
+  { name: "Apartment", src: "/Images/hero-banner-1.png" },
+  { name: "Penthouse", src: "/Images/hero-banner-1.png" },
 ];
 
 export default function TheResortPage() {
   const itemClassName =
     "flex flex-col sm:flex-row gap-2 sm:gap-4 items-center text-2xl sm:text-4xl text-zinc-500";
 
+  const images = [
+    "/Images/hero-banner-1.png",
+    "/Images/hero-banner-1.png",
+    "/Images/hero-banner-1.png",
+    "/Images/hero-banner-1.png",
+  ];
+
   return (
     <section className="flex flex-col p-4 sm:p-24 gap-8 sm:gap-16">
-      <div className="flex flex-col sm:flex-row gap-8 sm:gap-16">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="flex flex-col sm:flex-row gap-8 sm:gap-16"
+      >
         <div className="relative w-full sm:w-1/2 h-72 sm:h-[640px] ">
           <Image
             fill
@@ -73,7 +86,7 @@ export default function TheResortPage() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
       <div className="flex flex-col py-4 sm:py-24 gap-8 sm:gap-16">
         <div className="flex flex-col gap-4">
           <span className="text-lg sm:text-xl text-amber-500">
@@ -101,38 +114,27 @@ export default function TheResortPage() {
         </div>
         <div className="w-full border-t border-zinc-800" />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
-          <div className="relative w-full h-96">
-            <Image
-              fill
-              src="/Images/hero-banner-1.png"
-              alt="Gold Coast Morib International Resort Overview"
-              className="object-cover"
-            />
-          </div>
-          <div className="relative w-full h-96">
-            <Image
-              fill
-              src="/Images/hero-banner-1.png"
-              alt="Gold Coast Morib International Resort Overview"
-              className="object-cover"
-            />
-          </div>
-          <div className="relative w-full h-96">
-            <Image
-              fill
-              src="/Images/hero-banner-1.png"
-              alt="Gold Coast Morib International Resort Overview"
-              className="object-cover"
-            />
-          </div>
-          <div className="relative w-full h-96">
-            <Image
-              fill
-              src="/Images/hero-banner-1.png"
-              alt="Gold Coast Morib International Resort Overview"
-              className="object-cover"
-            />
-          </div>
+          {images.map((src, index) => (
+            <motion.div
+              key={index}
+              className="relative w-full h-96"
+              initial={{ opacity: 0, scale: 1.1 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: 0.6,
+                ease: "easeOut",
+                delay: index * 0.2,
+              }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              <Image
+                fill
+                src={src}
+                alt={`Banner ${index + 1}`}
+                className="object-cover"
+              />
+            </motion.div>
+          ))}
         </div>
       </div>
       <div className="flex flex-col -mx-4 sm:-mx-24 py-8 sm:py-24 bg-zinc-200">

@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 import { cormorantGaramond } from "@/config/fonts";
 
@@ -18,16 +21,28 @@ export default function GallerySection() {
       </div>
       <div className="-mx-4 sm:-mx-64">
         <div className="flex flex-col sm:flex-row gap-8 sm:gap-16">
-          <div className="relative w-full sm:w-1/2 h-72 sm:h-[640px]">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
+            className="relative w-full sm:w-1/2 h-72 sm:h-[640px]"
+          >
             <Image
               fill
               src="/Images/hero-banner-1.png"
               alt="Gold Coast Morib International Resort Gallery Image 1"
               className="object-cover"
             />
-          </div>
+          </motion.div>
 
-          <div className="flex flex-col gap-8 sm:gap-16 w-full sm:w-1/2">
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
+            className="flex flex-col gap-8 sm:gap-16 w-full sm:w-1/2"
+          >
             <div className="relative w-full h-[288px]">
               <Image
                 fill
@@ -44,7 +59,7 @@ export default function GallerySection() {
                 className="object-cover"
               />
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
       <h2

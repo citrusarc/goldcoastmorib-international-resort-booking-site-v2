@@ -6,6 +6,12 @@ import { motion } from "framer-motion";
 import { cormorantGaramond } from "@/config/fonts";
 
 export default function FacilitiesSection() {
+  const images = [
+    "/Images/hero-banner-1.png",
+    "/Images/hero-banner-1.png",
+    "/Images/hero-banner-1.png",
+    "/Images/hero-banner-1.png",
+  ];
   return (
     <section className="flex flex-col mt-8 sm:mt-16 p-4 sm:px-64 sm:py-24 gap-8 sm:gap-16">
       <div className="flex flex-col gap-4">
@@ -30,38 +36,23 @@ export default function FacilitiesSection() {
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
-        <div className="relative w-full h-96">
-          <Image
-            fill
-            src="/Images/hero-banner-1.png"
-            alt="Gold Coast Morib International Resort Overview"
-            className="object-cover"
-          />
-        </div>
-        <div className="relative w-full h-96">
-          <Image
-            fill
-            src="/Images/hero-banner-1.png"
-            alt="Gold Coast Morib International Resort Overview"
-            className="object-cover"
-          />
-        </div>
-        <div className="relative w-full h-96">
-          <Image
-            fill
-            src="/Images/hero-banner-1.png"
-            alt="Gold Coast Morib International Resort Overview"
-            className="object-cover"
-          />
-        </div>
-        <div className="relative w-full h-96">
-          <Image
-            fill
-            src="/Images/hero-banner-1.png"
-            alt="Gold Coast Morib International Resort Overview"
-            className="object-cover"
-          />
-        </div>
+        {images.map((src, index) => (
+          <motion.div
+            key={index}
+            className="relative w-full h-96"
+            initial={{ opacity: 0, scale: 1.1 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            <Image
+              fill
+              src={src}
+              alt={`Banner ${index + 1}`}
+              className="object-cover"
+            />
+          </motion.div>
+        ))}
       </div>
     </section>
   );

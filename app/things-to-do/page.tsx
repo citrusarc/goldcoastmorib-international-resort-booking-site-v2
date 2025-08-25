@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 import { activities } from "@/data/activities";
 import { cormorantGaramond } from "@/config/fonts";
@@ -6,7 +9,13 @@ import { cormorantGaramond } from "@/config/fonts";
 export default function ThingsToDoPage() {
   return (
     <section className="flex flex-col p-4 sm:p-24 gap-8 sm:gap-16">
-      <div className="flex flex-col sm:flex-row gap-8 sm:gap-16">
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+        viewport={{ once: true, amount: 0.2 }}
+        className="flex flex-col sm:flex-row gap-8 sm:gap-16"
+      >
         <div className="relative w-full sm:w-1/2 h-72 sm:h-[640px]">
           <Image
             fill
@@ -51,7 +60,7 @@ export default function ThingsToDoPage() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
       <div className="-mx-4 sm:-mx-24 py-8 sm:py-24">
         <div
           className="relative w-full h-[560px] sm:h-[800px] bg-cover bg-center bg-fixed"
@@ -75,10 +84,18 @@ export default function ThingsToDoPage() {
         return (
           <div
             key={item.id}
-            className="flex flex-col sm:flex-row gap-8 sm:gap-16 py-8 sm:py-24 items-center"
+            className="relative flex flex-col sm:flex-row gap-8 sm:gap-16 py-8 sm:py-24 items-center"
           >
             <div
-              className={`relative hidden sm:block w-96 aspect-square ${
+              className={`absolute top-24 w-[360px] sm:w-[640px] h-[300px] bg-gradient-to-r ${
+                isEven
+                  ? "left-10 from-zinc-200 to-transparent"
+                  : "right-10 from-transparent to-zinc-200"
+              } z-0`}
+            />
+
+            <div
+              className={`relative hidden sm:block w-96 aspect-square z-10 ${
                 isEven ? "order-1" : "order-3"
               }`}
             >
@@ -89,7 +106,7 @@ export default function ThingsToDoPage() {
                 className="object-cover"
               />
             </div>
-            <div className="flex flex-col gap-4 order-1 sm:order-2">
+            <div className="flex flex-col gap-4 order-1 sm:order-2 z-10">
               <h2
                 className={`text-4xl sm:text-6xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
               >

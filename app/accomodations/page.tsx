@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 import { cormorantGaramond } from "@/config/fonts";
 import { rooms } from "@/data/rooms";
@@ -26,8 +29,12 @@ export default function AccomodationsPage() {
       </div>
 
       {rooms.map((item, index) => (
-        <div
+        <motion.div
           key={item.id}
+          initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+          viewport={{ once: true, amount: 0.2 }}
           className={`flex flex-col sm:flex-row px-4 py-8 sm:px-64 sm:py-24 gap-8 sm:gap-16 items-start sm:items-center ${
             index % 2 !== 0 ? "sm:flex-row-reverse" : ""
           }`}
@@ -54,7 +61,7 @@ export default function AccomodationsPage() {
               })}
             </ul>
             <p className="flex flex-col gap-2 text-zinc-500">
-              <span>Starting from</span>
+              <span className="text-amber-500">Starting from</span>
               <span>
                 <span className="text-2xl sm:text-4xl text-zinc-800">
                   {item.price.currency}
@@ -74,7 +81,7 @@ export default function AccomodationsPage() {
               className="object-cover"
             />
           </div>
-        </div>
+        </motion.div>
       ))}
     </section>
   );
