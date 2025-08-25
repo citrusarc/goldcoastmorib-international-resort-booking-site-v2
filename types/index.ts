@@ -41,3 +41,26 @@ export interface AutoCarouselItem {
   interval?: number;
   className?: string;
 }
+
+export type PriceItem = {
+  currency: string;
+  original: string;
+  current: string;
+};
+
+export type FacilitiesProps = {
+  icon?: React.FC<IconSvgProps>;
+  label?: string;
+};
+
+export type RoomItem = {
+  id: string;
+  name: string;
+  image: string;
+  alt: string;
+  description?: string;
+  facilities?: FacilitiesProps[];
+  price: PriceItem;
+  isDiscount: boolean;
+  isRecommended: boolean;
+};
