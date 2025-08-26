@@ -71,7 +71,7 @@ export default function TheResortPage() {
                 Relax
               </li>
             </ul>
-            <div className="flex flex-col gap-4 p-4 sm:p-8 w-full max-w-xl bg-zinc-200">
+            <div className="flex flex-col gap-4 p-4 sm:p-8 w-full max-w-xl bg-amber-400/50">
               <h2
                 className={`text-2xl sm:text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
               >
