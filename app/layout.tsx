@@ -8,12 +8,8 @@ import { siteConfig } from "@/config/site";
 import Navbar from "@/components/ui/Navbar";
 import "./globals.css";
 
-const navItems = siteConfig.navItems.filter((item) => !item.status?.isHidden);
-
 export const metadata: Metadata = {
-  title: `${navItems
-    .map((item) => item.name)
-    .join(" | ")} | Gold Coast Morib International Resort`,
+  title: "Gold Coast Morib International Resort",
   description:
     "Experience luxury and comfort at Gold Coast Morib International Resort, your perfect beachfront getaway in Malaysia.",
   keywords: [
