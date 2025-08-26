@@ -112,7 +112,7 @@ export default function ThingsToDoPage() {
               >
                 {item.name}
               </h2>
-              <div className="w-full border-t border-amber-500" />
+              <div className="w-full border-t border-red-500" />
               <p className="text-zinc-500">{item.description}</p>
             </div>
             <div

@@ -23,7 +23,7 @@ export default function FacilitiesSection() {
         >
           Create Your Own Adventure
           <motion.span
-            className="absolute left-0 bottom-0 h-[2px] w-full bg-amber-500 origin-left"
+            className="absolute left-0 bottom-0 h-[2px] w-full bg-red-500 origin-left"
             initial={{ scaleX: 0 }}
             whileInView={{ scaleX: 1 }}
             viewport={{ once: false }}

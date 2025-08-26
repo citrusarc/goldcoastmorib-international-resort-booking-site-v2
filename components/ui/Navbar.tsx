@@ -86,7 +86,12 @@ export default function Navbar() {
             </button>
           </Link>
         </div>
-        <div className="border-t w-full" />
+        <div
+          className={clsx(
+            "w-full border-t",
+            scroll || !(isHome || isAccomodation) ? "border-red-500" : ""
+          )}
+        />
         <div className="flex gap-4 p-2 justify-end">
           <Link href="tel:+60331981028" className="flex items-center gap-2">
             <Phone className="w-4 h-4" strokeWidth={2} />
