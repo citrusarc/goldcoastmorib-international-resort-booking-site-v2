@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     siteName: "Gold Coast Morib International Resort",
     images: [
       {
-        url: "https://goldcoastmorib-international-resort.vercel.app/banner.png",
+        url: "https://goldcoastmorib-international-resort.vercel.app/Images/banner.png",
         width: 1200,
         height: 630,
         alt: "Gold Coast Morib International Resort beachfront view",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     description:
       "Discover the perfect beachfront holiday at Gold Coast Morib International Resort in Malaysia.",
     images: [
-      "https://goldcoastmorib-international-resort.vercel.app/banner.png",
+      "https://goldcoastmorib-international-resort.vercel.app/Images/banner.png",
     ],
   },
   icons: {
