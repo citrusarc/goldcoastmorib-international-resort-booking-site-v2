@@ -16,7 +16,7 @@ export default function HeroSection() {
         <div className="absolute inset-0 flex flex-col gap-4 items-center justify-center text-white">
           <h1 className="text-lg sm:text-xl">Discover The Beauty</h1>
           <p
-            className={`text-center text-4xl sm:text-6xl ${cormorantGaramond.className}`}
+            className={`text-center text-4xl sm:text-6xl font-medium ${cormorantGaramond.className}`}
           >
             Gold Coast Morib <br /> International Resort
           </p>
