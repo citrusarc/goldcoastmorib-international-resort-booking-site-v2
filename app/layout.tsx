@@ -41,7 +41,7 @@ export const metadata: Metadata = {
         url: "https://goldcoastmorib-international-resort.vercel.app/Images/banner.png",
         width: 1200,
         height: 630,
-        alt: "Gold Coast Morib International Resort beachfront view",
+        alt: "Gold Coast Morib International Resort Beachfront View",
       },
     ],
   },

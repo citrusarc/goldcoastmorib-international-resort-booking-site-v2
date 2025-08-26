@@ -38,7 +38,7 @@ export default function ThingsToDoPage() {
             Take a break from the ordinary with activities designed to refresh
             your mind, body, and soul.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 p-4 sm:p-8 sm:mt-24 w-full h-full justify-between bg-amber-400/50">
+          <div className="flex flex-col sm:flex-row gap-4 p-4 sm:p-8 sm:mt-24 w-full h-full justify-between bg-amber-500/30">
             <div className="flex flex-col gap-4">
               <h2
                 className={`text-2xl sm:text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
@@ -89,8 +89,8 @@ export default function ThingsToDoPage() {
             <div
               className={`absolute top-24 w-[360px] sm:w-[640px] h-[300px] bg-gradient-to-r ${
                 isEven
-                  ? "left-10 from-zinc-200 to-transparent"
-                  : "right-10 from-transparent to-zinc-200"
+                  ? "left-10 from-amber-500/30 to-transparent"
+                  : "right-10 from-transparent to-amber-500/30"
               } z-0`}
             />
 

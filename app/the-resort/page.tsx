@@ -71,7 +71,7 @@ export default function TheResortPage() {
                 Relax
               </li>
             </ul>
-            <div className="flex flex-col gap-4 p-4 sm:p-8 w-full max-w-xl bg-amber-400/50">
+            <div className="flex flex-col gap-4 p-4 sm:p-8 w-full max-w-xl bg-amber-500/30">
               <h2
                 className={`text-2xl sm:text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
               >
@@ -141,7 +141,7 @@ export default function TheResortPage() {
         <div className="flex flex-col gap-8 sm:gap-16 px-4 sm:px-24">
           <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 items-start sm:items-center">
             <h2
-              className={`text-4xl sm:text-6xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
+              className={`text-4xl sm:text-6xl font-semibold ${cormorantGaramond.className} text-amber-500`}
             >
               Stay In <br />
               Your Comfort
