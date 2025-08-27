@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
-import FloatingInput from "@/components/ui/FloatingInput";
 import { cormorantGaramond } from "@/config/fonts";
+import FloatingInput from "@/components/ui/FloatingInput";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -13,18 +13,19 @@ export default function AdminLoginPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const supabase = createPagesBrowserClient();
+  // ✅ Use Supabase client that handles session persistence
+  const supabase = createClientComponentClient();
 
   const handleLogin = async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
       setError(error.message);
-    } else if (data.user) {
-      router.push("/admin"); // redirect to admin page
+    } else {
+      router.push("/admin");
     }
   };
 
@@ -36,7 +37,6 @@ export default function AdminLoginPage() {
         >
           Admin Login
         </h2>
-
         <FloatingInput
           id="email"
           placeholder="example@example.com"

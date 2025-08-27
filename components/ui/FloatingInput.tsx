@@ -1,9 +1,14 @@
-// components/ui/FloatingInput.tsx
 "use client";
 
 import { useState } from "react";
 import { FloatingInputProps } from "@/types";
 import { Eye, EyeClosed } from "iconoir-react";
+
+interface Props extends FloatingInputProps {
+  type?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
 export default function FloatingInput({
   id,
@@ -13,15 +18,10 @@ export default function FloatingInput({
   type = "text",
   value,
   onChange,
-}: FloatingInputProps & {
-  type?: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}) {
+}: Props) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const inputType =
-    type === "password" ? (showPassword ? "text" : "password") : type;
+  const inputType = type === "password" && showPassword ? "text" : type;
 
   return (
     <div className="input-floating w-full sm:w-96 relative">
@@ -29,9 +29,9 @@ export default function FloatingInput({
         id={id}
         type={inputType}
         placeholder={placeholder}
-        className={`input pr-10 ${className}`}
         value={value}
         onChange={onChange}
+        className={`input pr-10 ${className}`}
       />
       <label className="input-floating-label" htmlFor={id}>
         {label}
@@ -40,7 +40,7 @@ export default function FloatingInput({
       {type === "password" && (
         <button
           type="button"
-          onClick={() => setShowPassword((prev) => !prev)}
+          onClick={() => setShowPassword(!showPassword)}
           className="absolute right-3 top-3 text-zinc-500 hover:text-zinc-800"
         >
           {showPassword ? <Eye /> : <EyeClosed />}
