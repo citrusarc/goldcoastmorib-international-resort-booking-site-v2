@@ -10,15 +10,15 @@ export default function AdminLoginPage() {
           Admin Login
         </h2>
         <div className="input-floating w-full sm:w-96">
-          <label className="input-floating-label" htmlFor="floatingInput">
-            Email
-          </label>
           <input
             type="text"
             placeholder="example@example.com"
-            className="input rounded-xl bg-white"
+            className="input"
             id="floatingInput"
           />
+          <label className="input-floating-label" htmlFor="floatingInput">
+            Email
+          </label>
         </div>
       </div>
     </section>

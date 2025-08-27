@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 
 import { cormorantGaramond } from "@/config/fonts";
 import { rooms } from "@/data/rooms";
-import { Cellar, SeaWaves, Yoga } from "iconoir-react";
 
 export default function AccomodationsPage() {
   return (
