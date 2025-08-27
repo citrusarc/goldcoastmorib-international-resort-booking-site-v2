@@ -6,6 +6,7 @@ import { Mail, Phone } from "iconoir-react";
 import { cormorantGaramond } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
 import Navbar from "@/components/ui/Navbar";
+import FlyonuiScript from "@/components/ui/FlyonuiScript";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -82,6 +83,7 @@ export default function RootLayout({
     <html lang="en" className="light">
       <body className="antialiased overflow-x-hidden overflow-y-auto">
         <Navbar />
+        <FlyonuiScript />
         <main>{children}</main>
         <footer className="flex flex-col items-start justify-start px-4 py-8 sm:px-64 sm:py-24 gap-8 sm:gap-16 border-t border-zinc-200">
           <div className="flex flex-col sm:flex-row gap-8 w-full justify-between">

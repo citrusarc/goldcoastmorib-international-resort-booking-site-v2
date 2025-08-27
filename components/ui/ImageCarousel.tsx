@@ -34,12 +34,14 @@ export default function ImageCarousel({ items }: ImageCarouselProps) {
         </div>
       </div>
 
-      <div className="flex flex-row sm:flex-col gap-4">
+      <div className="flex flex-row sm:flex-col gap-2 sm:gap-4">
         {items.map((item, index) => (
           <p
             key={item.name}
-            className={`cursor-pointer ${
-              activeIndex === index ? "text-amber-500" : "text-zinc-500"
+            className={`p-2 sm:p-4 cursor-pointer text-lg sm:text-xl text-center ${
+              activeIndex === index
+                ? "text-white bg-amber-500"
+                : "text-zinc-500"
             }`}
             onClick={() => setActiveIndex(index)}
           >
