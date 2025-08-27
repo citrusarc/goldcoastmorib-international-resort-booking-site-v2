@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createBrowserClient } from "@supabase/ssr";
+import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 
-import { cormorantGaramond } from "@/config/fonts";
 import FloatingInput from "@/components/ui/FloatingInput";
+import { cormorantGaramond } from "@/config/fonts";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -13,22 +13,18 @@ export default function AdminLoginPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // ✅ Use Supabase client that handles session persistence
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = createPagesBrowserClient();
 
   const handleLogin = async () => {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
       setError(error.message);
-    } else {
-      router.push("/admin");
+    } else if (data.user) {
+      router.push("/admin"); // redirect to admin page
     }
   };
 
@@ -47,9 +43,7 @@ export default function AdminLoginPage() {
           label="Email"
           className="input-lg !rounded-lg"
           value={email}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setEmail(e.target.value)
-          }
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <FloatingInput
@@ -59,9 +53,7 @@ export default function AdminLoginPage() {
           type="password"
           className="input-lg !rounded-lg"
           value={password}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setPassword(e.target.value)
-          }
+          onChange={(e) => setPassword(e.target.value)}
         />
 
         {error && <p className="text-red-500">{error}</p>}

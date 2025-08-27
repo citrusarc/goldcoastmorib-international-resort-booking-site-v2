@@ -1,53 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
-import { createBrowserClient } from "@supabase/ssr";
-import type { User } from "@supabase/supabase-js";
 
 export default function AdminPage() {
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
-
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = createPagesBrowserClient();
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    const checkUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        router.push("/admin/login");
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error || !data.user) {
+        router.replace("/admin/login");
       } else {
-        setUser(user);
+        setUser(data.user);
       }
-      setLoading(false);
     };
-
-    checkUser();
+    fetchUser();
   }, [router, supabase]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    setUser(null); // clear state
-    router.push("/admin/login");
+    router.replace("/admin/login");
   };
 
-  if (loading) return <p>Loading...</p>;
-
-  if (!user) {
-    return (
-      <section className="p-8">
-        <h1 className="text-3xl font-bold">Unauthorized</h1>
-        <p>Please log in to access this page.</p>
-      </section>
-    );
-  }
+  if (!user) return <p>Loading...</p>;
 
   return (
     <section className="p-8">

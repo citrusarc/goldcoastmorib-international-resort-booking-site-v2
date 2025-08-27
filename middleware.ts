@@ -1,25 +1,38 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js"; // plain client
+import { createClient } from "@supabase/supabase-js";
 import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      global: {
+        headers: {
+          cookie: req.headers.get("cookie") || "", // pass cookies to Supabase
+        },
+      },
+    }
   );
 
-  // Example: check if user has a session cookie
-  const accessToken = req.cookies.get("sb-access-token")?.value;
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  const path = req.nextUrl.pathname;
 
-  if (!accessToken && req.nextUrl.pathname.startsWith("/admin")) {
-    // redirect to login if not authenticated
+  // Redirect not logged-in users to login
+  if (!session && path.startsWith("/admin") && path !== "/admin/login") {
     return NextResponse.redirect(new URL("/admin/login", req.url));
+  }
+
+  // Redirect logged-in users away from login page
+  if (session && path === "/admin/login") {
+    return NextResponse.redirect(new URL("/admin", req.url));
   }
 
   return NextResponse.next();
 }
 
-// Optional: which paths to match
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*"], // protect all /admin routes
 };
