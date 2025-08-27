@@ -15,7 +15,7 @@ export default function CTASection() {
           Whether it’s a weekend retreat or a long-awaited holiday, the perfect
           stay begins here.
         </p>
-        <Link href="/">
+        <Link href="/booking">
           <button className="px-6 py-4 w-full sm:w-fit text-white bg-amber-500 hover:text-amber-500 hover:bg-white">
             Plan Your Escape
           </button>
