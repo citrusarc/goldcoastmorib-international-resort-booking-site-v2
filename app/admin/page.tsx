@@ -1,5 +1,6 @@
 "use client";
 
+import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
@@ -7,7 +8,7 @@ import { useRouter } from "next/navigation";
 export default function AdminPage() {
   const router = useRouter();
   const supabase = createPagesBrowserClient();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null); // ✅ specify type
 
   useEffect(() => {
     const fetchUser = async () => {

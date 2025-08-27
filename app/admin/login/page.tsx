@@ -1,3 +1,4 @@
+// app/admin/login/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -8,15 +9,19 @@ import { cormorantGaramond } from "@/config/fonts";
 import FloatingInput from "@/components/ui/FloatingInput";
 
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // ✅ Use Supabase client that handles session persistence
   const supabase = createClientComponentClient();
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      setError("Email and password are required");
+      return;
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -37,10 +42,12 @@ export default function AdminLoginPage() {
         >
           Admin Login
         </h2>
+
         <FloatingInput
           id="email"
           placeholder="example@example.com"
           label="Email"
+          type="email"
           className="input-lg !rounded-lg"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
