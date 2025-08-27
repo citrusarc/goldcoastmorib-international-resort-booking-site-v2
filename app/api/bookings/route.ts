@@ -1,11 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
-  // handle GET request
-  return NextResponse.json({ message: "Hello GET" });
+export async function GET() {
+  return NextResponse.json({
+    message: "GET /api/bookings - not implemented yet",
+  });
 }
 
-export async function POST(request: NextRequest) {
-  const data = await request.json();
-  return NextResponse.json({ received: data });
+export async function POST() {
+  return NextResponse.json({
+    message: "POST /api/bookings - not implemented yet",
+  });
 }

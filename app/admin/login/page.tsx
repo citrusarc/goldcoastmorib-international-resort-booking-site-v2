@@ -44,7 +44,9 @@ export default function AdminLoginPage() {
           label="Email"
           className="input-lg !rounded-lg"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setEmail(e.target.value)
+          }
         />
 
         <FloatingInput
@@ -54,7 +56,9 @@ export default function AdminLoginPage() {
           type="password"
           className="input-lg !rounded-lg"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setPassword(e.target.value)
+          }
         />
 
         {error && <p className="text-red-500">{error}</p>}

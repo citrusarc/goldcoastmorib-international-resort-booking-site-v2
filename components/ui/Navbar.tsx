@@ -73,7 +73,7 @@ export default function Navbar() {
               {item.name}
             </Link>
           ))}
-          <Link href="/">
+          <Link href="/booking">
             <button
               className={clsx(
                 "px-4 py-2 hover:text-white hover:bg-amber-500",
@@ -139,7 +139,7 @@ export default function Navbar() {
                 {item.name}
               </Link>
             ))}
-            <Link href="/" onClick={() => setOpenMobileMenu(false)}>
+            <Link href="/booking" onClick={() => setOpenMobileMenu(false)}>
               <button className="px-4 py-2 text-white bg-zinc-800 hover:bg-amber-500 w-full">
                 Book Now
               </button>
