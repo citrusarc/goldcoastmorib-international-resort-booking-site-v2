@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createBrowserClient } from "@supabase/ssr";
 
 import { cormorantGaramond } from "@/config/fonts";
 import FloatingInput from "@/components/ui/FloatingInput";
@@ -14,7 +14,10 @@ export default function AdminLoginPage() {
   const router = useRouter();
 
   // ✅ Use Supabase client that handles session persistence
-  const supabase = createClientComponentClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithPassword({
