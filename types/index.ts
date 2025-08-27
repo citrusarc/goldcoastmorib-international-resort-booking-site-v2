@@ -1,4 +1,5 @@
 import { SVGProps } from "react";
+import { ChangeEvent } from "react";
 
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
@@ -74,3 +75,13 @@ export type ActivityItem = {
   description?: string;
   highlights?: IconProps[];
 };
+
+export interface FloatingInputProps {
+  id: string;
+  label: string;
+  placeholder?: string;
+  className?: string;
+  type?: string;
+  value?: string;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+}

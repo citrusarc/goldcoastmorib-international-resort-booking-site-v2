@@ -4,11 +4,14 @@
 }
 @import "flyonui/variants.css";
 @source "./node_modules/flyonui/flyonui.js";
-@import "flatpickr/dist/flatpickr.css";
+@import "flyonui/src/vendor/flatpickr.css";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --p: 38 92% 50%;
+  --pc: 0 0% 100%;
 }
 
 @theme inline {
