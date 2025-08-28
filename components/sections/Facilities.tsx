@@ -7,10 +7,10 @@ import { cormorantGaramond } from "@/config/fonts";
 
 export default function FacilitiesSection() {
   const images = [
-    "/Images/hero-banner-1.png",
-    "/Images/hero-banner-1.png",
-    "/Images/hero-banner-1.png",
-    "/Images/hero-banner-1.png",
+    "/Images/facilities-banner-1.jpg",
+    "/Images/facilities-banner-2.jpg",
+    "/Images/facilities-banner-3.jpg",
+    "/Images/facilities-banner-4.jpg",
   ];
   return (
     <section className="flex flex-col mt-8 sm:mt-16 p-4 sm:px-64 sm:py-24 gap-8 sm:gap-16">

@@ -19,7 +19,7 @@ export default function ThingsToDoPage() {
         <div className="relative w-full sm:w-1/2 h-72 sm:h-[640px]">
           <Image
             fill
-            src="/Images/hero-banner-1.png"
+            src="/Images/things-to-do-hero-banner-1.jpg"
             alt="Gold Coast Morib International Resort Overview"
             className="object-cover"
           />
@@ -53,7 +53,7 @@ export default function ThingsToDoPage() {
             <div className="relative w-full sm:w-4/3 h-72 sm:h-full">
               <Image
                 fill
-                src="/Images/hero-banner-1.png"
+                src="/Images/things-to-do-hero-banner-2.jpg"
                 alt="Gold Coast Morib International Resort Overview"
                 className="object-cover"
               />
@@ -64,7 +64,9 @@ export default function ThingsToDoPage() {
       <div className="-mx-4 sm:-mx-24 py-8 sm:py-24">
         <div
           className="relative w-full h-[560px] sm:h-[800px] bg-cover bg-center bg-fixed"
-          style={{ backgroundImage: "url('/Images/hero-banner-1.png')" }}
+          style={{
+            backgroundImage: "url('/Images/things-to-do-image-seperator.jpg')",
+          }}
         >
           <div className="absolute inset-0 flex flex-col gap-4 items-center justify-center text-white">
             <h1 className="text-lg sm:text-xl">

@@ -32,7 +32,7 @@ export default function OverviewSection() {
       <div className="relative w-full sm:w-1/2 h-72">
         <Image
           fill
-          src="/Images/hero-banner-1.png"
+          src="/Images/overview-banner-1.jpg"
           alt="Gold Coast Morib International Resort Overview"
           className="object-cover"
         />

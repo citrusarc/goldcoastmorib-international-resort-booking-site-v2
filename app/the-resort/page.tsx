@@ -10,9 +10,9 @@ import ImageCarousel from "@/components/ui/ImageCarousel";
 import { CarouselItem } from "@/types";
 
 const roomsData: CarouselItem[] = [
-  { name: "Studio Suite", src: "/Images/hero-banner-1.png" },
-  { name: "Apartment", src: "/Images/hero-banner-1.png" },
-  { name: "Penthouse", src: "/Images/hero-banner-1.png" },
+  { name: "Studio Suite", src: "/Images/room-banner-1.jpg" },
+  { name: "Apartment", src: "/Images/room-banner-2.jpg" },
+  { name: "Penthouse", src: "/Images/room-banner-3.jpg" },
 ];
 
 export default function TheResortPage() {
@@ -20,10 +20,10 @@ export default function TheResortPage() {
     "flex flex-col sm:flex-row gap-2 sm:gap-4 items-center text-2xl sm:text-4xl text-zinc-500";
 
   const images = [
-    "/Images/hero-banner-1.png",
-    "/Images/hero-banner-1.png",
-    "/Images/hero-banner-1.png",
-    "/Images/hero-banner-1.png",
+    "/Images/food-banner-1.jpg",
+    "/Images/food-banner-2.jpg",
+    "/Images/food-banner-3.jpg",
+    "/Images/food-banner-4.jpg",
   ];
 
   return (
@@ -38,7 +38,7 @@ export default function TheResortPage() {
         <div className="relative w-full sm:w-1/2 h-72 sm:h-[640px] ">
           <Image
             fill
-            src="/Images/hero-banner-1.png"
+            src="/Images/resort-banner-1.jpg"
             alt="Gold Coast Morib International Resort Overview"
             className="object-cover"
           />

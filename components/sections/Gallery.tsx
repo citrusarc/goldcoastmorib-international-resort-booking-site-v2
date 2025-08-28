@@ -30,7 +30,7 @@ export default function GallerySection() {
           >
             <Image
               fill
-              src="/Images/hero-banner-1.png"
+              src="/Images/gallery-banner-1.jpg"
               alt="Gold Coast Morib International Resort Gallery Image 1"
               className="object-cover"
             />
@@ -46,7 +46,7 @@ export default function GallerySection() {
             <div className="relative w-full h-[288px]">
               <Image
                 fill
-                src="/Images/hero-banner-1.png"
+                src="/Images/gallery-banner-2.jpg"
                 alt="Gold Coast Morib International Resort Gallery Image 2"
                 className="object-cover"
               />
@@ -54,7 +54,7 @@ export default function GallerySection() {
             <div className="relative w-full h-[288px]">
               <Image
                 fill
-                src="/Images/hero-banner-1.png"
+                src="/Images/gallery-banner-3.jpg"
                 alt="Gold Coast Morib International Resort Gallery Image 3"
                 className="object-cover"
               />

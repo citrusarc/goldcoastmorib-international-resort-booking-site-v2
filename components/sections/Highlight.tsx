@@ -67,9 +67,9 @@ export default function HighlightSection() {
         </div>
         <ImageAutoCarousel
           images={[
-            "/Images/hero-banner-1.png",
-            "/Images/hero-banner-1.png",
-            "/Images/hero-banner-1.png",
+            "/Images/highlight-banner-1.jpg",
+            "/Images/highlight-banner-2.jpg",
+            "/Images/highlight-banner-3.jpg",
           ]}
           className="relative w-full h-96 sm:h-120"
         />

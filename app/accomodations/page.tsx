@@ -12,7 +12,7 @@ export default function AccomodationsPage() {
       <div className="relative w-full h-[640px] sm:h-[960px]">
         <Image
           fill
-          src="/Images/hero-banner-1.png"
+          src="/Images/accomodations-hero-banner.jpg"
           alt="Gold Coast Morib International Resort Hero Banner"
           className="object-cover"
         />
