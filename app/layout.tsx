@@ -91,7 +91,7 @@ export default function RootLayout({
         />
       </head> */}
       <body className="relative antialiased overflow-x-hidden overflow-y-auto">
-        <SplashScreen />
+        {/* <SplashScreen /> */}
         <Navbar />
         <main>{children}</main>
         <footer className="flex flex-col items-start justify-start px-4 py-8 sm:px-64 sm:py-24 gap-8 sm:gap-16 border-t border-zinc-200">
