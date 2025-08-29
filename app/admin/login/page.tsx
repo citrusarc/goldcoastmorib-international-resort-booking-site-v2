@@ -42,7 +42,6 @@ export default function AdminLoginPage() {
         >
           Admin Login
         </h2>
-
         <FloatingInput
           id="email"
           placeholder="example@example.com"
@@ -52,7 +51,6 @@ export default function AdminLoginPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-
         <FloatingInput
           id="password"
           placeholder="••••••••"
@@ -62,9 +60,7 @@ export default function AdminLoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-
         {error && <p className="text-red-500">{error}</p>}
-
         <button
           onClick={handleLogin}
           className="btn waves waves-light !w-full sm:!w-96 !rounded-lg border-0 bg-amber-500"

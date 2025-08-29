@@ -20,10 +20,10 @@ export default function TheResortPage() {
     "flex flex-col sm:flex-row gap-2 sm:gap-4 items-center text-2xl sm:text-4xl text-zinc-500";
 
   const images = [
-    "/Images/food-banner-1.jpg",
-    "/Images/food-banner-2.jpg",
-    "/Images/food-banner-3.jpg",
-    "/Images/food-banner-4.jpg",
+    "/Images/activities-banner-1.jpg",
+    "/Images/activities-banner-2.jpg",
+    "/Images/activities-banner-3.jpg",
+    "/Images/activities-banner-4.jpg",
   ];
 
   return (
