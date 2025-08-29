@@ -25,7 +25,7 @@ export default function OverviewSection() {
         </h2>
         <p className="text-zinc-500">
           Wake up to the gentle rhythm of the waves, unwind in your private
-          jacuzzi, and create unforgettable moments with the kids at the on-site
+          bathtub, and create unforgettable moments with the kids at the on-site
           water theme park.
         </p>
       </div>

@@ -72,7 +72,7 @@ export const rooms: RoomItem[] = [
     image: "/Images/accomodations-banner-5.jpg",
     alt: "Room 5",
     description:
-      "Expansive 177 m² penthouse offering 1 king + 1 single bed, a shower, and sweeping garden views — luxury and space combined.",
+      "Expansive 177 m² penthouse featuring 1 king and 1 single bed, a shower, sweeping garden views, and an extra-large balcony facing the sea — spacious enough to host private events of up to 50 guests.",
     facilities: [
       { icon: Bed, label: "1 Single Bed + 1 King Bed" },
       { icon: Bathroom, label: "Rain Shower" },

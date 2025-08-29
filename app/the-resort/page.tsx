@@ -52,9 +52,9 @@ export default function TheResortPage() {
             International Resort
           </h2>
           <p className="text-zinc-500">
-            Just an hour from Kuala Lumpur, Gold Coast Morib Resort brings
-            together spacious stays, endless fun, and unforgettable moments by
-            the coast — perfect for families, couples, and friends.
+            Nestled in the most central location of Malaysia, this resort offers
+            a serene escape untouched by monsoon winds or seasonal rains,
+            ensuring perfect weather all year round.
           </p>
           <div className="flex flex-col sm:flex-row gap-8 justify-between mt-4 sm:mt-8">
             <ul className="flex flex-row sm:flex-col gap-12 justify-between sm:justify-start">
@@ -78,10 +78,11 @@ export default function TheResortPage() {
                 More Than A Stay
               </h2>
               <p className="text-zinc-500">
-                Weddings, birthdays, and special times with loved ones all shine
-                brighter at Gold Coast Morib Resort. With a lively water park,
-                relaxing beachside views, and spaces for families and friends to
-                reunite, every visit becomes unforgettable.
+                Just 30–60 minutes from Kuala Lumpur and KLIA on weekends, this
+                resort lets you avoid the long holiday traffic jams of Malacca
+                or Kuantan, save on tolls that can practically cover your stay,
+                and spend more precious time enjoying stunning sea views,
+                exciting water parks, and the vibrant SKY World.
               </p>
             </div>
           </div>
@@ -89,9 +90,7 @@ export default function TheResortPage() {
       </motion.div>
       <div className="flex flex-col py-4 sm:py-24 gap-8 sm:gap-16">
         <div className="flex flex-col gap-4">
-          <span className="text-lg sm:text-xl text-amber-500">
-            Bites & Delights
-          </span>
+          <span className="text-lg sm:text-xl text-amber-500">Activities</span>
           <h2
             className={`relative inline-block w-fit px-2 text-4xl sm:text-6xl font-semibold ${cormorantGaramond.className}`}
           >
@@ -108,8 +107,9 @@ export default function TheResortPage() {
             </span>
           </h2>
           <p className="text-zinc-500">
-            Variety of dining options, from gourmet restaurants to casual cafés,
-            offering local flavors and international cuisine.
+            A wide variety of activities designed for fun, adventure, and
+            connection, from team-building experiences to kayaking on the water
+            and a lively play park perfect for families.
           </p>
         </div>
         <div className="w-full border-t border-red-500" />

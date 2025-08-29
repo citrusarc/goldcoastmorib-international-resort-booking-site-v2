@@ -8,6 +8,7 @@ import { siteConfig } from "@/config/site";
 import Navbar from "@/components/ui/Navbar";
 import FlyonuiScript from "@/components/ui/FlyonuiScript";
 import "@/app/globals.css";
+import SplashScreen from "@/components/ui/SplashScreen";
 
 export const metadata: Metadata = {
   title: "Gold Coast Morib International Resort",
@@ -81,7 +82,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="light">
-      <body className="antialiased overflow-x-hidden overflow-y-auto">
+      <head>
+        <meta name="theme-color" content="#f59e0b" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
+      </head>
+      <body className="relative antialiased overflow-x-hidden overflow-y-auto">
+        <SplashScreen />
         <Navbar />
         <main>{children}</main>
         <footer className="flex flex-col items-start justify-start px-4 py-8 sm:px-64 sm:py-24 gap-8 sm:gap-16 border-t border-zinc-200">
