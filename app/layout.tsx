@@ -82,14 +82,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="light">
-      <head>
+      {/* <head>
         <meta name="theme-color" content="#f59e0b" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
-      </head>
+      </head> */}
       <body className="relative antialiased overflow-x-hidden overflow-y-auto">
         <SplashScreen />
         <Navbar />
