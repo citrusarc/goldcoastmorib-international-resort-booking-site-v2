@@ -7,6 +7,7 @@ import Image from "next/image";
 export default function SplashScreen() {
   const pathname = usePathname();
   const [show, setShow] = useState(false);
+  const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
     if (pathname === "/" && !localStorage.getItem("hasVisited")) {
@@ -17,12 +18,14 @@ export default function SplashScreen() {
 
       window.addEventListener("load", () => {
         setTimeout(() => {
-          setShow(false);
+          setExiting(true);
           localStorage.setItem("hasVisited", "true");
 
-          // ✅ restore scroll
-          document.documentElement.style.overflow = "";
-          document.body.style.overflow = "";
+          setTimeout(() => {
+            setShow(false);
+            document.documentElement.style.overflow = "";
+            document.body.style.overflow = "";
+          }, 600);
         }, 3000);
       });
     }
@@ -31,7 +34,11 @@ export default function SplashScreen() {
   if (!show) return null;
 
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-white z-[9999] overflow-hidden">
+    <div
+      className={`fixed top-0 left-0 w-screen h-screen flex items-center justify-center bg-white z-[9999] overflow-hidden transform transition-transform duration-700 ${
+        exiting ? "-translate-y-full" : "translate-y-0"
+      }`}
+    >
       <Image
         src="/Images/brand-logo-horizontal.png"
         alt="Brand Logo"
