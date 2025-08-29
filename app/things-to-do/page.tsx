@@ -46,8 +46,9 @@ export default function ThingsToDoPage() {
                 Beachside Adventures
               </h2>
               <p className="text-zinc-500">
-                Exciting banana boat rides to thrilling ATV adventures, enjoy
-                seaside activities that bring out the best of Gold Coast Morib.
+                Dive into seaside fun with hands-on activities like fishing,
+                crab hunting, and clam digging. Explore the wonders of the coast
+                while creating unforgettable memories by the shore.
               </p>
             </div>
             <div className="relative w-full sm:w-4/3 h-72 sm:h-full">
