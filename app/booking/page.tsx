@@ -128,10 +128,12 @@ export default function BookingPage() {
                 <span className="label-text">Room Type</span>
               </label>
               <select className="select select-bordered w-full">
-                <option>Deluxe Room</option>
-                <option>Premier Twin</option>
+                <option>Studio Suite</option>
+                <option>Apartment With Balcony</option>
                 <option>Family Suite</option>
-                <option>Ocean Villa</option>
+                <option>2 Rooms Apartment</option>
+                <option>3 Rooms Apartment</option>
+                <option>Penthouse Room</option>
               </select>
             </div>
 
