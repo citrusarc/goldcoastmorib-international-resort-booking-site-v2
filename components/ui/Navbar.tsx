@@ -18,6 +18,7 @@ export default function Navbar() {
   const navItems = siteConfig.navItems.filter((item) => !item.status?.isHidden);
   const isHome = pathname === "/";
   const isAccomodation = pathname === "/accomodations";
+  const isBooking = pathname === "/booking";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,7 +37,7 @@ export default function Navbar() {
     <nav
       className={clsx(
         "sticky top-0 z-50 flex p-4 sm:py-6 sm:px-24 items-center justify-between w-full transition-colors duration-300",
-        scroll || openMobileMenu || !(isHome || isAccomodation)
+        scroll || openMobileMenu || !(isHome || isAccomodation || isBooking)
           ? "text-zinc-800 border-zinc-800 bg-white"
           : "text-white border-white bg-transparent"
       )}
@@ -77,7 +78,7 @@ export default function Navbar() {
             <button
               className={clsx(
                 "px-4 py-2 hover:text-white hover:bg-amber-500",
-                scroll || !(isHome || isAccomodation)
+                scroll || !(isHome || isAccomodation || isBooking)
                   ? "text-white bg-zinc-800"
                   : "text-zinc-800 bg-white"
               )}
@@ -89,7 +90,9 @@ export default function Navbar() {
         <div
           className={clsx(
             "w-full border-t",
-            scroll || !(isHome || isAccomodation) ? "border-red-500" : ""
+            scroll || !(isHome || isAccomodation || isBooking)
+              ? "border-red-500"
+              : ""
           )}
         />
         <div className="flex gap-4 p-2 justify-end">
