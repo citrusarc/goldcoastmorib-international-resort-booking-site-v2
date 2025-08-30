@@ -82,7 +82,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="light">
-      <head className="overflow-x-hidden">
+      <head>
         <meta name="theme-color" content="#f59e0b" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
@@ -97,7 +97,10 @@ export default function RootLayout({
         <footer className="flex flex-col items-start justify-start px-4 py-8 sm:px-64 sm:py-24 gap-8 sm:gap-16 border-t border-zinc-200">
           <div className="flex flex-col sm:flex-row gap-8 w-full justify-between">
             <div className="flex flex-col gap-4 sm:gap-8 text-zinc-500">
-              <Link href="/" className="flex items-center gap-2">
+              <Link
+                href="/"
+                className="flex items-center gap-2 max-w-full overflow-x-hidden"
+              >
                 <Image
                   priority
                   src="/Images/brand-logo.png"
