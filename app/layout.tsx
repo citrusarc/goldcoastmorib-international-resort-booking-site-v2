@@ -81,7 +81,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="light overflow-x-hidden">
+    <html lang="en" className="light">
       <head>
         <meta name="theme-color" content="#f59e0b" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -90,7 +90,7 @@ export default function RootLayout({
           content="black-translucent"
         />
       </head>
-      <body className="relative antialiased max-w-full overflow-x-hidden overflow-y-auto">
+      <body className="relative antialiased overflow-x-hidden overflow-y-auto">
         <SplashScreen />
         <Navbar />
         <main className="w-full">{children}</main>
