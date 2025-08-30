@@ -35,7 +35,7 @@ export default function SplashScreen() {
 
   return (
     <div
-      className={`fixed top-0 flex items-center justify-center bg-white z-[9999] overflow-hidden transform transition-transform duration-700 ${
+      className={`fixed inset-0 flex items-center justify-center bg-white z-[9999] overflow-hidden transform transition-transform duration-700 ${
         exiting ? "-translate-y-full" : "translate-y-0"
       }`}
     >
