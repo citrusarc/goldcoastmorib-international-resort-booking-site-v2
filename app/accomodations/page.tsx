@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { cormorantGaramond } from "@/config/fonts";
@@ -71,6 +72,11 @@ export default function AccomodationsPage() {
                 </span>
               </span>
             </p>
+            <Link href={`/booking?roomId=${item.id}`}>
+              <button className="px-6 py-4 w-full sm:w-fit text-white bg-amber-500 hover:text-amber-500 hover:bg-white">
+                Book Now
+              </button>
+            </Link>
           </div>
           <div className="relative w-full sm:w-1/2 h-72 sm:h-[560px]">
             <Image

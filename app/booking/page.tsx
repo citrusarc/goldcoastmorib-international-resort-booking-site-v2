@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
@@ -15,6 +15,8 @@ import { RoomItem } from "@/types";
 
 export default function BookingPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const roomIdFromQuery = searchParams.get("roomId");
   const [filteredRooms, setFilteredRooms] = useState<RoomItem[]>(rooms);
   const [open, setOpen] = useState(false);
   const [openRoom, setOpenRoom] = useState(false);
@@ -30,6 +32,15 @@ export default function BookingPage() {
           children > 0 ? `, ${children} Child${children > 1 ? "ren" : ""}` : ""
         }`
       : "Guests";
+
+  useEffect(() => {
+    if (roomIdFromQuery) {
+      const preselectedRoom = rooms.find((room) => room.id === roomIdFromQuery);
+      if (preselectedRoom) {
+        setSelectedRoom(preselectedRoom);
+      }
+    }
+  }, [roomIdFromQuery]);
 
   useEffect(() => {
     const input = document.getElementById("date-range") as HTMLInputElement;
