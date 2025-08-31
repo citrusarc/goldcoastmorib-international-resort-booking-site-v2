@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import flatpickr from "flatpickr";
@@ -13,7 +13,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { rooms } from "@/data/rooms";
 import { RoomItem } from "@/types";
 
-export default function BookingPage() {
+function BookingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const roomIdFromQuery = searchParams.get("roomId");
@@ -324,5 +324,13 @@ export default function BookingPage() {
         </div>
       </section>
     </section>
+  );
+}
+
+export default function BookingPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BookingContent />
+    </Suspense>
   );
 }
