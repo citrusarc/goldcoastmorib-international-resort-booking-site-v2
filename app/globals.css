@@ -4,7 +4,7 @@
 }
 @import "flyonui/variants.css";
 @source "./node_modules/flyonui/flyonui.js";
-@import "flyonui/src/vendor/flatpickr.css";
+@import "flatpickr/dist/flatpickr.min.css";
 
 :root {
   --background: #ffffff;
@@ -25,4 +25,79 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Calendar container */
+.flatpickr-calendar {
+  border-radius: 16px !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1) !important;
+  border: none !important;
+  padding: 16px !important;
+  font-family: "Inter", sans-serif;
+}
+
+/* Month navigation */
+.flatpickr-months {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  border-bottom: none !important;
+  padding: 0 16px;
+  position: relative;
+}
+
+.flatpickr-current-month {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+/* Day cells */
+.flatpickr-day {
+  border-radius: 8px !important;
+  transition: all 0.2s;
+  margin: 2px;
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+}
+
+.flatpickr-day:hover {
+  background: #fde68a !important;
+  color: #92400e !important;
+}
+
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  box-shadow: none !important;
+}
+
+/* Selected days */
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background: #f59e0b !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+}
+
+.flatpickr-day.inRange {
+  background: none !important;
+  box-shadow: none !important;
+  color: inherit !important;
+}
+
+/* Range highlight */
+.flatpickr-day.inRange {
+  background: rgba(245, 158, 11, 0.25) !important;
+  color: #92400e !important;
+}
+
+/* Disabled / out of month */
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.notAllowed {
+  color: #e4e4e7 !important;
+  box-shadow: none !important;
 }

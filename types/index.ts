@@ -76,7 +76,7 @@ export type ActivityItem = {
   highlights?: IconProps[];
 };
 
-export interface FloatingInputProps {
+export type FloatingInputProps = {
   id: string;
   label: string;
   placeholder?: string;
@@ -84,4 +84,11 @@ export interface FloatingInputProps {
   type?: string;
   value?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-}
+};
+
+export type BookingProps = {
+  checkin: string;
+  checkout: string;
+  adults: number;
+  kids: number;
+};
