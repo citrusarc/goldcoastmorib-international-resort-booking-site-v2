@@ -1,29 +1,25 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRef, useEffect, useState, Suspense } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { NavArrowDown } from "iconoir-react";
 
 import { cormorantGaramond } from "@/config/fonts";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { rooms } from "@/data/rooms";
 import { RoomItem } from "@/types";
 
 function BookingContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const roomIdFromQuery = searchParams.get("roomId");
-  const [filteredRooms, setFilteredRooms] = useState<RoomItem[]>(rooms);
+  const guestDropdownRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
-  const [openRoom, setOpenRoom] = useState(false);
-  const [selectedRoom, setSelectedRoom] = useState<RoomItem | null>(null);
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
-  const supabase = createClientComponentClient();
+  const [filteredRooms, setFilteredRooms] = useState<RoomItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const totalGuests = adults + children;
   const label =
@@ -34,13 +30,20 @@ function BookingContent() {
       : "Guests";
 
   useEffect(() => {
-    if (roomIdFromQuery) {
-      const preselectedRoom = rooms.find((room) => room.id === roomIdFromQuery);
-      if (preselectedRoom) {
-        setSelectedRoom(preselectedRoom);
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        guestDropdownRef.current &&
+        !guestDropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
       }
     }
-  }, [roomIdFromQuery]);
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     const input = document.getElementById("date-range") as HTMLInputElement;
@@ -48,7 +51,7 @@ function BookingContent() {
 
     flatpickr(input, {
       mode: "range",
-      dateFormat: "d/m/Y",
+      dateFormat: "Y-m-d",
       allowInput: false,
       onClose: (selectedDates, dateStr) => {
         if (dateStr) {
@@ -60,34 +63,50 @@ function BookingContent() {
     });
   }, []);
 
-  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    async function fetchRooms() {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/rooms");
+        const data: RoomItem[] = await res.json();
+        setFilteredRooms(data);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchRooms();
+  }, []);
+
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const checkin = form.get("checkin") as string;
-    const checkout = form.get("checkout") as string;
-    const roomId = form.get("room") as string;
-    const adults = Number(form.get("adults") || 1);
-    const kids = Number(form.get("kids") || 0);
 
-    console.log({ checkin, checkout, roomId, adults, kids });
+    const input = document.getElementById("date-range") as HTMLInputElement;
+    const [checkin, checkout] = input?.value
+      ? input.value.split(" - ")
+      : ["", ""];
 
-    let query = supabase.from("rooms").select("*");
-
-    if (roomId) {
-      query = query.eq("slug", roomId);
+    let url = "/api/rooms";
+    if (checkin && checkout) {
+      url = `/api/rooms/availability?checkin=${checkin}&checkout=${checkout}&guests=${totalGuests}`;
     }
 
-    const { data, error } = await query;
-
-    if (error) {
-      console.error(error);
-      setFilteredRooms(rooms);
-    } else {
-      setFilteredRooms(data.length ? (data as RoomItem[]) : rooms);
+    try {
+      setLoading(true);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Failed to fetch rooms");
+      const data: RoomItem[] = await res.json();
+      setFilteredRooms(data);
+      if (resultsRef.current) {
+        resultsRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    } catch (err) {
+      console.error(err);
+      setFilteredRooms([]);
+    } finally {
+      setLoading(false);
     }
-
-    document.getElementById("results")?.scrollIntoView({ behavior: "smooth" });
   };
+
   return (
     <section className="-mt-28 sm:-mt-40">
       <div className="relative w-full h-screen">
@@ -124,50 +143,11 @@ function BookingContent() {
                   />
                 </div>
 
-                {/* Rooms */}
-                <div className="relative form-control w-full sm:w-xs">
-                  <div
-                    onClick={() => setOpenRoom(!openRoom)}
-                    className="p-4 pr-12 w-full rounded-xl cursor-pointer border border-zinc-200 text-zinc-800 placeholder:text-zinc-400 focus-within:ring-amber-500 focus-within:border-amber-500"
-                  >
-                    {selectedRoom ? (
-                      <span>{selectedRoom.name}</span>
-                    ) : (
-                      <span className="text-zinc-400">
-                        Pick your perfect room
-                      </span>
-                    )}
-                  </div>
-
-                  <NavArrowDown
-                    className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none transition-transform duration-200 ${
-                      openRoom ? "rotate-180" : ""
-                    } text-zinc-400`}
-                    width={20}
-                    height={20}
-                  />
-
-                  {openRoom && (
-                    <div className="absolute z-10 p-2 mt-2 space-y-2 w-full rounded-xl bg-white border border-zinc-200 shadow-lg">
-                      {rooms.map((room) => (
-                        <button
-                          key={room.id}
-                          type="button"
-                          onClick={() => {
-                            setSelectedRoom(room);
-                            setOpenRoom(false);
-                          }}
-                          className="w-full text-left px-4 py-2 rounded-lg hover:bg-zinc-100 text-zinc-800"
-                        >
-                          {room.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
                 {/* Guest */}
-                <div className="relative form-control w-full sm:w-xs">
+                <div
+                  ref={guestDropdownRef}
+                  className="relative form-control w-full sm:w-xs"
+                >
                   <div
                     onClick={() => setOpen(!open)}
                     className="p-4 pr-12 w-full rounded-xl cursor-pointer border border-zinc-200 text-zinc-800 placeholder:text-zinc-400 focus-within:ring-amber-500 focus-within:border-amber-500"
@@ -236,7 +216,6 @@ function BookingContent() {
                     </div>
                   )}
                 </div>
-
                 {/* Button */}
                 <div className="form-control self-end w-full sm:w-36">
                   <button
@@ -254,6 +233,7 @@ function BookingContent() {
 
       <section
         id="results"
+        ref={resultsRef}
         className="flex flex-col mt-8 sm:mt-16 p-4 sm:px-64 sm:py-24 gap-8 sm:gap-16"
       >
         <h2
@@ -262,65 +242,77 @@ function BookingContent() {
           Available Rooms
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredRooms.map((room, index) => (
-            <motion.div
-              key={room.id}
-              initial={{ opacity: 0, y: -10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: "easeIn", delay: index * 0.1 }}
-              className="flex flex-col w-full min-h-[480px] rounded-2xl overflow-hidden border border-zinc-200"
-            >
-              <div className="relative w-full aspect-[4/3]">
-                <Image
-                  fill
-                  src={room.image}
-                  alt={room.alt}
-                  className="object-cover object-center"
-                />
-              </div>
+          {loading ? (
+            <p className="text-zinc-500">Loading rooms...</p>
+          ) : filteredRooms.length === 0 ? (
+            <p className="text-zinc-500">
+              No rooms available for your selection.
+            </p>
+          ) : (
+            filteredRooms.map((room, index) => (
+              <motion.div
+                key={room.id}
+                initial={{ opacity: 0, y: -10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.5,
+                  ease: "easeIn",
+                  delay: index * 0.1,
+                }}
+                className="flex flex-col w-full min-h-[480px] rounded-2xl overflow-hidden border border-zinc-200"
+              >
+                <div className="relative w-full aspect-[4/3]">
+                  <Image
+                    fill
+                    src={room.image}
+                    alt={room.alt}
+                    className="object-cover object-center"
+                  />
+                </div>
 
-              <div className="flex flex-col flex-grow gap-4 p-4">
-                <h2
-                  className={`text-2xl sm:text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
-                >
-                  {room.name}
-                </h2>
-                <p className="text-zinc-500">{room.description}</p>
+                <div className="flex flex-col flex-grow gap-4 p-4">
+                  <h2
+                    className={`text-2xl sm:text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
+                  >
+                    {room.name}
+                  </h2>
+                  <p className="text-zinc-500">{room.description}</p>
 
-                <p className="flex flex-col gap-2 text-zinc-500">
-                  <span className="text-amber-500">Starting from</span>
-                  <span>
-                    <span className="text-xl sm:text-2xl text-zinc-800">
-                      {room.price.currency}
-                      {room.price.current}
+                  <p className="flex flex-col gap-2 text-zinc-500">
+                    <span className="text-amber-500">Starting from</span>
+                    <span>
+                      <span className="text-xl sm:text-2xl text-zinc-800">
+                        {room.price.currency}
+                        {room.price.current}
+                      </span>
+                      <span className="text-lg sm:text-2xl text-zinc-500">
+                        /night
+                      </span>
                     </span>
-                    <span className="text-lg sm:text-2xl text-zinc-500">
-                      /night
-                    </span>
-                  </span>
-                </p>
+                  </p>
 
-                <button
-                  onClick={() => {
-                    const input = document.getElementById(
-                      "date-range"
-                    ) as HTMLInputElement;
-                    const [checkin, checkout] = input?.value
-                      ? input.value.split(" - ")
-                      : ["", ""];
+                  <button
+                    onClick={() => {
+                      const input = document.getElementById(
+                        "date-range"
+                      ) as HTMLInputElement;
+                      const [checkin, checkout] = input?.value
+                        ? input.value.split(" - ")
+                        : ["", ""];
 
-                    router.push(
-                      `/booking/${room.id}?checkin=${checkin}&checkout=${checkout}&adults=${adults}&kids=${children}`
-                    );
-                  }}
-                  className="mt-auto px-6 py-3 w-full font-medium rounded-xl text-white bg-amber-500"
-                >
-                  Book Now
-                </button>
-              </div>
-            </motion.div>
-          ))}
+                      router.push(
+                        `/booking/${room.id}?checkin=${checkin}&checkout=${checkout}&adults=${adults}&kids=${children}`
+                      );
+                    }}
+                    className="mt-auto px-6 py-3 w-full font-medium rounded-xl text-white bg-amber-500"
+                  >
+                    Book Now
+                  </button>
+                </div>
+              </motion.div>
+            ))
+          )}
         </div>
       </section>
     </section>

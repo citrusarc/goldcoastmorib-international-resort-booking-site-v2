@@ -61,6 +61,7 @@ export type RoomItem = {
   alt: string;
   description?: string;
   facilities?: IconProps[];
+  maxGuests: number;
   price: PriceItem;
   isDiscount: boolean;
   isRecommended: boolean;
@@ -87,6 +88,7 @@ export type FloatingInputProps = {
 };
 
 export type BookingProps = {
+  roomId: RoomItem["id"] | "any";
   checkin: string;
   checkout: string;
   adults: number;

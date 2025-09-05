@@ -17,6 +17,7 @@ export const rooms: RoomItem[] = [
     price: { currency: "RM", current: "120", original: "120" },
     isDiscount: true,
     isRecommended: true,
+    maxGuests: 2,
   },
   {
     id: "apartment-balcony",
@@ -33,6 +34,7 @@ export const rooms: RoomItem[] = [
     price: { currency: "RM", current: "180", original: "180" },
     isDiscount: true,
     isRecommended: true,
+    maxGuests: 2,
   },
   {
     id: "two-rooms-apartment",
@@ -49,6 +51,7 @@ export const rooms: RoomItem[] = [
     price: { currency: "RM", current: "250", original: "250" },
     isDiscount: true,
     isRecommended: false,
+    maxGuests: 3,
   },
   {
     id: "three-rooms-apartment",
@@ -65,6 +68,7 @@ export const rooms: RoomItem[] = [
     price: { currency: "RM", current: "280", original: "280" },
     isDiscount: true,
     isRecommended: false,
+    maxGuests: 5,
   },
   {
     id: "penthouse-room",
@@ -81,5 +85,6 @@ export const rooms: RoomItem[] = [
     price: { currency: "RM", current: "350", original: "350" },
     isDiscount: true,
     isRecommended: true,
+    maxGuests: 5,
   },
 ];
