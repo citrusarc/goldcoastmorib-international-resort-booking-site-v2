@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Phone } from "iconoir-react";
+import "flatpickr/dist/flatpickr.min.css";
 
 import { cormorantGaramond } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
@@ -89,7 +90,6 @@ export default function RootLayout({
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
-        <link rel="stylesheet" href="../path/to/flatpickr/dist/flatpickr.css" />
       </head>
       <body className="relative antialiased overflow-x-hidden overflow-y-auto">
         <SplashScreen />
