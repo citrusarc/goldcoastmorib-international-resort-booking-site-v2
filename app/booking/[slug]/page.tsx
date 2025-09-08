@@ -14,7 +14,6 @@ export default function BookingDetailsPage() {
   const [room, setRoom] = useState<RoomItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [kids] = useState(0); // // something need to check
 
   // // something need to check
   const [form, setForm] = useState({
@@ -123,7 +122,7 @@ export default function BookingDetailsPage() {
           </p>
           <p>
             <span className="text-zinc-500">Guests:</span>
-            {searchParams.get("guests")} Adults {kids > 0 && `, ${kids} Kids`}
+            {searchParams.get("guests")}
           </p>
 
           <hr className="my-2" />

@@ -32,16 +32,16 @@ export type FooterItem = {
   status?: ItemStatus;
 };
 
-export interface CarouselItem {
+export type CarouselItem = {
   name: string;
   src: string;
-}
+};
 
-export interface AutoCarouselItem {
+export type AutoCarouselItem = {
   images: string[];
   interval?: number;
   className?: string;
-}
+};
 
 export type PriceItem = {
   currency: string;
@@ -93,4 +93,9 @@ export type BookingProps = {
   checkout: string;
   adults: number;
   kids: number;
+};
+
+export type SearchErrors = {
+  dates?: string;
+  guests?: string;
 };

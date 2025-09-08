@@ -9,16 +9,19 @@ import "flatpickr/dist/flatpickr.min.css";
 import { NavArrowDown } from "iconoir-react";
 
 import { cormorantGaramond } from "@/config/fonts";
-import { RoomItem } from "@/types";
+import { RoomItem, SearchErrors } from "@/types";
+import { filter } from "framer-motion/client";
 
 function BookingContent() {
   const router = useRouter();
   const guestDropdownRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
+  const [dateRange, setDateRange] = useState("");
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
   const [filteredRooms, setFilteredRooms] = useState<RoomItem[]>([]);
+  const [errors, setErrors] = useState<SearchErrors>({});
   const [loading, setLoading] = useState(true);
 
   const totalGuests = adults + children;
@@ -53,11 +56,14 @@ function BookingContent() {
       mode: "range",
       dateFormat: "Y-m-d",
       allowInput: false,
+      minDate: "today",
       onClose: (selectedDates, dateStr) => {
         if (dateStr) {
-          input.value = dateStr.replace(" to ", " - ");
+          const formatted = dateStr.replace(" to ", " - ");
+          input.value = formatted;
           input.classList.remove("placeholder:text-zinc-200");
           input.classList.add("text-zinc-800");
+          setDateRange(formatted);
         }
       },
     });
@@ -80,10 +86,22 @@ function BookingContent() {
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const input = document.getElementById("date-range") as HTMLInputElement;
-    const [checkin, checkout] = input?.value
-      ? input.value.split(" - ")
-      : ["", ""];
+    const [checkin, checkout] = dateRange ? dateRange.split(" - ") : ["", ""];
+    const newErrors: { dates?: string; guests?: string } = {};
+
+    if (!checkin || !checkout) {
+      newErrors.dates = "This field cannot be empty";
+    }
+    if (totalGuests < 1) {
+      newErrors.guests = "Please select at least 1 guest.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
 
     let url = "/api/rooms";
     if (checkin && checkout) {
@@ -95,7 +113,8 @@ function BookingContent() {
       const res = await fetch(url);
       if (!res.ok) throw new Error("Failed to fetch rooms");
       const data: RoomItem[] = await res.json();
-      setFilteredRooms(data);
+      const filtered = data.filter((room) => totalGuests <= room.maxGuests);
+      setFilteredRooms(filtered);
       if (resultsRef.current) {
         resultsRef.current.scrollIntoView({ behavior: "smooth" });
       }
@@ -106,6 +125,8 @@ function BookingContent() {
       setLoading(false);
     }
   };
+
+  const isFormValid = !!(dateRange && totalGuests > 0);
 
   return (
     <section className="-mt-28 sm:-mt-40">
@@ -139,8 +160,27 @@ function BookingContent() {
                     id="date-range"
                     type="text"
                     placeholder="Check-in date - Check-out date"
-                    className="p-4 w-full rounded-xl cursor-pointer border border-zinc-200 text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-amber-500 focus:border-amber-500"
+                    className={`p-4 w-full rounded-xl cursor-pointer border text-zinc-800 placeholder:text-zinc-400 focus:outline-none 
+                      ${
+                        errors.dates
+                          ? "border-red-500"
+                          : "border-zinc-200 focus:ring-amber-500 focus:border-amber-500"
+                      }`}
+                    onChange={() => {
+                      if (
+                        (
+                          document.getElementById(
+                            "date-range"
+                          ) as HTMLInputElement
+                        )?.value
+                      ) {
+                        setErrors((prev) => ({ ...prev, dates: undefined }));
+                      }
+                    }}
                   />
+                  {errors.dates && (
+                    <p className="mt-2 text-red-500">{errors.dates}</p>
+                  )}
                 </div>
 
                 {/* Guest */}
@@ -150,7 +190,12 @@ function BookingContent() {
                 >
                   <div
                     onClick={() => setOpen(!open)}
-                    className="p-4 pr-12 w-full rounded-xl cursor-pointer border border-zinc-200 text-zinc-800 placeholder:text-zinc-400 focus-within:ring-amber-500 focus-within:border-amber-500"
+                    className={`p-4 pr-12 w-full rounded-xl cursor-pointer border text-zinc-800 placeholder:text-zinc-400 focus-within:ring-amber-500 
+                      ${
+                        errors.guests
+                          ? "border-red-500"
+                          : "border-zinc-200 focus-within:border-amber-500"
+                      }`}
                   >
                     {totalGuests === 0 ? (
                       <span className="text-zinc-400">Guests</span>
@@ -158,6 +203,9 @@ function BookingContent() {
                       label
                     )}
                   </div>
+                  {errors.guests && (
+                    <p className="mt-2 text-red-500">{errors.guests}</p>
+                  )}
                   <NavArrowDown
                     className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none transition-transform duration-200 ${
                       open ? "rotate-180" : ""
@@ -174,7 +222,16 @@ function BookingContent() {
                         <div className="flex items-center gap-4">
                           <button
                             type="button"
-                            onClick={() => setAdults(Math.max(1, adults - 1))}
+                            onClick={() => {
+                              const next = Math.max(1, adults - 1);
+                              setAdults(next);
+                              if (next + children > 0) {
+                                setErrors((prev) => ({
+                                  ...prev,
+                                  guests: undefined,
+                                }));
+                              }
+                            }}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-800"
                           >
                             −
@@ -182,7 +239,16 @@ function BookingContent() {
                           <span>{adults}</span>
                           <button
                             type="button"
-                            onClick={() => setAdults(adults + 1)}
+                            onClick={() => {
+                              const next = adults + 1;
+                              setAdults(next);
+                              if (next + children > 0) {
+                                setErrors((prev) => ({
+                                  ...prev,
+                                  guests: undefined,
+                                }));
+                              }
+                            }}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-800"
                           >
                             +
@@ -196,9 +262,16 @@ function BookingContent() {
                         <div className="flex items-center gap-4">
                           <button
                             type="button"
-                            onClick={() =>
-                              setChildren(Math.max(0, children - 1))
-                            }
+                            onClick={() => {
+                              const next = Math.max(0, children - 1);
+                              setChildren(next);
+                              if (adults + next > 0) {
+                                setErrors((prev) => ({
+                                  ...prev,
+                                  guests: undefined,
+                                }));
+                              }
+                            }}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-800"
                           >
                             −
@@ -206,7 +279,16 @@ function BookingContent() {
                           <span>{children}</span>
                           <button
                             type="button"
-                            onClick={() => setChildren(children + 1)}
+                            onClick={() => {
+                              const next = children + 1;
+                              setChildren(next);
+                              if (adults + next > 0) {
+                                setErrors((prev) => ({
+                                  ...prev,
+                                  guests: undefined,
+                                }));
+                              }
+                            }}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-800"
                           >
                             +
@@ -220,7 +302,13 @@ function BookingContent() {
                 <div className="form-control self-end w-full sm:w-36">
                   <button
                     type="submit"
-                    className="px-6 py-4 w-full font-medium rounded-xl text-white bg-amber-500"
+                    disabled={!isFormValid}
+                    className={`px-6 py-4 w-full font-medium rounded-xl text-white 
+                      ${
+                        isFormValid
+                          ? "bg-amber-500 hover:bg-amber-600"
+                          : "bg-gray-200 cursor-not-allowed"
+                      }`}
                   >
                     Search
                   </button>
@@ -294,15 +382,11 @@ function BookingContent() {
 
                   <button
                     onClick={() => {
-                      const input = document.getElementById(
-                        "date-range"
-                      ) as HTMLInputElement;
-                      const [checkin, checkout] = input?.value
-                        ? input.value.split(" - ")
+                      const [checkin, checkout] = dateRange
+                        ? dateRange.split(" - ")
                         : ["", ""];
-
                       router.push(
-                        `/booking/${room.id}?checkin=${checkin}&checkout=${checkout}&adults=${adults}&kids=${children}`
+                        `/booking/${room.id}?checkin=${checkin}&checkout=${checkout}&guests=${totalGuests}`
                       );
                     }}
                     className="mt-auto px-6 py-3 w-full font-medium rounded-xl text-white bg-amber-500"

@@ -6,11 +6,18 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const checkin = searchParams.get("checkin");
     const checkout = searchParams.get("checkout");
-    const guests = parseInt(searchParams.get("guests") || "1", 10);
+    const guests = Math.max(1, parseInt(searchParams.get("guests") || "1", 10));
 
     if (!checkin || !checkout) {
       return NextResponse.json(
         { error: "Missing checkin/checkout dates" },
+        { status: 400 }
+      );
+    }
+
+    if (!guests || guests < 1) {
+      return NextResponse.json(
+        { error: "At least 1 guest required" },
         { status: 400 }
       );
     }
