@@ -1,34 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react"; // NEW
-import { useParams, useSearchParams } from "next/navigation"; // NEW
-import { cormorantGaramond } from "@/config/fonts";
+import { useState, useEffect } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 
-interface Room {
-  // NEW
-  id: number;
-  name: string;
-  description: string;
-  image: string;
-  maxGuests: number;
-  price: {
-    currency: string;
-    current: number;
-    original?: number;
-  };
-}
+import { cormorantGaramond } from "@/config/fonts";
+import { RoomItem } from "@/types";
 
 export default function BookingDetailsPage() {
-  const { slug } = useParams(); // NEW: capture room slug/id from URL
-  const searchParams = useSearchParams(); // NEW: get checkin/out/guests from query string
+  const { slug } = useParams();
+  const searchParams = useSearchParams();
 
-  const [room, setRoom] = useState<Room | null>(null); // NEW
-  const [loading, setLoading] = useState(true); // NEW
-  const [submitting, setSubmitting] = useState(false); // NEW
-  const [kids] = useState(0); // NEW
+  const [room, setRoom] = useState<RoomItem | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [kids] = useState(0); // // something need to check
 
-  // NEW: form state
+  // // something need to check
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -38,18 +26,17 @@ export default function BookingDetailsPage() {
     request: "",
   });
 
-  // NEW: handle form change
+  // // why use onChange not useEffect?
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // NEW: fetch room details
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const res = await fetch(`/api/rooms/${slug}`); // ✅ now hitting /[id] API
+        const res = await fetch(`/api/rooms/${slug}`);
         const data = await res.json();
         setRoom(data);
       } catch (err) {
@@ -61,7 +48,7 @@ export default function BookingDetailsPage() {
     if (slug) fetchRoom();
   }, [slug]);
 
-  // NEW: handle booking form submit
+  // // Enhance later
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
@@ -88,57 +75,55 @@ export default function BookingDetailsPage() {
   };
 
   if (loading) {
-    return <p className="text-center py-20">Loading room details...</p>; // NEW
+    return <p className="text-center py-20">Loading room details...</p>;
   }
 
   if (!room) {
-    return <p className="text-center py-20">Room not found</p>; // NEW
+    return <p className="text-center py-20">Room not found</p>;
   }
 
   return (
     <section className="flex flex-col items-center p-4 sm:px-64 sm:py-24 gap-12">
-      <div className="w-full flex flex-col sm:flex-row gap-12">
+      <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 w-full">
         {/* Room Info */}
         <div className="flex-1">
           <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden">
             <Image
-              src={room.image || "/Images/hero-banner-1.png"} // CHANGED
-              alt={room.name}
               fill
+              src={room.image}
+              alt={room.alt}
               className="object-cover object-center"
             />
           </div>
           <h1
             className={`mt-4 text-2xl sm:text-3xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
           >
-            {room.name} {/* CHANGED */}
+            {room.name}
           </h1>
-          <p className="text-zinc-500 mt-2">{room.description}</p>{" "}
-          {/* CHANGED */}
+          <p className="text-zinc-500 mt-2">{room.description}</p>
+
           <p className="mt-4 font-semibold text-xl text-zinc-800">
             {room.price.currency}
             {room.price.current}
           </p>
         </div>
 
-        {/* Booking Form */}
         <form
-          onSubmit={handleSubmit} // CHANGED
+          onSubmit={handleSubmit}
           className="flex-1 flex flex-col gap-4 p-6 rounded-2xl border border-zinc-200 bg-white"
         >
           <h2 className="text-lg font-semibold text-zinc-800">Your Stay</h2>
           <p>
-            <span className="text-zinc-500">Check In:</span>{" "}
-            {searchParams.get("checkin")} {/* CHANGED */}
+            <span className="text-zinc-500">Check In:</span>
+            {searchParams.get("checkin")}
           </p>
           <p>
-            <span className="text-zinc-500">Check Out:</span>{" "}
-            {searchParams.get("checkout")} {/* CHANGED */}
+            <span className="text-zinc-500">Check Out:</span>
+            {searchParams.get("checkout")}
           </p>
           <p>
-            <span className="text-zinc-500">Guests:</span>{" "}
-            {searchParams.get("guests")} Adults {kids > 0 && `, ${kids} Kids`}{" "}
-            {/* CHANGED */}
+            <span className="text-zinc-500">Guests:</span>
+            {searchParams.get("guests")} Adults {kids > 0 && `, ${kids} Kids`}
           </p>
 
           <hr className="my-2" />

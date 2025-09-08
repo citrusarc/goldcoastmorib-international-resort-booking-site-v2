@@ -4,10 +4,10 @@ import { supabaseServer } from "@/lib/supabase/server";
 
 export async function GET(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> } // ✅ params is a Promise
+  context: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
   try {
-    const { id } = await context.params; // ✅ await params
+    const { id } = await context.params;
 
     const { data, error } = await supabaseServer
       .from("rooms")
@@ -40,6 +40,7 @@ export async function GET(
   } catch (err: unknown) {
     const message =
       err instanceof Error ? err.message : "Unknown error occurred";
+    ``;
     console.error("Error fetching room:", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }

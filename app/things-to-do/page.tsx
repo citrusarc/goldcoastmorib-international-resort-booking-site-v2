@@ -20,7 +20,7 @@ export default function ThingsToDoPage() {
           <Image
             fill
             src="/Images/things-to-do-hero-banner-1.jpg"
-            alt="Gold Coast Morib International Resort Overview"
+            alt="Gold Coast Morib International Resort Things To Do Hero Banner 1"
             className="object-cover"
           />
         </div>
@@ -55,7 +55,7 @@ export default function ThingsToDoPage() {
               <Image
                 fill
                 src="/Images/things-to-do-hero-banner-2.jpg"
-                alt="Gold Coast Morib International Resort Overview"
+                alt="Gold Coast Morib International Resort Things To Do Hero Banner 2"
                 className="object-cover"
               />
             </div>
@@ -105,7 +105,7 @@ export default function ThingsToDoPage() {
               <Image
                 fill
                 src={isEven ? item.image1 : item.image2}
-                alt="Gold Coast Morib International Resort Overview"
+                alt="Gold Coast Morib International Resort Activity Image 1"
                 className="object-cover"
               />
             </div>
@@ -126,7 +126,7 @@ export default function ThingsToDoPage() {
               <Image
                 fill
                 src={isEven ? item.image2 : item.image1}
-                alt="Gold Coast Morib International Resort Overview"
+                alt="Gold Coast Morib International Resort Activity Image 2"
                 className="object-cover"
               />
             </div>

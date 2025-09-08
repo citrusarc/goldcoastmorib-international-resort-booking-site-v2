@@ -82,7 +82,7 @@ export default function AccomodationsPage() {
             <Image
               fill
               src={item.image}
-              alt="Gold Coast Morib International Resort Overview"
+              alt={item.alt}
               className="object-cover"
             />
           </div>

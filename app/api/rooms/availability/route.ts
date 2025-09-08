@@ -28,8 +28,8 @@ export async function GET(req: NextRequest) {
     const { data: booked, error: bookingError } = await supabaseServer
       .from("bookings")
       .select("room_id")
-      .lt("checkin_date", checkout) // starts before checkout
-      .gt("checkout_date", checkin); // ends after checkin
+      .lt("checkin_date", checkout)
+      .gt("checkout_date", checkin);
 
     if (bookingError) throw bookingError;
 

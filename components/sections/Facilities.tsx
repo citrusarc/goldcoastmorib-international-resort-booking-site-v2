@@ -48,7 +48,7 @@ export default function FacilitiesSection() {
             <Image
               fill
               src={src}
-              alt={`Banner ${index + 1}`}
+              alt={`Facilities Banner ${index + 1}`}
               className="object-cover"
             />
           </motion.div>

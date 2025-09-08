@@ -39,7 +39,7 @@ export default function TheResortPage() {
           <Image
             fill
             src="/Images/resort-banner-1.jpg"
-            alt="Gold Coast Morib International Resort Overview"
+            alt="Gold Coast Morib International Resort View"
             className="object-cover"
           />
         </div>
@@ -130,7 +130,7 @@ export default function TheResortPage() {
               <Image
                 fill
                 src={src}
-                alt={`Banner ${index + 1}`}
+                alt={`Activities Banner ${index + 1}`}
                 className="object-cover"
               />
             </motion.div>
