@@ -92,7 +92,6 @@ export default function RootLayout({
           src="https://www.googletagmanager.com/gtag/js?id=G-Y683DQH45D"
         />
 
-        {/* Initialize gtag */}
         <Script id="gtag-init">
           {`
             window.dataLayer = window.dataLayer || [];
