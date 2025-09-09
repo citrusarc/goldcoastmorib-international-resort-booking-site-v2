@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import Script from "next/script";
 import { Mail, Phone } from "iconoir-react";
 import "flatpickr/dist/flatpickr.min.css";
 
@@ -26,22 +27,20 @@ export const metadata: Metadata = {
   authors: [{ name: "Gold Coast Morib International Resort" }],
   creator: "Gold Coast Morib International Resort",
   publisher: "Gold Coast Morib International Resort",
-  metadataBase: new URL(
-    "https://goldcoastmorib-international-resort.vercel.app"
-  ),
+  metadataBase: new URL("https://www.goldcoastmoribresort.com"),
   alternates: {
-    canonical: "https://goldcoastmorib-international-resort.vercel.app",
+    canonical: "https://www.goldcoastmoribresort.com",
   },
   openGraph: {
     type: "website",
-    url: "https://goldcoastmorib-international-resort.vercel.app",
+    url: "https://www.goldcoastmoribresort.com",
     title: "Gold Coast Morib International Resort",
     description:
       "Enjoy a beachfront escape with family-friendly amenities, water park fun, and unforgettable holidays at Gold Coast Morib International Resort.",
     siteName: "Gold Coast Morib International Resort",
     images: [
       {
-        url: "https://goldcoastmorib-international-resort.vercel.app/Images/banner.png",
+        url: "https://www.goldcoastmoribresort.com/Images/banner.png",
         width: 1200,
         height: 630,
         alt: "Gold Coast Morib International Resort Beachfront View",
@@ -53,9 +52,7 @@ export const metadata: Metadata = {
     title: "Gold Coast Morib International Resort",
     description:
       "Discover the perfect beachfront holiday at Gold Coast Morib International Resort in Malaysia.",
-    images: [
-      "https://goldcoastmorib-international-resort.vercel.app/Images/banner.png",
-    ],
+    images: ["https://www.goldcoastmoribresort.com/Images/banner.png"],
   },
   icons: {
     icon: "/favicon.ico",
@@ -90,6 +87,17 @@ export default function RootLayout({
           name="apple-mobile-web-app-status-bar-style"
           content="black-translucent"
         />
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-Y683DQH45D"
+        />
+        <Script>
+          {`window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Y683DQH45D');`}
+        </Script>
       </head>
       <body className="relative antialiased overflow-x-hidden overflow-y-auto">
         <SplashScreen />
