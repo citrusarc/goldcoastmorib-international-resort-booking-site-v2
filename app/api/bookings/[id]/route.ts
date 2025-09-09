@@ -1,22 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/utils/supabase/server";
 
-// GET single booking (with room details)
+// GET single booking
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
+
     const { data, error } = await supabaseServer
       .from("bookings")
-      .select("*, rooms(*)")
+      .select("*, rooms(*)") // joined with rooms
       .eq("id", id)
       .single();
 
     if (error) throw error;
-    if (!data)
+    if (!data) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
 
     return NextResponse.json(data);
   } catch (err: unknown) {
@@ -29,17 +31,17 @@ export async function GET(
 // UPDATE booking (e.g. change status or guest info)
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const body = await req.json();
 
     const { data, error } = await supabaseServer
       .from("bookings")
       .update(body)
       .eq("id", id)
-      .select("*, rooms(*)")
+      .select()
       .single();
 
     if (error) throw error;
@@ -54,10 +56,10 @@ export async function PUT(
 // DELETE booking
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
 
     const { error } = await supabaseServer
       .from("bookings")
