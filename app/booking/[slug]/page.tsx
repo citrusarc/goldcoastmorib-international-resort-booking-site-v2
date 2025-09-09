@@ -550,7 +550,7 @@ export default function BookingDetailsPage() {
                   : "text-zinc-400 bg-gray-200 cursor-not-allowed"
               }`}
             >
-              {submitting ? "Submitting..." : "Confirm Booking"}
+              {submitting ? "Submitting..." : "Secure My Stay"}
             </button>
           </form>
         </div>

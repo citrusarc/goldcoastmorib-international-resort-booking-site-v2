@@ -406,7 +406,7 @@ function BookingContent() {
                     }}
                     className="mt-auto px-6 py-3 w-full font-medium rounded-xl text-white bg-amber-500"
                   >
-                    Book Now
+                    Reserve Now
                   </button>
                 </div>
               </motion.div>

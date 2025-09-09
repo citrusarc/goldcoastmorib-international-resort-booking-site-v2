@@ -74,7 +74,7 @@ export default function AccomodationsPage() {
             </p>
             <Link href={`/booking?roomId=${item.id}`}>
               <button className="px-6 py-4 w-full sm:w-fit text-white bg-amber-500 hover:text-amber-500 hover:bg-white">
-                Book Now
+                Check Availability
               </button>
             </Link>
           </div>
