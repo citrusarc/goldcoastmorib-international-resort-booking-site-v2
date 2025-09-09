@@ -91,12 +91,15 @@ export default function RootLayout({
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-Y683DQH45D"
         />
-        <Script>
-          {`window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-Y683DQH45D');`}
+        {/* Initialize gtag */}
+        <Script id="gtag-init">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-Y683DQH45D');
+          `}
         </Script>
       </head>
       <body className="relative antialiased overflow-x-hidden overflow-y-auto">
