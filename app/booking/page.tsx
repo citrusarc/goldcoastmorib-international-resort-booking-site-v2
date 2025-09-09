@@ -10,7 +10,6 @@ import { NavArrowDown } from "iconoir-react";
 
 import { cormorantGaramond } from "@/config/fonts";
 import { RoomItem, SearchErrors } from "@/types";
-import { filter } from "framer-motion/client";
 
 function BookingContent() {
   const router = useRouter();

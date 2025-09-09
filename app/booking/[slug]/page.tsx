@@ -18,7 +18,6 @@ export default function BookingDetailsPage() {
   const [room, setRoom] = useState<RoomItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [countryCode, setCountryCode] = useState("+60");
   const [openPhoneDropdown, setOpenPhoneDropdown] = useState(false);
   const [openArrivalDropdown, setOpenArrivalDropdown] = useState(false);
   const [selectedCode, setSelectedCode] = useState(phoneCodes[0]);
@@ -70,12 +69,9 @@ export default function BookingDetailsPage() {
     >
   ) => {
     const { name, value } = e.target;
-    if (name === "countryCode") {
-      setCountryCode(value);
-    } else {
-      setForm({ ...form, [name]: value });
-      setErrors({ ...errors, [name]: undefined });
-    }
+
+    setForm({ ...form, [name]: value });
+    setErrors({ ...errors, [name]: undefined });
   };
 
   const handleBlur = (field: keyof BookingForms) => {
@@ -183,6 +179,7 @@ export default function BookingDetailsPage() {
         adult,
         children,
         ...form,
+        phone: `${selectedCode.code}${form.phone}`,
       };
 
       const res = await fetch("/api/bookings", {
@@ -212,6 +209,10 @@ export default function BookingDetailsPage() {
       field && errors[field] ? "border-red-500" : ""
     }`;
 
+  const payload = {
+    ...form,
+    phone: `${selectedCode.code}${form.phone}`, // prepend country code
+  };
   return (
     <section className="flex flex-col items-center p-4 sm:px-64 sm:py-24 gap-12">
       <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 w-full">

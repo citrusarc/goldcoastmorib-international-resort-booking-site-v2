@@ -4,14 +4,14 @@ import { supabaseServer } from "@/utils/supabase/server";
 // GET single booking
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await params;
 
     const { data, error } = await supabaseServer
       .from("bookings")
-      .select("*, rooms(*)") // joined with rooms
+      .select("*, rooms(*)")
       .eq("id", id)
       .single();
 
@@ -31,10 +31,10 @@ export async function GET(
 // UPDATE booking (e.g. change status or guest info)
 export async function PUT(
   req: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await params;
     const body = await req.json();
 
     const { data, error } = await supabaseServer
@@ -56,10 +56,10 @@ export async function PUT(
 // DELETE booking
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await params;
 
     const { error } = await supabaseServer
       .from("bookings")
