@@ -404,7 +404,7 @@ function BookingContent() {
                         `/booking/${room.id}?checkin=${checkin}&checkout=${checkout}&adult=${safeAdult}&children=${children}`
                       );
                     }}
-                    className="mt-auto px-6 py-3 w-full font-medium rounded-xl text-white bg-amber-500"
+                    className="mt-auto px-6 py-3 w-full font-medium rounded-xl text-white bg-amber-500 hover:bg-amber-600"
                   >
                     Reserve Now
                   </button>
