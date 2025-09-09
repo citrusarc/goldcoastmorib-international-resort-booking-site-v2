@@ -318,14 +318,24 @@ export default function BookingDetailsPage() {
                 </div>
                 <div>
                   <p>
-                    <span className="text-zinc-500">
-                      Total length of stay:{" "}
-                    </span>
-                    {nights} Night{nights > 1 ? "s" : ""}
-                  </p>
-                  <p>
                     <span className="text-zinc-500">Total Guests: </span>
                     {guestsLabel}
+                  </p>
+                </div>
+                <div className="w-full border-t border-zinc-200" />
+                <div>
+                  <p className="flex gap-2 text-center">
+                    {room.price.currency}
+                    {room.price.current}
+                    <span>per night</span>
+                    <span>x</span>
+                    <span>
+                      {nights} Night{nights > 1 ? "s" : ""}
+                    </span>
+                  </p>
+                  <p className="mt-4 text-2xl sm:text-4xl font-medium text-amber-500">
+                    Total Price: {room.price.currency}
+                    {room.price.current * (nights > 0 ? nights : 1)}
                   </p>
                 </div>
               </div>
