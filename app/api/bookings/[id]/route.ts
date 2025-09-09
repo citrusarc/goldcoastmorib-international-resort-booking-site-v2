@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/utils/supabase/server";
 
-// GET single booking
+// GET single booking (with room details)
 export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -39,7 +39,7 @@ export async function PUT(
       .from("bookings")
       .update(body)
       .eq("id", id)
-      .select()
+      .select("*, rooms(*)")
       .single();
 
     if (error) throw error;

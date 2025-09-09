@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Fetch room to calculate price
+    // Fetch room price
     const { data: room, error: roomError } = await supabaseServer
       .from("rooms")
       .select("price")
@@ -74,6 +74,7 @@ export async function POST(req: NextRequest) {
 
     const price =
       typeof room.price === "string" ? JSON.parse(room.price) : room.price;
+
     const checkinDate = new Date(checkin);
     const checkoutDate = new Date(checkout);
     const nights = Math.max(
@@ -81,9 +82,10 @@ export async function POST(req: NextRequest) {
       (checkoutDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24)
     );
 
-    const pricePerNight = price.current;
+    const pricePerNight = Number(price.current);
     const totalPrice = pricePerNight * nights;
 
+    // Save into bookings with breakdown
     const { data, error } = await supabaseServer
       .from("bookings")
       .insert([
@@ -100,13 +102,13 @@ export async function POST(req: NextRequest) {
           phone,
           special_request: request,
           arrival_time: arrivalTime,
-          total_price: totalPrice,
           nights,
           price_per_night: pricePerNight,
+          total_price: totalPrice,
           currency: price.currency || "RM",
         },
       ])
-      .select()
+      .select("*, rooms(*)") // also return joined room data
       .single();
 
     if (error) throw error;
