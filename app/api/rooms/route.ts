@@ -22,19 +22,37 @@ function normalizePrice(price: unknown): PriceItem {
 
 export async function GET() {
   try {
-    const { data, error } = await supabaseServer
+    const today = new Date().toISOString().split("T")[0];
+
+    // Get all rooms //
+    const { data: rooms, error: roomError } = await supabaseServer
       .from("rooms")
       .select("*")
       .order("price->>current", { ascending: true });
 
-    if (error) throw error;
+    if (roomError) throw roomError;
 
-    const normalized = (data || []).map((r) => ({
-      ...r,
-      price: normalizePrice(r.price),
-    }));
+    // Get all confirmed bookings that overlap today //
+    const { data: booked, error: bookingError } = await supabaseServer
+      .from("bookings")
+      .select("room_id")
+      .eq("status", "confirmed")
+      .lte("checkin_date", today)
+      .gte("checkout_date", today);
 
-    return NextResponse.json(normalized);
+    if (bookingError) throw bookingError;
+
+    const bookedRoomIds = new Set(booked?.map((b) => b.room_id) || []);
+
+    // Filter only available rooms //
+    const availableRooms = (rooms || [])
+      .filter((r) => !bookedRoomIds.has(r.id))
+      .map((r) => ({
+        ...r,
+        price: normalizePrice(r.price),
+      }));
+
+    return NextResponse.json(availableRooms);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unexpected error";
     return NextResponse.json({ error: message }, { status: 500 });

@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
       phone,
       arrivalTime,
       request,
+      status,
     } = body;
 
     if (
@@ -113,7 +114,7 @@ export async function POST(req: NextRequest) {
           checkout_date: checkout,
           adults: adult,
           kids: children,
-          status: "pending",
+          status: status || "confirmed",
           first_name: firstName,
           last_name: lastName,
           email,
