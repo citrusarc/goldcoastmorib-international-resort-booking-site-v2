@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase/server";
+import { PriceItem } from "@/types";
 
-function normalizePrice(price: any) {
+function normalizePrice(price: unknown): PriceItem {
   if (typeof price === "string") {
     try {
-      return JSON.parse(price);
+      return JSON.parse(price) as PriceItem;
     } catch {
       return {
         currency: "RM",
@@ -16,7 +17,7 @@ function normalizePrice(price: any) {
   if (typeof price === "number") {
     return { currency: "RM", current: price, original: price };
   }
-  return price;
+  return price as PriceItem;
 }
 
 export async function GET(req: NextRequest) {

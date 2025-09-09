@@ -45,8 +45,8 @@ export type AutoCarouselItem = {
 
 export type PriceItem = {
   currency: string;
-  original: string;
-  current: string;
+  original: number;
+  current: number;
 };
 
 export type IconProps = {
