@@ -95,6 +95,21 @@ export type BookingProps = {
   kids: number;
 };
 
+export type BookingForms = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  arrivalTime?: string;
+  request?: string;
+};
+
+export type PhoneCodes = {
+  code: string;
+  label: string;
+  emoji?: string;
+};
+
 export type SearchErrors = {
   dates?: string;
   guests?: string;

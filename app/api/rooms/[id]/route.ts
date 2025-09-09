@@ -1,4 +1,3 @@
-// app/api/rooms/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase/server";
 
@@ -20,7 +19,6 @@ export async function GET(
       return NextResponse.json({ error: "Room not found" }, { status: 404 });
     }
 
-    // ✅ Normalize price field
     let price = data.price;
     if (typeof price === "string") {
       try {
@@ -40,7 +38,6 @@ export async function GET(
   } catch (err: unknown) {
     const message =
       err instanceof Error ? err.message : "Unknown error occurred";
-    ``;
     console.error("Error fetching room:", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }

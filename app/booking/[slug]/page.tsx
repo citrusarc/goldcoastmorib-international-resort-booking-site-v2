@@ -1,11 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "next/navigation";
+import { NavArrowDown } from "iconoir-react";
 
 import { cormorantGaramond } from "@/config/fonts";
-import { RoomItem } from "@/types";
+import { mapRoomData } from "@/lib/mapRoomData";
+import { RoomItem, BookingForms } from "@/types";
+import { phoneCodes } from "@/lib/phoneCodes";
+import { arrivalTimes } from "@/lib/arrivalTimes";
 
 export default function BookingDetailsPage() {
   const { slug } = useParams();
@@ -14,9 +18,42 @@ export default function BookingDetailsPage() {
   const [room, setRoom] = useState<RoomItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [countryCode, setCountryCode] = useState("+60");
+  const [openPhoneDropdown, setOpenPhoneDropdown] = useState(false);
+  const [openArrivalDropdown, setOpenArrivalDropdown] = useState(false);
+  const [selectedCode, setSelectedCode] = useState(phoneCodes[0]);
+  const phoneDropdownRef = useRef<HTMLDivElement>(null);
+  const arrivalDropdownRef = useRef<HTMLDivElement>(null);
 
-  // // something need to check
-  const [form, setForm] = useState({
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        phoneDropdownRef.current &&
+        !phoneDropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpenPhoneDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        arrivalDropdownRef.current &&
+        !arrivalDropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpenArrivalDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const [form, setForm] = useState<BookingForms>({
     firstName: "",
     lastName: "",
     email: "",
@@ -25,11 +62,65 @@ export default function BookingDetailsPage() {
     request: "",
   });
 
-  // // why use onChange not useEffect?
+  const [errors, setErrors] = useState<Partial<BookingForms>>({});
+
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "countryCode") {
+      setCountryCode(value);
+    } else {
+      setForm({ ...form, [name]: value });
+      setErrors({ ...errors, [name]: undefined });
+    }
+  };
+
+  const handleBlur = (field: keyof BookingForms) => {
+    const fieldError = validateField(field);
+    setErrors({ ...errors, [field]: fieldError });
+  };
+
+  const validateField = (field: keyof BookingForms) => {
+    const value = form[field];
+    switch (field) {
+      case "firstName":
+        if (!value?.trim()) return "This field cannot be empty";
+        break;
+      case "lastName":
+        if (!value?.trim()) return "This field cannot be empty";
+        break;
+      case "email":
+        if (!value?.trim()) return "This field cannot be empty";
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) return "Invalid email format";
+        break;
+      case "phone":
+        if (!value?.trim()) return "This field cannot be empty";
+        const phoneRegex = /^[0-9]{7,15}$/;
+        if (!phoneRegex.test(value)) return "Invalid phone number format";
+        break;
+      case "arrivalTime":
+        if (value?.trim()) {
+          const checkin = searchParams.get("checkin");
+          if (checkin) {
+            const [hours, minutes] = value.split(":").map(Number);
+            const arrivalDate = new Date(checkin);
+            arrivalDate.setHours(hours || 0, minutes || 0, 0, 0);
+
+            const checkinDate = new Date(checkin);
+            checkinDate.setHours(15, 0, 0, 0);
+
+            if (arrivalDate > checkinDate) {
+              return "Arrival time cannot be later than check-in time";
+            }
+          }
+        }
+        break;
+    }
+    return undefined;
   };
 
   useEffect(() => {
@@ -37,7 +128,7 @@ export default function BookingDetailsPage() {
       try {
         const res = await fetch(`/api/rooms/${slug}`);
         const data = await res.json();
-        setRoom(data);
+        setRoom(mapRoomData(data));
       } catch (err) {
         console.error(err);
       } finally {
@@ -47,9 +138,43 @@ export default function BookingDetailsPage() {
     if (slug) fetchRoom();
   }, [slug]);
 
+  const validateForm = () => {
+    const newErrors: Partial<BookingForms> = {};
+    (
+      [
+        "firstName",
+        "lastName",
+        "email",
+        "phone",
+        "arrivalTime",
+      ] as (keyof BookingForms)[]
+    ).forEach((field) => {
+      const error = validateField(field);
+      if (error) newErrors[field] = error;
+    });
+    return newErrors;
+  };
+
+  const isFormValid = () => {
+    const requiredChecks =
+      form.firstName.trim() &&
+      form.lastName.trim() &&
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
+      /^[0-9]{7,15}$/.test(form.phone);
+
+    const formErrors = validateForm();
+    return requiredChecks && Object.keys(formErrors).length === 0;
+  };
+
   // // Enhance later
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length) {
+      setErrors(formErrors);
+      return;
+    }
+
     setSubmitting(true);
     try {
       const res = await fetch("/api/bookings", {
@@ -60,11 +185,12 @@ export default function BookingDetailsPage() {
           checkin: searchParams.get("checkin"),
           checkout: searchParams.get("checkout"),
           guests: searchParams.get("guests"),
+          countryCode,
           ...form,
         }),
       });
       if (!res.ok) throw new Error("Failed to create booking");
-      alert("Booking confirmed! 🎉"); // replace with nicer UI later
+      alert("Booking confirmed! 🎉");
     } catch (err) {
       console.error(err);
       alert("Error submitting booking");
@@ -73,13 +199,15 @@ export default function BookingDetailsPage() {
     }
   };
 
-  if (loading) {
+  if (loading)
     return <p className="text-center py-20">Loading room details...</p>;
-  }
+  if (!room) return <p className="text-center py-20">Room not found</p>;
 
-  if (!room) {
-    return <p className="text-center py-20">Room not found</p>;
-  }
+  const inputStyle = (field?: keyof BookingForms) =>
+    `p-4 w-full rounded-xl border text-zinc-800 placeholder:text-zinc-400 focus:outline-none 
+    focus:ring-amber-500 focus:border-amber-500 border-zinc-200 ${
+      field && errors[field] ? "border-red-500" : ""
+    }`;
 
   return (
     <section className="flex flex-col items-center p-4 sm:px-64 sm:py-24 gap-12">
@@ -94,103 +222,317 @@ export default function BookingDetailsPage() {
               className="object-cover object-center"
             />
           </div>
-          <h1
-            className={`mt-4 text-2xl sm:text-3xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
-          >
-            {room.name}
-          </h1>
-          <p className="text-zinc-500 mt-2">{room.description}</p>
+          <div className="flex flex-col flex-grow gap-4 p-4">
+            <h2
+              className={`text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
+            >
+              {room.name}
+            </h2>
+            <p className="text-zinc-500">{room.description}</p>
 
-          <p className="mt-4 font-semibold text-xl text-zinc-800">
-            {room.price.currency}
-            {room.price.current}
-          </p>
+            <ul className="flex flex-row sm:flex-col gap-4 justify-between sm:justify-start text-center sm:text-start">
+              {room.facilities?.map((item) => {
+                if (!item.icon) return null;
+                const Icon = item.icon;
+                const itemClassName =
+                  "flex flex-col sm:flex-row gap-2 sm:gap-4 items-center text-zinc-500";
+                return (
+                  <li key={item.label} className={itemClassName}>
+                    <Icon className="w-6 h-6" />
+                    {item.label}
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="flex flex-col gap-2 mt-4 p-4 w-fit text-zinc-500 bg-amber-500/30">
+              <span>
+                <span className="text-xl sm:text-2xl text-zinc-800">
+                  {room.price.currency}
+                  {room.price.current}
+                </span>
+                <span className="text-lg sm:text-2xl text-zinc-500">
+                  /night
+                </span>
+              </span>
+            </p>
+          </div>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="flex-1 flex flex-col gap-4 p-6 rounded-2xl border border-zinc-200 bg-white"
-        >
-          <h2 className="text-lg font-semibold text-zinc-800">Your Stay</h2>
-          <p>
-            <span className="text-zinc-500">Check In:</span>
-            {searchParams.get("checkin")}
-          </p>
-          <p>
-            <span className="text-zinc-500">Check Out:</span>
-            {searchParams.get("checkout")}
-          </p>
-          <p>
-            <span className="text-zinc-500">Guests:</span>
-            {searchParams.get("guests")}
-          </p>
-
-          <hr className="my-2" />
-
-          <h2 className="text-lg font-semibold text-zinc-800">
-            Guest Information
-          </h2>
-
-          <input
-            type="text"
-            name="firstName"
-            placeholder="First Name"
-            className="p-3 border rounded-lg"
-            value={form.firstName}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            className="p-3 border rounded-lg"
-            value={form.lastName}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            className="p-3 border rounded-lg"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="tel"
-            name="phone"
-            placeholder="Phone"
-            className="p-3 border rounded-lg"
-            value={form.phone}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="arrivalTime"
-            placeholder="Arrival Time (e.g. 14:00)"
-            className="p-3 border rounded-lg"
-            value={form.arrivalTime}
-            onChange={handleChange}
-          />
-          <textarea
-            name="request"
-            placeholder="Special Request"
-            className="p-3 border rounded-lg"
-            value={form.request}
-            onChange={handleChange}
-          />
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="mt-4 px-6 py-3 rounded-xl text-white bg-amber-500 hover:bg-amber-600 disabled:opacity-50"
+        <div className="flex-1 flex flex-col gap-4 sm:gap-8 p-4 sm:p-8 rounded-2xl border border-zinc-200 bg-white">
+          <h2
+            className={`text-2xl sm:text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
           >
-            {submitting ? "Submitting..." : "Confirm Booking"}
-          </button>
-        </form>
+            Your Booking Details
+          </h2>
+          {(() => {
+            const checkin = searchParams.get("checkin");
+            const checkout = searchParams.get("checkout");
+            const adult = parseInt(searchParams.get("adult") || "0", 10);
+            const children = parseInt(searchParams.get("children") || "0", 10);
+
+            let nights = 0;
+            let checkinStr = checkin;
+            let checkoutStr = checkout;
+
+            if (checkin && checkout) {
+              const checkinDate = new Date(checkin);
+              const checkoutDate = new Date(checkout);
+              nights =
+                (checkoutDate.getTime() - checkinDate.getTime()) /
+                (1000 * 60 * 60 * 24);
+
+              const formatter = new Intl.DateTimeFormat("en-US", {
+                weekday: "short",
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              });
+
+              checkinStr = `${formatter.format(checkinDate)}`;
+              checkoutStr = `${formatter.format(checkoutDate)}`;
+            }
+
+            const totalGuests = adult + children;
+            const guestsLabel =
+              totalGuests > 0
+                ? `${totalGuests} (${adult} Adult${adult !== 1 ? "s" : ""}${
+                    children > 0
+                      ? `, ${children} Child${children !== 1 ? "ren" : ""}`
+                      : ""
+                  })`
+                : "0";
+
+            return (
+              <div className="flex flex-col gap-4 sm:gap-8">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-24">
+                  <div>
+                    <p className="text-zinc-500">Check In:</p>
+                    <p>{checkinStr}</p>
+                    <p>(3PM – 12AM)</p>
+                  </div>
+                  <div>
+                    <p className="text-zinc-500">Check Out:</p>
+                    <p>{checkoutStr}</p>
+                    <p>(12PM – 1PM)</p>
+                  </div>
+                </div>
+                <div>
+                  <p>
+                    <span className="text-zinc-500">
+                      Total length of stay:{" "}
+                    </span>
+                    {nights} Night{nights > 1 ? "s" : ""}
+                  </p>
+                  <p>
+                    <span className="text-zinc-500">Total Guests: </span>
+                    {guestsLabel}
+                  </p>
+                </div>
+              </div>
+            );
+          })()}
+
+          <div className="w-full border-t border-zinc-200" />
+
+          <form
+            onSubmit={handleSubmit}
+            className="flex-1 flex flex-col gap-4 sm:gap-8"
+          >
+            <h2
+              className={`text-2xl sm:text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
+            >
+              Guest Informations
+            </h2>
+            <div className="flex flex-col gap-4">
+              <div>
+                <label className="flex px-2 mb-2">
+                  First Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="firstName"
+                  placeholder="First Name"
+                  className={inputStyle("firstName")}
+                  value={form.firstName}
+                  onChange={handleChange}
+                  onBlur={() => handleBlur("firstName")}
+                />
+                {errors.firstName && (
+                  <p className="text-red-500">{errors.firstName}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="flex px-2 mb-2">
+                  Last Name<span className="text-red-500">*</span>
+                </label>
+                <input
+                  required
+                  type="text"
+                  name="lastName"
+                  placeholder="Last Name"
+                  className={inputStyle("lastName")}
+                  value={form.lastName}
+                  onChange={handleChange}
+                  onBlur={() => handleBlur("lastName")}
+                />
+                {errors.lastName && (
+                  <p className="text-red-500">{errors.lastName}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="flex px-2 mb-2">
+                  Email<span className="text-red-500">*</span>
+                </label>
+                <input
+                  required
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  className={inputStyle("email")}
+                  value={form.email}
+                  onChange={handleChange}
+                  onBlur={() => handleBlur("email")}
+                />
+                {errors.email && <p className="text-red-500">{errors.email}</p>}
+              </div>
+
+              <div>
+                <label className="flex px-2 mb-2">
+                  Phone Number<span className="text-red-500">*</span>
+                </label>
+                <div
+                  ref={phoneDropdownRef}
+                  className="relative flex gap-2 w-full"
+                >
+                  <div
+                    onClick={() => setOpenPhoneDropdown(!openPhoneDropdown)}
+                    className="relative p-4 pr-12 w-24 rounded-xl cursor-pointer border text-zinc-800 placeholder:text-zinc-400 focus-within:ring-amber-500 border-zinc-200 focus-within:border-amber-500"
+                  >
+                    <span>{selectedCode.code}</span>
+                    <NavArrowDown
+                      className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none transition-transform duration-200 ${
+                        openPhoneDropdown ? "rotate-180" : ""
+                      } text-zinc-400`}
+                      width={16}
+                      height={16}
+                    />
+                  </div>
+                  <input
+                    required
+                    type="tel"
+                    name="phone"
+                    placeholder="Phone Number"
+                    className={inputStyle("phone")}
+                    value={form.phone}
+                    onChange={handleChange}
+                    onBlur={() => handleBlur("phone")}
+                  />
+                  {openPhoneDropdown && (
+                    <div className="absolute z-10 mt-17 w-full rounded-xl shadow-md border-zinc-200 bg-white border ">
+                      {phoneCodes.map((item) => (
+                        <div
+                          key={item.code}
+                          onClick={() => {
+                            setSelectedCode(item);
+                            setOpenPhoneDropdown(false);
+                          }}
+                          className="p-4 cursor-pointer text-zinc-800 hover:bg-zinc-100"
+                        >
+                          {item.emoji} {item.label} ({item.code})
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {errors.phone && <p className="text-red-500">{errors.phone}</p>}
+              </div>
+            </div>
+
+            <h2
+              className={`text-2xl sm:text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
+            >
+              Additional Informations
+            </h2>
+
+            <div className="flex flex-col gap-4">
+              <div>
+                <label className="flex px-2 mb-2 gap-2">
+                  Early Check In
+                  <span className="text-zinc-400">(Optional)</span>
+                </label>
+                <div ref={arrivalDropdownRef} className="relative w-full">
+                  <div
+                    onClick={() => setOpenArrivalDropdown(!openArrivalDropdown)}
+                    className={`relative p-4 pr-12 w-full rounded-xl cursor-pointer border text-zinc-800 placeholder:text-zinc-400 ${
+                      errors.arrivalTime
+                        ? "border-red-500"
+                        : "border-zinc-200 focus-within:ring-amber-500 focus-within:border-amber-500"
+                    }`}
+                  >
+                    {form.arrivalTime || "Select Arrival Time"}
+                    <NavArrowDown
+                      className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none transition-transform duration-200 ${
+                        openArrivalDropdown ? "rotate-180" : ""
+                      } text-zinc-400`}
+                      width={16}
+                      height={16}
+                    />
+                  </div>
+
+                  {openArrivalDropdown && (
+                    <div className="absolute z-10 mt-2 w-full rounded-xl bg-white border border-zinc-200 shadow-md">
+                      {arrivalTimes.map((time) => (
+                        <div
+                          key={time.value}
+                          onClick={() => {
+                            setForm({ ...form, arrivalTime: time.value });
+                            setOpenArrivalDropdown(false);
+                            setErrors({ ...errors, arrivalTime: undefined });
+                          }}
+                          className="p-4 cursor-pointer text-zinc-800 hover:bg-zinc-100"
+                        >
+                          {time.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {errors.arrivalTime && (
+                  <p className="text-red-500">{errors.arrivalTime}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="flex px-2 mb-2 gap-2">
+                  Special Request
+                  <span className="text-zinc-400">(Optional)</span>
+                </label>
+                <textarea
+                  name="request"
+                  placeholder="Special Request"
+                  className={`${inputStyle()} h-56`}
+                  value={form.request}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={submitting || !isFormValid()}
+              className={`px-6 py-4 w-full font-medium rounded-xl ${
+                isFormValid()
+                  ? "text-white bg-amber-500 hover:bg-amber-600"
+                  : "text-zinc-400 bg-gray-200 cursor-not-allowed"
+              }`}
+            >
+              {submitting ? "Submitting..." : "Confirm Booking"}
+            </button>
+          </form>
+        </div>
       </div>
     </section>
   );

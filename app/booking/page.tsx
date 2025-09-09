@@ -18,16 +18,16 @@ function BookingContent() {
   const resultsRef = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const [dateRange, setDateRange] = useState("");
-  const [adults, setAdults] = useState(2);
+  const [adult, setAdult] = useState(2);
   const [children, setChildren] = useState(0);
   const [filteredRooms, setFilteredRooms] = useState<RoomItem[]>([]);
   const [errors, setErrors] = useState<SearchErrors>({});
   const [loading, setLoading] = useState(true);
 
-  const totalGuests = adults + children;
+  const totalGuests = adult + children;
   const label =
     totalGuests > 0
-      ? `${adults} Adult${adults > 1 ? "s" : ""}${
+      ? `${adult} Adult${adult > 1 ? "s" : ""}${
           children > 0 ? `, ${children} Child${children > 1 ? "ren" : ""}` : ""
         }`
       : "Guests";
@@ -218,13 +218,15 @@ function BookingContent() {
                     <div className="absolute z-10 p-4 mt-2 space-y-4 w-full  rounded-xl bg-white border border-zinc-200">
                       {/* Adults */}
                       <div className="flex items-center justify-between">
-                        <span className="text-zinc-800">Adults</span>
+                        <span className="text-zinc-800">
+                          {adult} Adult{adult > 1 ? "s" : ""}
+                        </span>
                         <div className="flex items-center gap-4">
                           <button
                             type="button"
                             onClick={() => {
-                              const next = Math.max(1, adults - 1);
-                              setAdults(next);
+                              const next = Math.max(1, adult - 1);
+                              setAdult(next);
                               if (next + children > 0) {
                                 setErrors((prev) => ({
                                   ...prev,
@@ -236,12 +238,12 @@ function BookingContent() {
                           >
                             −
                           </button>
-                          <span>{adults}</span>
+                          <span>{adult}</span>
                           <button
                             type="button"
                             onClick={() => {
-                              const next = adults + 1;
-                              setAdults(next);
+                              const next = adult + 1;
+                              setAdult(next);
                               if (next + children > 0) {
                                 setErrors((prev) => ({
                                   ...prev,
@@ -258,14 +260,16 @@ function BookingContent() {
 
                       {/* Children */}
                       <div className="flex items-center justify-between">
-                        <span className="text-zinc-800">Children</span>
+                        <span className="text-zinc-800">
+                          {children} Child{children > 1 ? "ren" : ""}
+                        </span>
                         <div className="flex items-center gap-4">
                           <button
                             type="button"
                             onClick={() => {
                               const next = Math.max(0, children - 1);
                               setChildren(next);
-                              if (adults + next > 0) {
+                              if (adult + next > 0) {
                                 setErrors((prev) => ({
                                   ...prev,
                                   guests: undefined,
@@ -282,7 +286,7 @@ function BookingContent() {
                             onClick={() => {
                               const next = children + 1;
                               setChildren(next);
-                              if (adults + next > 0) {
+                              if (adult + next > 0) {
                                 setErrors((prev) => ({
                                   ...prev,
                                   guests: undefined,
@@ -303,11 +307,11 @@ function BookingContent() {
                   <button
                     type="submit"
                     disabled={!isFormValid}
-                    className={`px-6 py-4 w-full font-medium rounded-xl text-white 
+                    className={`px-6 py-4 w-full font-medium rounded-xl  
                       ${
                         isFormValid
-                          ? "bg-amber-500 hover:bg-amber-600"
-                          : "bg-gray-200 cursor-not-allowed"
+                          ? "text-white bg-amber-500 hover:bg-amber-600"
+                          : "text-zinc-400 bg-gray-200 cursor-not-allowed"
                       }`}
                   >
                     Search
@@ -361,7 +365,7 @@ function BookingContent() {
 
                 <div className="flex flex-col flex-grow gap-4 p-4">
                   <h2
-                    className={`text-2xl sm:text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
+                    className={`text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
                   >
                     {room.name}
                   </h2>
@@ -382,11 +386,23 @@ function BookingContent() {
 
                   <button
                     onClick={() => {
-                      const [checkin, checkout] = dateRange
+                      let [checkin, checkout] = dateRange
                         ? dateRange.split(" - ")
                         : ["", ""];
+
+                      if (!checkin || !checkout) {
+                        const today = new Date();
+                        const tomorrow = new Date(today);
+                        tomorrow.setDate(today.getDate() + 1);
+
+                        checkin = today.toISOString().split("T")[0];
+                        checkout = tomorrow.toISOString().split("T")[0];
+                      }
+
+                      const safeAdult = adult > 0 ? adult : 1;
+
                       router.push(
-                        `/booking/${room.id}?checkin=${checkin}&checkout=${checkout}&guests=${totalGuests}`
+                        `/booking/${room.id}?checkin=${checkin}&checkout=${checkout}&adult=${safeAdult}&children=${children}`
                       );
                     }}
                     className="mt-auto px-6 py-3 w-full font-medium rounded-xl text-white bg-amber-500"
