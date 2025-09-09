@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { NavArrowDown } from "iconoir-react";
 
 import { cormorantGaramond } from "@/config/fonts";
@@ -14,6 +14,7 @@ import { arrivalTimes } from "@/lib/arrivalTimes";
 export default function BookingDetailsPage() {
   const { slug } = useParams();
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const [room, setRoom] = useState<RoomItem | null>(null);
   const [loading, setLoading] = useState(true);
@@ -188,9 +189,19 @@ export default function BookingDetailsPage() {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error("Failed to create booking");
+      const data = await res.json();
 
-      alert("Booking confirmed! 🎉"); // ⭐ later replace with nicer UI
+      if (!res.ok) {
+        if (data.error === "Booking already exists") {
+          alert("You already made this booking.");
+        } else {
+          alert(data.error || "Failed to create booking");
+        }
+        return;
+      }
+
+      alert("Booking confirmed! 🎉");
+      router.push("/booking");
     } catch (err) {
       console.error(err);
       alert("Error submitting booking");
@@ -209,10 +220,6 @@ export default function BookingDetailsPage() {
       field && errors[field] ? "border-red-500" : ""
     }`;
 
-  const payload = {
-    ...form,
-    phone: `${selectedCode.code}${form.phone}`, // prepend country code
-  };
   return (
     <section className="flex flex-col items-center p-4 sm:px-64 sm:py-24 gap-12">
       <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 w-full">

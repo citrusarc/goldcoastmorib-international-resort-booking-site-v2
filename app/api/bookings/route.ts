@@ -61,6 +61,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Check duplicate confirmed booking
+    const { data: existing, error: checkError } = await supabaseServer
+      .from("bookings")
+      .select("id")
+      .eq("room_id", roomId)
+      .eq("checkin_date", checkin)
+      .eq("checkout_date", checkout)
+      .eq("status", "confirmed");
+
+    if (checkError) throw checkError;
+
+    if (existing && existing.length > 0) {
+      return NextResponse.json(
+        { error: "This room is already booked for the selected dates." },
+        { status: 400 }
+      );
+    }
+
     // Fetch room price
     const { data: room, error: roomError } = await supabaseServer
       .from("rooms")
@@ -108,7 +126,7 @@ export async function POST(req: NextRequest) {
           currency: price.currency || "RM",
         },
       ])
-      .select("*, rooms(*)") // also return joined room data
+      .select("*, rooms(*)")
       .single();
 
     if (error) throw error;
