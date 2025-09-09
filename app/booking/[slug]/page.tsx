@@ -166,31 +166,34 @@ export default function BookingDetailsPage() {
     return requiredChecks && Object.keys(formErrors).length === 0;
   };
 
-  // // Enhance later
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formErrors = validateForm();
-    if (Object.keys(formErrors).length) {
-      setErrors(formErrors);
-      return;
-    }
-
     setSubmitting(true);
+
     try {
+      const checkin = searchParams.get("checkin");
+      const checkout = searchParams.get("checkout");
+      const adult = parseInt(searchParams.get("adult") || "1", 10);
+      const children = parseInt(searchParams.get("children") || "0", 10);
+
+      const payload = {
+        roomId: room?.id,
+        checkin,
+        checkout,
+        adult,
+        children,
+        ...form,
+      };
+
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          roomId: room?.id,
-          checkin: searchParams.get("checkin"),
-          checkout: searchParams.get("checkout"),
-          guests: searchParams.get("guests"),
-          countryCode,
-          ...form,
-        }),
+        body: JSON.stringify(payload),
       });
+
       if (!res.ok) throw new Error("Failed to create booking");
-      alert("Booking confirmed! 🎉");
+
+      alert("Booking confirmed! 🎉"); // ⭐ later replace with nicer UI
     } catch (err) {
       console.error(err);
       alert("Error submitting booking");
