@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/utils/supabase/server";
 
+import { transporter } from "@/utils/email";
+
 // GET all bookings (optionally filter by email or status)
 export async function GET(req: NextRequest) {
   try {
@@ -83,7 +85,7 @@ export async function POST(req: NextRequest) {
     // Fetch room price
     const { data: room, error: roomError } = await supabaseServer
       .from("rooms")
-      .select("price")
+      .select("name, price")
       .eq("id", roomId)
       .single();
 
@@ -131,6 +133,21 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (error) throw error;
+
+    await transporter.sendMail({
+      from: `"Hotel Booking" <${process.env.EMAIL_USER}>`,
+      to: body.email,
+      cc: process.env.ADMIN_EMAIL,
+      subject: "Booking Confirmation",
+      html: `
+        <h2>Hi ${firstName},</h2>
+        <p>Thanks for booking <b>${room?.name || "your room"}</b>.</p>
+        <p>Check-in: ${checkin} <br/> Check-out: ${checkout}</p>
+        <p>Total Price: ${totalPrice} ${price.currency || "RM"}</p>
+        <br/>
+        <p>We look forward to your stay!</p>
+      `,
+    });
 
     return NextResponse.json(data, { status: 201 });
   } catch (err: unknown) {
