@@ -58,6 +58,7 @@ export async function GET(req: NextRequest) {
     const { data: booked, error: bookingError } = await supabaseServer
       .from("bookings")
       .select("room_id")
+      .eq("status", "confirmed")
       .lt("checkin_date", checkout)
       .gt("checkout_date", checkin);
 
