@@ -3,6 +3,14 @@ import { supabaseServer } from "@/utils/supabase/server";
 
 import { transporter } from "@/utils/email";
 
+// Booking number generator
+function generateBookingNumber(): string {
+  const now = new Date();
+  const datePart = now.toISOString().slice(2, 10).replace(/-/g, ""); // YYMMDD
+  const randPart = Math.floor(10000 + Math.random() * 90000); // 5-digit random
+  return `B${datePart}-${randPart}`;
+}
+
 // GET all bookings (optionally filter by email or status)
 export async function GET(req: NextRequest) {
   try {
@@ -64,20 +72,28 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check duplicate confirmed booking
-    const { data: existing, error: checkError } = await supabaseServer
-      .from("bookings")
-      .select("id")
+    //Check room availability
+    const { data: availability, error: availError } = await supabaseServer
+      .from("room_availability")
+      .select("id, available_units")
       .eq("room_id", roomId)
-      .eq("checkin_date", checkin)
-      .eq("checkout_date", checkout)
-      .eq("status", "confirmed");
+      .gte("date", checkin)
+      .lt("date", checkout);
 
-    if (checkError) throw checkError;
-
-    if (existing && existing.length > 0) {
+    if (availError) throw availError;
+    if (!availability?.length) {
       return NextResponse.json(
-        { error: "This room is already booked for the selected dates." },
+        { error: "No availability for this room" },
+        { status: 400 }
+      );
+    }
+
+    const minAvailable = Math.min(
+      ...availability.map((a) => a.available_units)
+    );
+    if (minAvailable <= 0) {
+      return NextResponse.json(
+        { error: "Room is fully booked for selected dates" },
         { status: 400 }
       );
     }
@@ -105,6 +121,8 @@ export async function POST(req: NextRequest) {
 
     const pricePerNight = Number(price.current);
     const totalPrice = pricePerNight * nights;
+
+    const bookingNumber = generateBookingNumber();
 
     // Save into bookings with breakdown
     const { data, error } = await supabaseServer
@@ -134,8 +152,15 @@ export async function POST(req: NextRequest) {
 
     if (error) throw error;
 
+    for (const a of availability) {
+      await supabaseServer
+        .from("room_availability")
+        .update({ available_units: a.available_units - 1 })
+        .eq("id", a.id);
+    }
+
     await transporter.sendMail({
-      from: `"Hotel Booking" <${process.env.EMAIL_USER}>`,
+      from: `"Gold Coast Morib International Resort" <${process.env.EMAIL_USER}>`,
       to: body.email,
       cc: process.env.ADMIN_EMAIL,
       subject: "Booking Confirmation",

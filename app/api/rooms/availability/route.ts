@@ -55,21 +55,23 @@ export async function GET(req: NextRequest) {
     if (roomError) throw roomError;
     if (!rooms?.length) return NextResponse.json([]);
 
-    const { data: booked, error: bookingError } = await supabaseServer
-      .from("bookings")
-      .select("room_id")
-      .eq("status", "confirmed")
-      .lt("checkin_date", checkout)
-      .gt("checkout_date", checkin);
+    const { data: availability, error: availError } = await supabaseServer
+      .from("room_availability")
+      .select("room_id, date, available_units")
+      .gte("date", checkin)
+      .lt("date", checkout);
 
-    if (bookingError) throw bookingError;
+    if (availError) throw availError;
 
-    if (!booked?.length) return NextResponse.json(rooms);
+    const availabilityMap = new Map<string, number>();
 
-    const bookedIds = booked.map((b) => b.room_id);
+    availability?.forEach((a) => {
+      const current = availabilityMap.get(a.room_id) ?? Infinity;
+      availabilityMap.set(a.room_id, Math.min(current, a.available_units));
+    });
 
     const availableRooms = rooms
-      .filter((r) => !bookedIds.includes(r.id))
+      .filter((r) => (availabilityMap.get(r.id) ?? 0) > 0)
       .map((r) => ({ ...r, price: normalizePrice(r.price) }));
 
     return NextResponse.json(availableRooms);
