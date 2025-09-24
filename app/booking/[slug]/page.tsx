@@ -177,9 +177,10 @@ export default function BookingDetailsPage() {
         roomId: room?.id,
         checkin,
         checkout,
-        adult,
-        children,
+        adults: parseInt(searchParams.get("adult") || "1", 10),
+        children: parseInt(searchParams.get("children") || "0", 10),
         ...form,
+        specialRequest: form.request,
         phone: `${selectedCode.code}${form.phone}`,
       };
 

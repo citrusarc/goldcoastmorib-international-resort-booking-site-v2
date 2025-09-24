@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     if (email) query = query.eq("email", email);
     if (status) query = query.eq("status", status);
 
-    const { data, error } = await query.order("created_at", {
+    const { data, error } = await query.order("createdAt", {
       ascending: false,
     });
 
@@ -38,14 +38,14 @@ export async function POST(req: NextRequest) {
       roomId,
       checkin,
       checkout,
-      adult,
+      adults,
       children,
       firstName,
       lastName,
       email,
       phone,
       arrivalTime,
-      request,
+      specialRequest,
       status,
     } = body;
 
@@ -68,9 +68,9 @@ export async function POST(req: NextRequest) {
     const { data: existing, error: checkError } = await supabaseServer
       .from("bookings")
       .select("id")
-      .eq("room_id", roomId)
-      .eq("checkin_date", checkin)
-      .eq("checkout_date", checkout)
+      .eq("roomId", roomId)
+      .eq("checkInDate", checkin)
+      .eq("checkOutDate", checkout)
       .eq("status", "confirmed");
 
     if (checkError) throw checkError;
@@ -114,22 +114,22 @@ export async function POST(req: NextRequest) {
       .from("bookings")
       .insert([
         {
-          booking_number: bookingNumber,
-          room_id: roomId,
-          checkin_date: checkin,
-          checkout_date: checkout,
-          adults: adult,
-          kids: children,
+          bookingNumber,
+          roomId,
+          checkInDate: checkin,
+          checkOutDate: checkout,
+          adults,
+          children,
           status: status || "confirmed",
-          first_name: firstName,
-          last_name: lastName,
+          firstName,
+          lastName,
           email,
           phone,
-          special_request: request,
-          arrival_time: arrivalTime,
+          specialRequest,
+          arrivalTime,
           nights,
-          price_per_night: pricePerNight,
-          total_price: totalPrice,
+          pricePerNight,
+          totalPrice,
           currency: price.currency || "RM",
         },
       ])

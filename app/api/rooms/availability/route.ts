@@ -61,8 +61,8 @@ export async function GET(req: NextRequest) {
       .from("bookings")
       .select("roomId")
       .eq("status", "confirmed")
-      .lt("checkOutDate", checkout)
-      .gt("checkInDate", checkin);
+      .lt("checkInDate", checkout)
+      .gt("checkOutDate", checkin);
 
     if (bookingError) throw bookingError;
 
