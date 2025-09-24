@@ -47,6 +47,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // fetch rooms that can host required guests
     const { data: rooms, error: roomError } = await supabaseServer
       .from("rooms")
       .select("*")
@@ -55,28 +56,38 @@ export async function GET(req: NextRequest) {
     if (roomError) throw roomError;
     if (!rooms?.length) return NextResponse.json([]);
 
-    const { data: availability, error: availError } = await supabaseServer
-      .from("room_availability")
-      .select("room_id, date, available_units")
-      .gte("date", checkin)
-      .lt("date", checkout);
+    // fetch overlapping bookings
+    const { data: booked, error: bookingError } = await supabaseServer
+      .from("bookings")
+      .select("roomId")
+      .eq("status", "confirmed")
+      .lt("checkOutDate", checkout)
+      .gt("checkInDate", checkin);
 
-    if (availError) throw availError;
+    if (bookingError) throw bookingError;
 
-    const availabilityMap = new Map<string, number>();
-
-    availability?.forEach((a) => {
-      const current = availabilityMap.get(a.room_id) ?? Infinity;
-      availabilityMap.set(a.room_id, Math.min(current, a.available_units));
+    // count bookings per room
+    const bookingCounts: Record<string, number> = {};
+    booked?.forEach((b) => {
+      bookingCounts[b.roomId] = (bookingCounts[b.roomId] || 0) + 1;
     });
 
     const availableRooms = rooms
-      .filter((r) => (availabilityMap.get(r.id) ?? 0) > 0)
-      .map((r) => ({ ...r, price: normalizePrice(r.price) }));
+      .map((r) => {
+        const bookedCount = bookingCounts[r.id] || 0;
+        const availableUnits = r.totalUnits - bookedCount;
+        return {
+          ...r,
+          available_units: availableUnits,
+          price: normalizePrice(r.price),
+        };
+      })
+      .filter((r) => r.available_units > 0);
 
     return NextResponse.json(availableRooms);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unexpected error";
+    console.error("Availability API error:", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

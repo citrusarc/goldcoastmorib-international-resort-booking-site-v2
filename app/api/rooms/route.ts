@@ -35,14 +35,14 @@ export async function GET() {
     // Get all confirmed bookings that overlap today //
     const { data: booked, error: bookingError } = await supabaseServer
       .from("bookings")
-      .select("room_id")
+      .select("roomId")
       .eq("status", "confirmed")
-      .lte("checkin_date", today)
-      .gte("checkout_date", today);
+      .lte("checkInDate", today)
+      .gte("checkOutDate", today);
 
     if (bookingError) throw bookingError;
 
-    const bookedRoomIds = new Set(booked?.map((b) => b.room_id) || []);
+    const bookedRoomIds = new Set(booked?.map((b) => b.roomId) || []);
 
     // Filter only available rooms //
     const availableRooms = (rooms || [])
