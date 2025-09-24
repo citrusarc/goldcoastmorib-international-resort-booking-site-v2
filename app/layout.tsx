@@ -100,6 +100,79 @@ export default function RootLayout({
             gtag('config', 'G-Y683DQH45D');
           `}
         </Script>
+        <Script
+          id="ldjson-hotel"
+          type="application/ld+json"
+          strategy="afterInteractive"
+        >
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Hotel",
+            name: "Gold Coast Morib International Resort",
+            description:
+              "Experience luxury and comfort at Gold Coast Morib International Resort, your perfect beachfront getaway in Malaysia.",
+            image: "https://www.goldcoastmoribresort.com/Images/banner.png",
+            logo: "https://www.goldcoastmoribresort.com/Images/brand-logo.png",
+            url: "https://www.goldcoastmoribresort.com",
+            telephone: "+60331981028",
+            email: "reservation@goldcoastresort.com.my",
+            address: {
+              "@type": "PostalAddress",
+              streetAddress:
+                "PT 294, Kawasan Kanchong Laut, Mukim Morib, Morib Beach",
+              addressLocality: "Banting",
+              addressRegion: "Selangor",
+              postalCode: "42700",
+              addressCountry: "MY",
+            },
+            geo: {
+              "@type": "GeoCoordinates",
+              latitude: 2.7401,
+              longitude: 101.5012,
+            },
+            checkinTime: "14:00",
+            checkoutTime: "12:00",
+            openingHours: "Mo-Su 00:00-23:59",
+            priceRange: "RM",
+            amenityFeature: [
+              {
+                "@type": "LocationFeatureSpecification",
+                name: "Water Park",
+                value: true,
+              },
+              {
+                "@type": "LocationFeatureSpecification",
+                name: "Beachfront",
+                value: true,
+              },
+              {
+                "@type": "LocationFeatureSpecification",
+                name: "Family-friendly",
+                value: true,
+              },
+              {
+                "@type": "LocationFeatureSpecification",
+                name: "Swimming Pool",
+                value: true,
+              },
+              {
+                "@type": "LocationFeatureSpecification",
+                name: "Restaurant",
+                value: true,
+              },
+            ],
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: "4.2",
+              reviewCount: "2150",
+            },
+            sameAs: [
+              "https://www.facebook.com/goldcoastmoribresort",
+              "https://www.instagram.com/goldcoastmoribresort",
+              "https://maps.google.com/?q=Gold+Coast+Morib+International+Resort",
+            ],
+          })}
+        </Script>
       </head>
       <body className="relative antialiased overflow-x-hidden overflow-y-auto">
         <SplashScreen />
