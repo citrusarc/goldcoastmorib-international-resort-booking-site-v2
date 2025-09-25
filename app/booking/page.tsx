@@ -10,6 +10,7 @@ import { NavArrowDown } from "iconoir-react";
 
 import { cormorantGaramond } from "@/config/fonts";
 import { RoomItem, SearchErrors } from "@/types";
+import { formatDate } from "@/utils/formatDate";
 
 function BookingContent() {
   const router = useRouter();
@@ -17,6 +18,7 @@ function BookingContent() {
   const resultsRef = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const [dateRange, setDateRange] = useState("");
+  const [dateRangeUI, setDateRangeUI] = useState("");
   const [adult, setAdult] = useState(2);
   const [children, setChildren] = useState(0);
   const [filteredRooms, setFilteredRooms] = useState<RoomItem[]>([]);
@@ -57,12 +59,16 @@ function BookingContent() {
       allowInput: false,
       minDate: "today",
       onClose: (selectedDates, dateStr) => {
-        if (dateStr) {
-          const formatted = dateStr.replace(" to ", " - ");
-          input.value = formatted;
+        if (selectedDates.length === 2) {
+          const [checkin, checkout] = selectedDates;
+          setDateRange(dateStr.replace(" to ", " - "));
+          const formattedUi = `${formatDate(checkin)} - ${formatDate(
+            checkout
+          )}`;
+          setDateRangeUI(formattedUi);
+          input.value = formattedUi;
           input.classList.remove("placeholder:text-zinc-200");
           input.classList.add("text-zinc-800");
-          setDateRange(formatted);
         }
       },
     });

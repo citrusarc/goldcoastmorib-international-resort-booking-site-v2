@@ -1,7 +1,8 @@
+// utils/email/bookingEmailTemplate.ts
+
 import { BookingEmailTemplateProps } from "@/types";
 
 export function bookingEmailTemplate({
-  logoUrl,
   firstName,
   bookingNumber,
   createdAt,
@@ -16,31 +17,89 @@ export function bookingEmailTemplate({
   currency,
 }: BookingEmailTemplateProps) {
   return `
-      <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-        <div style="text-align: center; padding: 20px;">
-          <img src="${logoUrl}" alt="Hotel Logo" style="max-height: 60px; margin-bottom: 10px;" />
-        </div>
-        <h2>Hello ${firstName},</h2>
-        <p>Thank you for your booking. Below are your booking details:</p>
-        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-          <tr><td><strong>Booking Number:</strong></td><td>${bookingNumber}</td></tr>
-          <tr><td><strong>Order Created:</strong></td><td>${createdAt}</td></tr>
-          <tr><td><strong>Room:</strong></td><td>${roomName}</td></tr>
-          <tr><td><strong>Check-in Date:</strong></td><td>${checkInDate}</td></tr>
-          <tr><td><strong>Check-out Date:</strong></td><td>${checkOutDate}</td></tr>
-          <tr><td><strong>Total Guests:</strong></td><td>${adults} Adult(s), ${children} Children</td></tr>
-          <tr><td><strong>Arrival Time:</strong></td><td>${
-            arrivalTime || "-"
-          }</td></tr>
-          <tr><td><strong>Special Request:</strong></td><td>${
-            specialRequest || "-"
-          }</td></tr>
-          <tr><td><strong>Paid Amount:</strong></td><td>${currency} ${totalPrice}</td></tr>
-        </table>
-        <p>We look forward to welcoming you!</p>
-        <footer style="text-align: center; font-size: 12px; color: #777; margin-top: 20px;">
-          &copy; ${new Date().getFullYear()} Hotel Booking. All rights reserved.
-        </footer>
+  <div style="background-color:#f4f4f4; padding:24px;">
+  <div style="max-width:600px; margin:0 auto; font-family:Arial,sans-serif; background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+    <div style="padding:24px;">
+      <img src="https://www.goldcoastmoribresort.com/Images/brand-logo-horizontal.png" 
+           alt="Gold Coast Morib International Resort Logo" 
+           style="width:200px; height:auto;" />
+      <hr style="border:none; border-top:2px solid #e63946; margin:16px 0"/>
+      <h2 style="font-size:22px; font-weight:600; margin:0 0 12px;">Hey ${firstName}!</h2>
+      <p style="margin:0 0 8px; font-size:14px; color:#333;">
+        Packed your bags yet?<br/>Your reservation is all set. Here’s a quick look at your stay:
+      </p>
+
+      <table style="width:100%; border-collapse:collapse; margin-top:12px; font-size:14px;">
+        <tbody>
+          <tr style="background-color:#ffffff;">
+            <td style="padding:8px; font-weight:bold; width:40%;">Booking Number</td>
+            <td style="padding:8px;">${bookingNumber}</td>
+          </tr>
+          <tr style="background-color:#f9f9f9;">
+            <td style="padding:8px; font-weight:bold;">Order Created</td>
+            <td style="padding:8px;">${createdAt}</td>
+          </tr>
+          <tr style="background-color:#ffffff;">
+            <td style="padding:8px; font-weight:bold;">Room Type</td>
+            <td style="padding:8px;">${roomName}</td>
+          </tr>
+          <tr style="background-color:#f9f9f9;">
+            <td style="padding:8px; font-weight:bold;">Check In</td>
+            <td style="padding:8px;">${checkInDate}</td>
+          </tr>
+          <tr style="background-color:#ffffff;">
+            <td style="padding:8px; font-weight:bold;">Check Out</td>
+            <td style="padding:8px;">${checkOutDate}</td>
+          </tr>
+          <tr style="background-color:#f9f9f9;">
+            <td style="padding:8px; font-weight:bold;">Total Guests</td>
+            <td style="padding:8px;">${adults} Adult(s) ${
+    children || 0
+  } Child(ren)</td>
+          </tr>
+          <tr style="background-color:#ffffff;">
+            <td style="padding:8px; font-weight:bold;">Arrival Time</td>
+            <td style="padding:8px;">${arrivalTime || "-"}</td>
+          </tr>
+          <tr style="background-color:#f9f9f9;">
+            <td style="padding:8px; font-weight:bold;">Special Request</td>
+            <td style="padding:8px;">${specialRequest || "-"}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top:16px;">
+        <p style="margin:0;">Paid Amount:</p>
+        <p style="font-size:20px; font-weight:bold; margin:4px 0;">${currency} ${totalPrice}</p>
       </div>
-    `;
+    </div>
+
+    <!-- Footer -->
+    <div style="background:#1d4ed8; color:#fff; text-align:center; padding:20px; font-size:14px;">
+      <p style="margin:4px 0;">
+        <a href="mailto:info@goldcoastresort.com.my" style="color:#fff; text-decoration:none;" 
+           onmouseover="this.style.textDecoration='underline';" 
+           onmouseout="this.style.textDecoration='none';">
+           info@goldcoastresort.com.my
+        </a>
+      </p>
+      <p style="margin:4px 0;">
+        <a href="tel:+60331981028" style="color:#fff; text-decoration:none;" 
+           onmouseover="this.style.textDecoration='underline';" 
+           onmouseout="this.style.textDecoration='none';">
+           +6 03 3198 1028
+        </a>
+      </p>
+      <p style="margin:4px 0;">
+        <a href="https://www.goldcoastmoribresort.com/" style="color:#fff; text-decoration:none;" 
+           onmouseover="this.style.textDecoration='underline';" 
+           onmouseout="this.style.textDecoration='none';">
+           www.goldcoastmoribresort.com
+        </a>
+      </p>
+      <p style="margin:8px 0 0;">© ${new Date().getFullYear()} Gold Coast Morib International Resort. All rights reserved.</p>
+    </div>
+  </div>
+</div>
+  `;
 }

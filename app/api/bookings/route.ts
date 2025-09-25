@@ -3,7 +3,7 @@ import { supabaseServer } from "@/utils/supabase/server";
 
 import { transporter } from "@/utils/email";
 import { bookingEmailTemplate } from "@/utils/email/bookingEmailTemplate";
-import { BookingEmailTemplateProps } from "@/types";
+import { formatDate } from "@/utils/formatDate";
 
 // GET all bookings (optionally filter by email or status)
 export async function GET(req: NextRequest) {
@@ -141,18 +141,24 @@ export async function POST(req: NextRequest) {
     if (error) throw error;
 
     await transporter.sendMail({
-      from: `"Hotel Booking" <${process.env.EMAIL_USER}>`,
+      from: `"Gold Coast Morib International Resort" <${process.env.EMAIL_USER}>`,
       to: body.email,
       cc: process.env.ADMIN_EMAIL,
       subject: "Booking Confirmation",
-      html: `
-        <h2>Hi ${firstName},</h2>
-        <p>Thanks for booking <b>${room?.name || "your room"}</b>.</p>
-        <p>Check-in: ${checkin} <br/> Check-out: ${checkout}</p>
-        <p>Total Price: ${totalPrice} ${price.currency || "RM"}</p>
-        <br/>
-        <p>We look forward to your stay!</p>
-      `,
+      html: bookingEmailTemplate({
+        bookingNumber,
+        firstName,
+        roomName: room?.name || "Room",
+        checkInDate: formatDate(checkinDate),
+        checkOutDate: formatDate(checkoutDate),
+        adults,
+        children,
+        arrivalTime,
+        specialRequest,
+        currency: price.currency || "RM",
+        totalPrice,
+        createdAt: formatDate(new Date()),
+      }),
     });
 
     return NextResponse.json(data, { status: 201 });

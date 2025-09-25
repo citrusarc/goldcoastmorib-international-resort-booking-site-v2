@@ -116,10 +116,8 @@ export type SearchErrors = {
 };
 
 export type BookingEmailTemplateProps = {
-  logoUrl: string;
-  firstName: string;
   bookingNumber: string;
-  createdAt: string;
+  firstName: string;
   roomName: string;
   checkInDate: string;
   checkOutDate: string;
@@ -127,6 +125,7 @@ export type BookingEmailTemplateProps = {
   children: number;
   arrivalTime?: string | null;
   specialRequest?: string | null;
-  totalPrice: number;
   currency: string;
+  totalPrice: number;
+  createdAt: string;
 };
