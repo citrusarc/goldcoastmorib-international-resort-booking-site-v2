@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/utils/supabase/server";
 
 import { transporter } from "@/utils/email";
+import { bookingEmailTemplate } from "@/utils/email/bookingEmailTemplate";
+import { BookingEmailTemplateProps } from "@/types";
 
 // GET all bookings (optionally filter by email or status)
 export async function GET(req: NextRequest) {

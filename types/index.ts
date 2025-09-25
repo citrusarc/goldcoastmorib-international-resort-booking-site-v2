@@ -114,3 +114,19 @@ export type SearchErrors = {
   dates?: string;
   guests?: string;
 };
+
+export type BookingEmailTemplateProps = {
+  logoUrl: string;
+  firstName: string;
+  bookingNumber: string;
+  createdAt: string;
+  roomName: string;
+  checkInDate: string;
+  checkOutDate: string;
+  adults: number;
+  children: number;
+  arrivalTime?: string | null;
+  specialRequest?: string | null;
+  totalPrice: number;
+  currency: string;
+};

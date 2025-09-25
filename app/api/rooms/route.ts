@@ -24,7 +24,7 @@ export async function GET() {
   try {
     const today = new Date().toISOString().split("T")[0];
 
-    // Get all rooms //
+    // Get all rooms
     const { data: rooms, error: roomError } = await supabaseServer
       .from("rooms")
       .select("*")
@@ -32,7 +32,7 @@ export async function GET() {
 
     if (roomError) throw roomError;
 
-    // Get all confirmed bookings that overlap today //
+    // Get all confirmed bookings that overlap today
     const { data: booked, error: bookingError } = await supabaseServer
       .from("bookings")
       .select("roomId")
@@ -44,7 +44,7 @@ export async function GET() {
 
     const bookedRoomIds = new Set(booked?.map((b) => b.roomId) || []);
 
-    // Filter only available rooms //
+    // Filter only available rooms
     const availableRooms = (rooms || [])
       .filter((r) => !bookedRoomIds.has(r.id))
       .map((r) => ({
