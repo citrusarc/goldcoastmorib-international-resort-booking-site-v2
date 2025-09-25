@@ -9,7 +9,7 @@ import { cormorantGaramond } from "@/config/fonts";
 import { mapRoomData } from "@/lib/mapRoomData";
 import { RoomItem, BookingForms } from "@/types";
 import { phoneCodes } from "@/lib/phoneCodes";
-import { arrivalTimes } from "@/lib/arrivalTimes";
+import { earlyCheckIn } from "@/lib/earlyCheckIn";
 
 export default function BookingDetailsPage() {
   const { slug } = useParams();
@@ -58,7 +58,7 @@ export default function BookingDetailsPage() {
     lastName: "",
     email: "",
     phone: "",
-    arrivalTime: "",
+    earlyCheckIn: "",
     request: "",
   });
 
@@ -99,7 +99,7 @@ export default function BookingDetailsPage() {
         const phoneRegex = /^[0-9]{7,15}$/;
         if (!phoneRegex.test(value)) return "Invalid phone number format";
         break;
-      case "arrivalTime":
+      case "earlyCheckIn":
         if (value?.trim()) {
           const checkin = searchParams.get("checkin");
           if (checkin) {
@@ -111,7 +111,7 @@ export default function BookingDetailsPage() {
             checkinDate.setHours(15, 0, 0, 0);
 
             if (arrivalDate > checkinDate) {
-              return "Arrival time cannot be later than check-in time";
+              return "Early Check In cannot be later than check-in time";
             }
           }
         }
@@ -143,7 +143,7 @@ export default function BookingDetailsPage() {
         "lastName",
         "email",
         "phone",
-        "arrivalTime",
+        "earlyCheckIn",
       ] as (keyof BookingForms)[]
     ).forEach((field) => {
       const error = validateField(field);
@@ -180,7 +180,7 @@ export default function BookingDetailsPage() {
         adults: parseInt(searchParams.get("adult") || "1", 10),
         children: parseInt(searchParams.get("children") || "0", 10),
         ...form,
-        specialRequest: form.request,
+        remarks: form.request,
         phone: `${selectedCode.code}${form.phone}`,
       };
 
@@ -489,12 +489,12 @@ export default function BookingDetailsPage() {
                   <div
                     onClick={() => setOpenArrivalDropdown(!openArrivalDropdown)}
                     className={`relative p-4 pr-12 w-full rounded-xl cursor-pointer border text-zinc-800 placeholder:text-zinc-400 ${
-                      errors.arrivalTime
+                      errors.earlyCheckIn
                         ? "border-red-500"
                         : "border-zinc-200 focus-within:ring-amber-500 focus-within:border-amber-500"
                     }`}
                   >
-                    {form.arrivalTime || "Select Arrival Time"}
+                    {form.earlyCheckIn || "Select Arrival Time"}
                     <NavArrowDown
                       className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none transition-transform duration-200 ${
                         openArrivalDropdown ? "rotate-180" : ""
@@ -506,13 +506,13 @@ export default function BookingDetailsPage() {
 
                   {openArrivalDropdown && (
                     <div className="absolute z-10 mt-2 w-full rounded-xl bg-white border border-zinc-200 shadow-md">
-                      {arrivalTimes.map((time) => (
+                      {earlyCheckIn.map((time) => (
                         <div
                           key={time.value}
                           onClick={() => {
-                            setForm({ ...form, arrivalTime: time.value });
+                            setForm({ ...form, earlyCheckIn: time.value });
                             setOpenArrivalDropdown(false);
-                            setErrors({ ...errors, arrivalTime: undefined });
+                            setErrors({ ...errors, earlyCheckIn: undefined });
                           }}
                           className="p-4 cursor-pointer text-zinc-800 hover:bg-zinc-100"
                         >
@@ -522,19 +522,19 @@ export default function BookingDetailsPage() {
                     </div>
                   )}
                 </div>
-                {errors.arrivalTime && (
-                  <p className="text-red-500">{errors.arrivalTime}</p>
+                {errors.earlyCheckIn && (
+                  <p className="text-red-500">{errors.earlyCheckIn}</p>
                 )}
               </div>
 
               <div>
                 <label className="flex px-2 mb-2 gap-2">
-                  Special Request
+                  Remarks
                   <span className="text-zinc-400">(Optional)</span>
                 </label>
                 <textarea
                   name="request"
-                  placeholder="Special Request"
+                  placeholder="Remarks"
                   className={`${inputStyle()} h-56`}
                   value={form.request}
                   onChange={handleChange}

@@ -100,7 +100,7 @@ export type BookingForms = {
   lastName: string;
   email: string;
   phone: string;
-  arrivalTime?: string;
+  earlyCheckIn?: string;
   request?: string;
 };
 
@@ -123,8 +123,8 @@ export type BookingEmailTemplateProps = {
   checkOutDate: string;
   adults: number;
   children: number;
-  arrivalTime?: string | null;
-  specialRequest?: string | null;
+  earlyCheckIn?: string | null;
+  remarks?: string | null;
   currency: string;
   totalPrice: number;
   createdAt: string;

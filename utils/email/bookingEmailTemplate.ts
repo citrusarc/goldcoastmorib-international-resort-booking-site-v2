@@ -11,8 +11,8 @@ export function bookingEmailTemplate({
   checkOutDate,
   adults,
   children,
-  arrivalTime,
-  specialRequest,
+  earlyCheckIn,
+  remarks,
   totalPrice,
   currency,
 }: BookingEmailTemplateProps) {
@@ -58,12 +58,12 @@ export function bookingEmailTemplate({
   } Child(ren)</td>
           </tr>
           <tr style="background-color:#ffffff;">
-            <td style="padding:8px; font-weight:bold;">Arrival Time</td>
-            <td style="padding:8px;">${arrivalTime || "-"}</td>
+            <td style="padding:8px; font-weight:bold;">Early Check In</td>
+            <td style="padding:8px;">${earlyCheckIn || "-"}</td>
           </tr>
           <tr style="background-color:#f9f9f9;">
             <td style="padding:8px; font-weight:bold;">Special Request</td>
-            <td style="padding:8px;">${specialRequest || "-"}</td>
+            <td style="padding:8px;">${remarks || "-"}</td>
           </tr>
         </tbody>
       </table>
