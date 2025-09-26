@@ -88,16 +88,16 @@ export default function RootLayout({
           content="black-translucent"
         />
         <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-Y683DQH45D"
+          src="https://www.googletagmanager.com/gtag/js?id=G-FCJQJHEQ4E"
+          strategy="afterInteractive"
         />
 
-        <Script id="gtag-init">
+        <Script id="gtag-init" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-Y683DQH45D');
+            gtag('config', 'G-FCJQJHEQ4E');
           `}
         </Script>
         <Script
