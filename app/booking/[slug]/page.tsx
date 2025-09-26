@@ -201,7 +201,7 @@ export default function BookingDetailsPage() {
         return;
       }
 
-      alert("Booking confirmed! yeay 🎉");
+      alert("Booking confirmed! 🎉");
       router.push("/booking");
     } catch (err) {
       console.error(err);
