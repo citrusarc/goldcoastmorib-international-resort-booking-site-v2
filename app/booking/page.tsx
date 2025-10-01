@@ -79,8 +79,8 @@ function BookingContent() {
       try {
         setLoading(true);
         const res = await fetch("/api/rooms");
-        const data: RoomItem[] = await res.json();
-        setFilteredRooms(data);
+        const data = await res.json();
+        setFilteredRooms(Array.isArray(data) ? data : data.rooms || []);
       } finally {
         setLoading(false);
       }
@@ -117,8 +117,11 @@ function BookingContent() {
       setLoading(true);
       const res = await fetch(url);
       if (!res.ok) throw new Error("Failed to fetch rooms");
-      const data: RoomItem[] = await res.json();
-      const filtered = data.filter((room) => totalGuests <= room.maxGuests);
+      const data = await res.json();
+      const rooms = Array.isArray(data) ? data : data.rooms || [];
+      const filtered = rooms.filter(
+        (room: RoomItem) => totalGuests <= room.maxGuests
+      );
       setFilteredRooms(filtered);
       if (resultsRef.current) {
         resultsRef.current.scrollIntoView({ behavior: "smooth" });
