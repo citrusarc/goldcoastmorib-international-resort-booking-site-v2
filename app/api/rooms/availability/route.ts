@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseServer } from "@/utils/supabase/server";
+import { supabase } from "@/utils/supabase/client";
 import { PriceItem } from "@/types";
 
 function normalizePrice(price: unknown): PriceItem {
@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
     }
 
     // fetch rooms that can host required guests
-    const { data: rooms, error: roomError } = await supabaseServer
+    const { data: rooms, error: roomError } = await supabase
       .from("rooms")
       .select("*")
       .gte("maxGuests", totalGuests);
@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
     if (!rooms?.length) return NextResponse.json([]);
 
     // fetch overlapping bookings
-    const { data: booked, error: bookingError } = await supabaseServer
+    const { data: booked, error: bookingError } = await supabase
       .from("bookings")
       .select("roomId")
       .eq("status", "confirmed")
