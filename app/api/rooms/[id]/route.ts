@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseServer } from "@/utils/supabase/server";
+import { supabase } from "@/utils/supabase/client";
 
 export async function GET(
   req: NextRequest,
@@ -8,7 +8,7 @@ export async function GET(
   try {
     const { id } = await context.params;
 
-    const { data, error } = await supabaseServer
+    const { data, error } = await supabase
       .from("rooms")
       .select("*")
       .eq("id", id)

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseServer } from "@/utils/supabase/server";
+import { supabase } from "@/utils/supabase/client";
 
 // GET single booking
 export async function GET(
@@ -9,7 +9,7 @@ export async function GET(
   try {
     const { id } = await params;
 
-    const { data, error } = await supabaseServer
+    const { data, error } = await supabase
       .from("bookings")
       .select("*, rooms(*)")
       .eq("id", id)
@@ -37,7 +37,7 @@ export async function PUT(
     const { id } = await params;
     const body = await req.json();
 
-    const { data, error } = await supabaseServer
+    const { data, error } = await supabase
       .from("bookings")
       .update(body)
       .eq("id", id)
@@ -61,10 +61,7 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    const { error } = await supabaseServer
-      .from("bookings")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("bookings").delete().eq("id", id);
 
     if (error) throw error;
     return NextResponse.json({ message: "Booking deleted" }, { status: 200 });

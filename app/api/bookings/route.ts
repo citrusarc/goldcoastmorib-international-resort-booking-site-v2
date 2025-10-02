@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseServer } from "@/utils/supabase/server";
+import { supabase } from "@/utils/supabase/client";
 
 import { transporter } from "@/utils/email";
 import { bookingEmailTemplate } from "@/utils/email/bookingEmailTemplate";
@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     const email = searchParams.get("email");
     const status = searchParams.get("status");
 
-    let query = supabaseServer.from("bookings").select("*, rooms(*)");
+    let query = supabase.from("bookings").select("*, rooms(*)");
 
     if (email) query = query.eq("email", email);
     if (status) query = query.eq("status", status);
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Fetch room price
-    const { data: room, error: roomError } = await supabaseServer
+    const { data: room, error: roomError } = await supabase
       .from("rooms")
       .select("id, name, price, totalUnits")
       .eq("id", roomId)
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check duplicate confirmed booking
-    const { data: existing, error: checkError } = await supabaseServer
+    const { data: existing, error: checkError } = await supabase
       .from("bookings")
       .select("id, roomId")
       .eq("roomId", roomId)
@@ -112,7 +112,7 @@ export async function POST(req: NextRequest) {
     )}`;
 
     // Save into bookings with breakdown
-    const { data, error } = await supabaseServer
+    const { data, error } = await supabase
       .from("bookings")
       .insert([
         {
