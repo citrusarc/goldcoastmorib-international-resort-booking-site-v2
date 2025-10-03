@@ -24,19 +24,18 @@ export async function GET() {
   try {
     const today = new Date().toISOString().split("T")[0];
 
-    // Get all rooms
+    // // Get all rooms with totalUnits
     const { data: rooms, error: roomError } = await supabase
       .from("rooms")
-      .select("*")
-      // // safer: remove JSON path ordering, just order by a plain column
-      .order("id", { ascending: true }); // // change here
+      .select("*, totalUnits") // // Include totalUnits explicitly
+      .order("id", { ascending: true });
 
     if (roomError) {
-      console.error("Supabase room error:", roomError); // // log actual error
+      console.error("Supabase room error:", roomError);
       throw roomError;
     }
 
-    // Get all confirmed bookings that overlap today
+    // // Get all confirmed bookings that overlap today
     const { data: booked, error: bookingError } = await supabase
       .from("bookings")
       .select("roomId")
@@ -45,23 +44,32 @@ export async function GET() {
       .gte("checkOutDate", today);
 
     if (bookingError) {
-      console.error("Supabase booking error:", bookingError); // // log actual error
+      console.error("Supabase booking error:", bookingError);
       throw bookingError;
     }
 
-    const bookedRoomIds = new Set(booked?.map((b) => b.roomId) || []);
+    // // Count bookings per room
+    const bookingCounts: Record<string, number> = {};
+    booked?.forEach((b) => {
+      bookingCounts[b.roomId] = (bookingCounts[b.roomId] || 0) + 1;
+    });
 
-    // Filter only available rooms
+    // // Filter rooms with available units
     const availableRooms = (rooms || [])
-      .filter((r) => !bookedRoomIds.has(r.id))
-      .map((r) => ({
-        ...r,
-        price: normalizePrice(r.price),
-      }));
+      .map((r) => {
+        const bookedCount = bookingCounts[r.id] || 0;
+        const availableUnits = r.totalUnits - bookedCount; // // Calculate available units
+        return {
+          ...r,
+          available_units: availableUnits, // // Add available_units to response
+          price: normalizePrice(r.price),
+        };
+      })
+      .filter((r) => r.available_units > 0); // // Only include rooms with available units
 
     return NextResponse.json(availableRooms);
   } catch (err: unknown) {
-    console.error("API /api/rooms error:", err); // // better logging
+    console.error("API /api/rooms error:", err);
     const message = err instanceof Error ? err.message : "Unexpected error";
     return NextResponse.json({ error: message }, { status: 500 });
   }

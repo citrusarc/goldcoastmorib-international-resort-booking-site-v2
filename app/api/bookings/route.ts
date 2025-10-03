@@ -126,7 +126,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Fetch room price
+    // // Fetch room details including totalUnits
     const { data: room, error: roomError } = await supabase
       .from("rooms")
       .select("id, name, price, totalUnits")
@@ -135,13 +135,13 @@ export async function POST(req: NextRequest) {
 
     if (roomError || !room) {
       return NextResponse.json(
-        { error: `Room not found: ${roomError?.message || "Unknown error"}` }, // // Improved error message
+        { error: `Room not found: ${roomError?.message || "Unknown error"}` },
         { status: 404 }
       );
     }
 
-    // Check duplicate confirmed booking
-    const { data: existing, error: checkError } = await supabase
+    // // Check room availability for the selected dates
+    const { data: existingBookings, error: checkError } = await supabase
       .from("bookings")
       .select("id, roomId")
       .eq("roomId", roomId)
@@ -149,41 +149,37 @@ export async function POST(req: NextRequest) {
       .lte("checkInDate", checkout)
       .gte("checkOutDate", checkin);
 
-    if (checkError)
-      throw new Error(`Supabase booking！
+    if (checkError) {
+      throw new Error(`Supabase booking check error: ${checkError.message}`);
+    }
 
-System: check error: ${checkError.message}`); // // Improved error message
-
-    if (existing && existing.length >= room.totalUnits) {
+    const bookedCount = existingBookings?.length || 0;
+    if (bookedCount >= room.totalUnits) {
       return NextResponse.json(
         { error: "This room is fully booked for the selected dates." },
         { status: 400 }
       );
     }
 
-    // // Check for duplicate booking by the same user
-    const { data: existingUserBooking, error: userBookingError } =
-      await supabase
-        .from("bookings")
-        .select("id")
-        .eq("email", email)
-        .eq("roomId", roomId)
-        .eq("status", "confirmed")
-        .lte("checkInDate", checkout)
-        .gte("checkOutDate", checkin);
-
-    if (userBookingError) {
-      throw new Error(
-        `Supabase user booking check error: ${userBookingError.message}`
-      ); // // Improved error message
-    }
-
-    if (existingUserBooking && existingUserBooking.length > 0) {
-      return NextResponse.json(
-        { error: "You already have a booking for these dates." },
-        { status: 400 }
-      ); // // Prevent duplicate bookings by the same user
-    }
+    // // Removed duplicate user booking check to allow multiple bookings if units are available
+    // // Previous code:
+    // const { data: existingUserBooking, error: userBookingError } = await supabase
+    //   .from("bookings")
+    //   .select("id")
+    //   .eq("email", email)
+    //   .eq("roomId", roomId)
+    //   .eq("status", "confirmed")
+    //   .lte("checkInDate", checkout)
+    //   .gte("checkOutDate", checkin);
+    // if (userBookingError) {
+    //   throw new Error(`Supabase user booking check error: ${userBookingError.message}`);
+    // }
+    // if (existingUserBooking && existingUserBooking.length > 0) {
+    //   return NextResponse.json(
+    //     { error: "You already have a booking for these dates." },
+    //     { status: 400 }
+    //   );
+    // }
 
     const price =
       typeof room.price === "string" ? JSON.parse(room.price) : room.price;
@@ -191,14 +187,12 @@ System: check error: ${checkError.message}`); // // Improved error message
     const nights = Math.max(
       1,
       Math.round(
-        // // Use Math.round to ensure integer nights
         (checkoutDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24)
       )
     );
 
     const pricePerNight = Number(price.current);
     if (isNaN(pricePerNight)) {
-      // // Validate price
       return NextResponse.json(
         { error: "Invalid room price format" },
         { status: 500 }
@@ -209,7 +203,7 @@ System: check error: ${checkError.message}`); // // Improved error message
       1000 + Math.random() * 9000
     )}`;
 
-    // Save into bookings with breakdown
+    // // Save into bookings with breakdown
     const { data, error } = await supabase
       .from("bookings")
       .insert([
@@ -218,15 +212,15 @@ System: check error: ${checkError.message}`); // // Improved error message
           roomId,
           checkInDate: checkin,
           checkOutDate: checkout,
-          adults: Number(adults), // // Ensure type safety
-          children: Number(children), // // Ensure type safety
+          adults: Number(adults),
+          children: Number(children),
           status: status || "confirmed",
-          firstName: firstName.trim(), // // Trim string fields
-          lastName: lastName.trim(), // // Trim string fields
-          email: email.trim(), // // Trim string fields
-          phone: phone.trim(), // // Trim string fields
-          remarks: remarks?.trim() || null, // // Handle optional field
-          earlyCheckIn: earlyCheckIn || null, // // Handle optional field
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          remarks: remarks?.trim() || null,
+          earlyCheckIn: earlyCheckIn || null,
           nights,
           pricePerNight,
           totalPrice,
@@ -236,9 +230,9 @@ System: check error: ${checkError.message}`); // // Improved error message
       .select("*, rooms(*)")
       .single();
 
-    if (error) throw new Error(`Supabase insert error: ${error.message}`); // // Improved error message
+    if (error) throw new Error(`Supabase insert error: ${error.message}`);
 
-    // // Handle email sending in try-catch to prevent failure from affecting response
+    // // Handle email sending in try-catch
     try {
       await transporter.sendMail({
         from: `"Gold Coast Morib International Resort" <${process.env.EMAIL_USER}>`,
@@ -261,12 +255,12 @@ System: check error: ${checkError.message}`); // // Improved error message
         }),
       });
     } catch (emailError: unknown) {
-      console.error("Email sending failed:", emailError); // // Log email errors
+      console.error("Email sending failed:", emailError);
     }
 
     return NextResponse.json(data, { status: 201 });
   } catch (err: unknown) {
-    console.error("Booking creation error:", err); // // Log errors for debugging
+    console.error("Booking creation error:", err);
     const message =
       err instanceof Error ? err.message : "Failed to create booking";
     return NextResponse.json({ error: message }, { status: 500 });

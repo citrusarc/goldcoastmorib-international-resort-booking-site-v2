@@ -51,7 +51,7 @@ export default function BookingDetailsPage() {
     email: "",
     phone: "",
     earlyCheckIn: "",
-    request: "", // // Initialized as empty string, consistent with optional type
+    request: "",
   });
 
   const [errors, setErrors] = useState<Partial<BookingForms>>({});
@@ -204,7 +204,7 @@ export default function BookingDetailsPage() {
         adults: number;
         children: number;
         status: string;
-        phone: string; // // Override phone to include country code
+        phone: string;
       } = {
         roomId: room.id,
         checkin,
@@ -214,9 +214,9 @@ export default function BookingDetailsPage() {
         firstName: form.firstName.trim(),
         lastName: form.lastName.trim(),
         email: form.email.trim(),
-        phone: `${selectedCode.code}${form.phone.trim()}`, // // Combine country code with phone
+        phone: `${selectedCode.code}${form.phone.trim()}`,
         earlyCheckIn: form.earlyCheckIn || undefined,
-        request: form.request?.trim() || undefined, // // Safely handle optional request field
+        request: form.request?.trim() || undefined,
         status: "confirmed",
       };
 
@@ -237,7 +237,13 @@ export default function BookingDetailsPage() {
     } catch (err: unknown) {
       console.error("Booking submission error:", err);
       const message =
-        err instanceof Error ? err.message : "Error submitting booking";
+        err instanceof Error
+          ? err.message === "This room is fully booked for the selected dates."
+            ? "This room is fully booked for the selected dates. Please choose different dates or another room."
+            : err.message === "You already have a booking for these dates."
+            ? "You already have a booking for these dates. Please use a different email or modify your dates."
+            : err.message
+          : "Error submitting booking"; // // Enhanced error messages for user feedback
       setErrorMessage(message);
     } finally {
       setSubmitting(false);
@@ -573,7 +579,7 @@ export default function BookingDetailsPage() {
                   name="request"
                   placeholder="Remarks"
                   className={`${inputStyle()} h-56`}
-                  value={form.request ?? ""} // // Ensure controlled input with fallback
+                  value={form.request ?? ""}
                   onChange={handleChange}
                 />
               </div>
