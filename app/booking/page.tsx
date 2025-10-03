@@ -24,6 +24,8 @@ function BookingContent() {
   const [filteredRooms, setFilteredRooms] = useState<RoomItem[]>([]);
   const [errors, setErrors] = useState<SearchErrors>({});
   const [loading, setLoading] = useState(true);
+  // // Added error state for user feedback
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const totalGuests = adult + children;
   const label =
@@ -79,8 +81,12 @@ function BookingContent() {
       try {
         setLoading(true);
         const res = await fetch("/api/rooms");
+        if (!res.ok) throw new Error("Failed to fetch rooms"); // // Improved error handling
         const data = await res.json();
         setFilteredRooms(Array.isArray(data) ? data : data.rooms || []);
+      } catch (err) {
+        console.error("Error fetching rooms:", err); // // Log errors
+        setErrorMessage("Failed to load rooms"); // // Show error to user
       } finally {
         setLoading(false);
       }
@@ -101,12 +107,25 @@ function BookingContent() {
       newErrors.guests = "Please select at least 1 guest.";
     }
 
+    // // Validate dates
+    if (checkin && checkout) {
+      const checkinDate = new Date(checkin);
+      const checkoutDate = new Date(checkout);
+      if (isNaN(checkinDate.getTime()) || isNaN(checkoutDate.getTime())) {
+        newErrors.dates = "Invalid date format";
+      } else if (checkinDate >= checkoutDate) {
+        newErrors.dates = "Check-out date must be after check-in date";
+      }
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      setErrorMessage("Please correct the errors in the form"); // // Show error to user
       return;
     }
 
     setErrors({});
+    setErrorMessage(null); // // Clear error message
 
     let url = "/api/rooms";
     if (checkin && checkout) {
@@ -127,7 +146,8 @@ function BookingContent() {
         resultsRef.current.scrollIntoView({ behavior: "smooth" });
       }
     } catch (err) {
-      console.error(err);
+      console.error("Error searching rooms:", err); // // Log errors
+      setErrorMessage("Failed to search rooms"); // // Show error to user
       setFilteredRooms([]);
     } finally {
       setLoading(false);
@@ -138,6 +158,12 @@ function BookingContent() {
 
   return (
     <section className="-mt-28 sm:-mt-40">
+      {/* // // Display error message */}
+      {errorMessage && (
+        <div className="p-4 w-full max-w-2xl mx-auto rounded-xl bg-red-100 text-red-600">
+          {errorMessage}
+        </div>
+      )}
       <div className="relative w-full h-screen">
         <Image
           fill
@@ -183,6 +209,7 @@ function BookingContent() {
                         )?.value
                       ) {
                         setErrors((prev) => ({ ...prev, dates: undefined }));
+                        setErrorMessage(null); // // Clear error message
                       }
                     }}
                   />
@@ -223,7 +250,7 @@ function BookingContent() {
                   />
 
                   {open && (
-                    <div className="absolute z-10 p-4 mt-2 space-y-4 w-full  rounded-xl bg-white border border-zinc-200">
+                    <div className="absolute z-10 p-4 mt-2 space-y-4 w-full rounded-xl bg-white border border-zinc-200">
                       {/* Adults */}
                       <div className="flex items-center justify-between">
                         <span className="text-zinc-800">
@@ -240,6 +267,7 @@ function BookingContent() {
                                   ...prev,
                                   guests: undefined,
                                 }));
+                                setErrorMessage(null); // // Clear error message
                               }
                             }}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-800"
@@ -257,6 +285,7 @@ function BookingContent() {
                                   ...prev,
                                   guests: undefined,
                                 }));
+                                setErrorMessage(null); // // Clear error message
                               }
                             }}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-800"
@@ -282,6 +311,7 @@ function BookingContent() {
                                   ...prev,
                                   guests: undefined,
                                 }));
+                                setErrorMessage(null); // // Clear error message
                               }
                             }}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-800"
@@ -299,6 +329,7 @@ function BookingContent() {
                                   ...prev,
                                   guests: undefined,
                                 }));
+                                setErrorMessage(null); // // Clear error message
                               }
                             }}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-800"
@@ -408,6 +439,23 @@ function BookingContent() {
                       }
 
                       const safeAdult = adult > 0 ? adult : 1;
+
+                      // // Validate dates before navigation
+                      const checkinDate = new Date(checkin);
+                      const checkoutDate = new Date(checkout);
+                      if (
+                        isNaN(checkinDate.getTime()) ||
+                        isNaN(checkoutDate.getTime())
+                      ) {
+                        setErrorMessage("Invalid date format");
+                        return;
+                      }
+                      if (checkinDate >= checkoutDate) {
+                        setErrorMessage(
+                          "Check-out date must be after check-in date"
+                        );
+                        return;
+                      }
 
                       router.push(
                         `/booking/${room.id}?checkin=${checkin}&checkout=${checkout}&adult=${safeAdult}&children=${children}`

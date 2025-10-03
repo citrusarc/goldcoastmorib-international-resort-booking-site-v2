@@ -19,6 +19,7 @@ export default function BookingDetailsPage() {
   const [room, setRoom] = useState<RoomItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [openPhoneDropdown, setOpenPhoneDropdown] = useState(false);
   const [openArrivalDropdown, setOpenArrivalDropdown] = useState(false);
   const [selectedCode, setSelectedCode] = useState(phoneCodes[0]);
@@ -33,15 +34,6 @@ export default function BookingDetailsPage() {
       ) {
         setOpenPhoneDropdown(false);
       }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
       if (
         arrivalDropdownRef.current &&
         !arrivalDropdownRef.current.contains(event.target as Node)
@@ -59,7 +51,7 @@ export default function BookingDetailsPage() {
     email: "",
     phone: "",
     earlyCheckIn: "",
-    request: "",
+    request: "", // // Initialized as empty string, consistent with optional type
   });
 
   const [errors, setErrors] = useState<Partial<BookingForms>>({});
@@ -70,9 +62,9 @@ export default function BookingDetailsPage() {
     >
   ) => {
     const { name, value } = e.target;
-
     setForm({ ...form, [name]: value });
     setErrors({ ...errors, [name]: undefined });
+    setErrorMessage(null);
   };
 
   const handleBlur = (field: keyof BookingForms) => {
@@ -84,21 +76,19 @@ export default function BookingDetailsPage() {
     const value = form[field];
     switch (field) {
       case "firstName":
-        if (!value?.trim()) return "This field cannot be empty";
-        break;
+        return !value?.trim() ? "This field cannot be empty" : undefined;
       case "lastName":
-        if (!value?.trim()) return "This field cannot be empty";
-        break;
+        return !value?.trim() ? "This field cannot be empty" : undefined;
       case "email":
         if (!value?.trim()) return "This field cannot be empty";
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value)) return "Invalid email format";
-        break;
+        return emailRegex.test(value) ? undefined : "Invalid email format";
       case "phone":
         if (!value?.trim()) return "This field cannot be empty";
         const phoneRegex = /^[0-9]{7,15}$/;
-        if (!phoneRegex.test(value)) return "Invalid phone number format";
-        break;
+        return phoneRegex.test(value)
+          ? undefined
+          : "Invalid phone number format";
       case "earlyCheckIn":
         if (value?.trim()) {
           const checkin = searchParams.get("checkin");
@@ -106,28 +96,29 @@ export default function BookingDetailsPage() {
             const [hours, minutes] = value.split(":").map(Number);
             const arrivalDate = new Date(checkin);
             arrivalDate.setHours(hours || 0, minutes || 0, 0, 0);
-
             const checkinDate = new Date(checkin);
             checkinDate.setHours(15, 0, 0, 0);
-
             if (arrivalDate > checkinDate) {
-              return "Early Check In cannot be later than check-in time";
+              return "Early check-in cannot be later than standard check-in (3:00 PM)";
             }
           }
         }
-        break;
+        return undefined;
+      default:
+        return undefined;
     }
-    return undefined;
   };
 
   useEffect(() => {
     const fetchRoom = async () => {
       try {
         const res = await fetch(`/api/rooms/${slug}`);
+        if (!res.ok) throw new Error("Failed to fetch room");
         const data = await res.json();
         setRoom(mapRoomData(data));
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching room:", err);
+        setErrorMessage("Failed to load room details");
       } finally {
         setLoading(false);
       }
@@ -158,7 +149,6 @@ export default function BookingDetailsPage() {
       form.lastName.trim() &&
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
       /^[0-9]{7,15}$/.test(form.phone);
-
     const formErrors = validateForm();
     return requiredChecks && Object.keys(formErrors).length === 0;
   };
@@ -166,22 +156,68 @@ export default function BookingDetailsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+    setErrorMessage(null);
+
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      setErrorMessage("Please correct the errors in the form");
+      setSubmitting(false);
+      return;
+    }
 
     try {
       const checkin = searchParams.get("checkin");
       const checkout = searchParams.get("checkout");
-      const adult = parseInt(searchParams.get("adult") || "1", 10);
+      const adults = parseInt(searchParams.get("adult") || "1", 10);
       const children = parseInt(searchParams.get("children") || "0", 10);
 
-      const payload = {
-        roomId: room?.id,
+      if (!checkin || !checkout) {
+        setErrorMessage("Missing check-in or check-out date");
+        setSubmitting(false);
+        return;
+      }
+
+      const checkinDate = new Date(checkin);
+      const checkoutDate = new Date(checkout);
+      if (isNaN(checkinDate.getTime()) || isNaN(checkoutDate.getTime())) {
+        setErrorMessage("Invalid date format");
+        setSubmitting(false);
+        return;
+      }
+      if (checkinDate >= checkoutDate) {
+        setErrorMessage("Check-out date must be after check-in date");
+        setSubmitting(false);
+        return;
+      }
+
+      if (!room?.id) {
+        setErrorMessage("Room not found");
+        setSubmitting(false);
+        return;
+      }
+
+      const payload: BookingForms & {
+        roomId: string;
+        checkin: string;
+        checkout: string;
+        adults: number;
+        children: number;
+        status: string;
+        phone: string; // // Override phone to include country code
+      } = {
+        roomId: room.id,
         checkin,
         checkout,
-        adults: parseInt(searchParams.get("adult") || "1", 10),
-        children: parseInt(searchParams.get("children") || "0", 10),
-        ...form,
-        remarks: form.request,
-        phone: `${selectedCode.code}${form.phone}`,
+        adults,
+        children,
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+        email: form.email.trim(),
+        phone: `${selectedCode.code}${form.phone.trim()}`, // // Combine country code with phone
+        earlyCheckIn: form.earlyCheckIn || undefined,
+        request: form.request?.trim() || undefined, // // Safely handle optional request field
+        status: "confirmed",
       };
 
       const res = await fetch("/api/bookings", {
@@ -193,19 +229,16 @@ export default function BookingDetailsPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        if (data.error === "Booking already exists") {
-          alert("You already made this booking.");
-        } else {
-          alert(data.error || "Failed to create booking");
-        }
-        return;
+        throw new Error(data.error || "Failed to create booking");
       }
 
       alert("Booking confirmed! 🎉");
       router.push("/booking");
-    } catch (err) {
-      console.error(err);
-      alert("Error submitting booking");
+    } catch (err: unknown) {
+      console.error("Booking submission error:", err);
+      const message =
+        err instanceof Error ? err.message : "Error submitting booking";
+      setErrorMessage(message);
     } finally {
       setSubmitting(false);
     }
@@ -223,6 +256,11 @@ export default function BookingDetailsPage() {
 
   return (
     <section className="flex flex-col items-center p-4 sm:px-64 sm:py-24 gap-12">
+      {errorMessage && (
+        <div className="p-4 w-full max-w-2xl rounded-xl bg-red-100 text-red-600">
+          {errorMessage}
+        </div>
+      )}
       <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 w-full">
         {/* Room Info */}
         <div className="flex-1">
@@ -283,23 +321,22 @@ export default function BookingDetailsPage() {
             const children = parseInt(searchParams.get("children") || "0", 10);
 
             let nights = 0;
-            let checkinStr = checkin;
-            let checkoutStr = checkout;
+            let checkinStr = checkin || "Not specified";
+            let checkoutStr = checkout || "Not specified";
 
             if (checkin && checkout) {
               const checkinDate = new Date(checkin);
               const checkoutDate = new Date(checkout);
-              nights =
+              nights = Math.round(
                 (checkoutDate.getTime() - checkinDate.getTime()) /
-                (1000 * 60 * 60 * 24);
-
+                  (1000 * 60 * 60 * 24)
+              );
               const formatter = new Intl.DateTimeFormat("en-US", {
                 weekday: "short",
                 day: "numeric",
                 month: "short",
                 year: "numeric",
               });
-
               checkinStr = `${formatter.format(checkinDate)}`;
               checkoutStr = `${formatter.format(checkoutDate)}`;
             }
@@ -363,7 +400,7 @@ export default function BookingDetailsPage() {
             <h2
               className={`text-2xl sm:text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
             >
-              Guest Informations
+              Guest Information
             </h2>
             <div className="flex flex-col gap-4">
               <div>
@@ -387,7 +424,7 @@ export default function BookingDetailsPage() {
 
               <div>
                 <label className="flex px-2 mb-2">
-                  Last Name<span className="text-red-500">*</span>
+                  Last Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   required
@@ -406,7 +443,7 @@ export default function BookingDetailsPage() {
 
               <div>
                 <label className="flex px-2 mb-2">
-                  Email<span className="text-red-500">*</span>
+                  Email <span className="text-red-500">*</span>
                 </label>
                 <input
                   required
@@ -423,7 +460,7 @@ export default function BookingDetailsPage() {
 
               <div>
                 <label className="flex px-2 mb-2">
-                  Phone Number<span className="text-red-500">*</span>
+                  Phone Number <span className="text-red-500">*</span>
                 </label>
                 <div
                   ref={phoneDropdownRef}
@@ -453,7 +490,7 @@ export default function BookingDetailsPage() {
                     onBlur={() => handleBlur("phone")}
                   />
                   {openPhoneDropdown && (
-                    <div className="absolute z-10 mt-17 w-full rounded-xl shadow-md border-zinc-200 bg-white border ">
+                    <div className="absolute z-10 mt-17 w-full rounded-xl shadow-md border-zinc-200 bg-white border">
                       {phoneCodes.map((item) => (
                         <div
                           key={item.code}
@@ -476,7 +513,7 @@ export default function BookingDetailsPage() {
             <h2
               className={`text-2xl sm:text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
             >
-              Additional Informations
+              Additional Information
             </h2>
 
             <div className="flex flex-col gap-4">
@@ -536,7 +573,7 @@ export default function BookingDetailsPage() {
                   name="request"
                   placeholder="Remarks"
                   className={`${inputStyle()} h-56`}
-                  value={form.request}
+                  value={form.request ?? ""} // // Ensure controlled input with fallback
                   onChange={handleChange}
                 />
               </div>
@@ -546,7 +583,7 @@ export default function BookingDetailsPage() {
               type="submit"
               disabled={submitting || !isFormValid()}
               className={`px-6 py-4 w-full font-medium rounded-xl ${
-                isFormValid()
+                isFormValid() && !submitting
                   ? "text-white bg-amber-500 hover:bg-amber-600"
                   : "text-zinc-400 bg-gray-200 cursor-not-allowed"
               }`}
