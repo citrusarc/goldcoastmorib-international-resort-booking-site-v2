@@ -10,6 +10,7 @@ import { mapRoomData } from "@/lib/mapRoomData";
 import { RoomItem, BookingForms } from "@/types";
 import { phoneCodes } from "@/lib/phoneCodes";
 import { earlyCheckIn } from "@/lib/earlyCheckIn";
+import { SuccessModal, ErrorModal } from "@/components/ui/Modal";
 
 export default function BookingDetailsPage() {
   const { slug } = useParams();
@@ -20,6 +21,9 @@ export default function BookingDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [openPhoneDropdown, setOpenPhoneDropdown] = useState(false);
   const [openArrivalDropdown, setOpenArrivalDropdown] = useState(false);
   const [selectedCode, setSelectedCode] = useState(phoneCodes[0]);
@@ -65,6 +69,7 @@ export default function BookingDetailsPage() {
     setForm({ ...form, [name]: value });
     setErrors({ ...errors, [name]: undefined });
     setErrorMessage(null);
+    setShowErrorModal(false);
   };
 
   const handleBlur = (field: keyof BookingForms) => {
@@ -119,6 +124,7 @@ export default function BookingDetailsPage() {
       } catch (err) {
         console.error("Error fetching room:", err);
         setErrorMessage("Failed to load room details");
+        setShowErrorModal(true);
       } finally {
         setLoading(false);
       }
@@ -157,11 +163,13 @@ export default function BookingDetailsPage() {
     e.preventDefault();
     setSubmitting(true);
     setErrorMessage(null);
+    setShowErrorModal(false);
 
     const formErrors = validateForm();
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       setErrorMessage("Please correct the errors in the form");
+      setShowErrorModal(true);
       setSubmitting(false);
       return;
     }
@@ -174,6 +182,7 @@ export default function BookingDetailsPage() {
 
       if (!checkin || !checkout) {
         setErrorMessage("Missing check-in or check-out date");
+        setShowErrorModal(true);
         setSubmitting(false);
         return;
       }
@@ -182,17 +191,20 @@ export default function BookingDetailsPage() {
       const checkoutDate = new Date(checkout);
       if (isNaN(checkinDate.getTime()) || isNaN(checkoutDate.getTime())) {
         setErrorMessage("Invalid date format");
+        setShowErrorModal(true);
         setSubmitting(false);
         return;
       }
       if (checkinDate >= checkoutDate) {
         setErrorMessage("Check-out date must be after check-in date");
+        setShowErrorModal(true);
         setSubmitting(false);
         return;
       }
 
       if (!room?.id) {
         setErrorMessage("Room not found");
+        setShowErrorModal(true);
         setSubmitting(false);
         return;
       }
@@ -232,8 +244,9 @@ export default function BookingDetailsPage() {
         throw new Error(data.error || "Failed to create booking");
       }
 
-      alert("Booking confirmed! 🎉");
-      router.push("/booking");
+      setSuccessMessage("Your booking has been successfully confirmed!"); // // Set success message
+      setShowSuccessModal(true);
+      // router.push("/booking");
     } catch (err: unknown) {
       console.error("Booking submission error:", err);
       const message =
@@ -245,6 +258,7 @@ export default function BookingDetailsPage() {
             : err.message
           : "Error submitting booking"; // // Enhanced error messages for user feedback
       setErrorMessage(message);
+      setShowErrorModal(true);
     } finally {
       setSubmitting(false);
     }
@@ -262,11 +276,20 @@ export default function BookingDetailsPage() {
 
   return (
     <section className="flex flex-col items-center p-4 sm:px-64 sm:py-24 gap-12">
-      {errorMessage && (
-        <div className="p-4 w-full max-w-2xl rounded-xl bg-red-100 text-red-600">
-          {errorMessage}
-        </div>
-      )}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          router.push("/booking"); // // Redirect on close
+        }}
+        message={successMessage || "Booking confirmed!"}
+        redirectUrl="/booking" // // Pass redirect URL
+      />
+      <ErrorModal
+        isOpen={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        message={errorMessage || "An error occurred."}
+      />
       <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 w-full">
         {/* Room Info */}
         <div className="flex-1">
