@@ -1,24 +1,13 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { cormorantGaramond } from "@/config/fonts"; // // Import font for consistent styling
+import { cormorantGaramond } from "@/config/fonts";
+import { ModalProps } from "@/types";
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  message: string;
-  redirectUrl?: string; // // Optional redirect for SuccessModal
-}
-
-export function SuccessModal({
-  isOpen,
-  onClose,
-  message,
-  redirectUrl,
-}: ModalProps) {
+export function SuccessModal({ isOpen, onClose, redirectUrl }: ModalProps) {
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden"; // // Disable background scroll
+      document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
@@ -31,25 +20,28 @@ export function SuccessModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      onClick={onClose} // // Close on backdrop click
+      className="flex fixed inset-0 z-50 p-4 items-center justify-center"
+      onClick={onClose}
     >
       <div
-        className="relative flex flex-col gap-4 p-6 max-w-sm w-full rounded-2xl bg-white shadow-lg border border-amber-500"
-        onClick={(e) => e.stopPropagation()} // // Prevent closing when clicking modal content
+        className="relative flex flex-col gap-4 p-6 max-w-sm w-full rounded-2xl shadow-lg border border-zinc-200 bg-white"
+        onClick={(e) => e.stopPropagation()}
       >
         <h2
           className={`text-2xl font-semibold text-zinc-800 ${cormorantGaramond.className}`}
         >
-          Booking Confirmed 🎉
+          Booking Confirmed!
         </h2>
-        <p className="text-zinc-600">{message}</p>
+        <p className="text-zinc-500">
+          Everything is arranged for your stay. We look forward to welcoming
+          you.
+        </p>
         <button
           onClick={() => {
             onClose();
-            if (redirectUrl) window.location.href = redirectUrl; // // Handle redirect
+            if (redirectUrl) window.location.href = redirectUrl;
           }}
-          className="px-4 py-2 bg-amber-500 text-white rounded-xl hover:bg-amber-600"
+          className="px-4 py-2 rounded-xl text-white bg-amber-500 hover:bg-amber-600"
         >
           OK
         </button>
@@ -58,10 +50,10 @@ export function SuccessModal({
   );
 }
 
-export function ErrorModal({ isOpen, onClose, message }: ModalProps) {
+export function ErrorModal({ isOpen, onClose }: ModalProps) {
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden"; // // Disable background scroll
+      document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
@@ -74,22 +66,25 @@ export function ErrorModal({ isOpen, onClose, message }: ModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      onClick={onClose} // // Close on backdrop click
+      className="flex fixed inset-0 z-50 p-4 items-center justify-center"
+      onClick={onClose}
     >
       <div
-        className="relative flex flex-col gap-4 p-6 max-w-sm w-full rounded-2xl bg-red-100 shadow-lg border border-red-500"
-        onClick={(e) => e.stopPropagation()} // // Prevent closing when clicking modal content
+        className="relative flex flex-col gap-4 p-6 max-w-sm w-full rounded-2xl shadow-lg border border-zinc-200 bg-white"
+        onClick={(e) => e.stopPropagation()}
       >
         <h2
-          className={`text-2xl font-semibold text-red-600 ${cormorantGaramond.className}`}
+          className={`text-2xl font-semibold text-zinc-800 ${cormorantGaramond.className}`}
         >
-          Error
+          TITLE
         </h2>
-        <p className="text-red-600">{message}</p>
+        <p className="text-zinc-500">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+          quos.
+        </p>
         <button
           onClick={onClose}
-          className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600"
+          className="px-4 py-2 rounded-xl text-white bg-amber-500 hover:bg-amber-600"
         >
           Close
         </button>

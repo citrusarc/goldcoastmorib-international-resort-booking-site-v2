@@ -129,3 +129,9 @@ export type BookingEmailTemplateProps = {
   totalPrice: number;
   createdAt: string;
 };
+
+export type ModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  redirectUrl?: string;
+};

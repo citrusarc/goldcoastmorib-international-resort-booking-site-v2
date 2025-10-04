@@ -282,13 +282,11 @@ export default function BookingDetailsPage() {
           setShowSuccessModal(false);
           router.push("/booking"); // // Redirect on close
         }}
-        message={successMessage || "Booking confirmed!"}
         redirectUrl="/booking" // // Pass redirect URL
       />
       <ErrorModal
         isOpen={showErrorModal}
         onClose={() => setShowErrorModal(false)}
-        message={errorMessage || "An error occurred."}
       />
       <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 w-full">
         {/* Room Info */}
