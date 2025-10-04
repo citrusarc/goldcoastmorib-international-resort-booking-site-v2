@@ -70,6 +70,7 @@ export default function BookingDetailsPage() {
     setErrors({ ...errors, [name]: undefined });
     setErrorMessage(null);
     setShowErrorModal(false);
+    console.log(errorMessage);
   };
 
   const handleBlur = (field: keyof BookingForms) => {
@@ -125,6 +126,7 @@ export default function BookingDetailsPage() {
         console.error("Error fetching room:", err);
         setErrorMessage("Failed to load room details");
         setShowErrorModal(true);
+        console.log(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -164,6 +166,7 @@ export default function BookingDetailsPage() {
     setSubmitting(true);
     setErrorMessage(null);
     setShowErrorModal(false);
+    console.log(errorMessage);
 
     const formErrors = validateForm();
     if (Object.keys(formErrors).length > 0) {
@@ -171,6 +174,7 @@ export default function BookingDetailsPage() {
       setErrorMessage("Please correct the errors in the form");
       setShowErrorModal(true);
       setSubmitting(false);
+      console.log(errorMessage);
       return;
     }
 
@@ -184,6 +188,7 @@ export default function BookingDetailsPage() {
         setErrorMessage("Missing check-in or check-out date");
         setShowErrorModal(true);
         setSubmitting(false);
+        console.log(errorMessage);
         return;
       }
 
@@ -193,12 +198,14 @@ export default function BookingDetailsPage() {
         setErrorMessage("Invalid date format");
         setShowErrorModal(true);
         setSubmitting(false);
+        console.log(errorMessage);
         return;
       }
       if (checkinDate >= checkoutDate) {
         setErrorMessage("Check-out date must be after check-in date");
         setShowErrorModal(true);
         setSubmitting(false);
+        console.log(errorMessage);
         return;
       }
 
@@ -206,6 +213,7 @@ export default function BookingDetailsPage() {
         setErrorMessage("Room not found");
         setShowErrorModal(true);
         setSubmitting(false);
+        console.log(errorMessage);
         return;
       }
 
@@ -244,9 +252,9 @@ export default function BookingDetailsPage() {
         throw new Error(data.error || "Failed to create booking");
       }
 
-      setSuccessMessage("Your booking has been successfully confirmed!"); // // Set success message
+      setSuccessMessage("Booking confirmed!");
       setShowSuccessModal(true);
-      // router.push("/booking");
+      console.log(errorMessage);
     } catch (err: unknown) {
       console.error("Booking submission error:", err);
       const message =
@@ -256,9 +264,10 @@ export default function BookingDetailsPage() {
             : err.message === "You already have a booking for these dates."
             ? "You already have a booking for these dates. Please use a different email or modify your dates."
             : err.message
-          : "Error submitting booking"; // // Enhanced error messages for user feedback
+          : "Error submitting booking";
       setErrorMessage(message);
       setShowErrorModal(true);
+      console.log(errorMessage);
     } finally {
       setSubmitting(false);
     }
@@ -280,9 +289,9 @@ export default function BookingDetailsPage() {
         isOpen={showSuccessModal}
         onClose={() => {
           setShowSuccessModal(false);
-          router.push("/booking"); // // Redirect on close
+          router.push("/booking");
         }}
-        redirectUrl="/booking" // // Pass redirect URL
+        redirectUrl="/booking"
       />
       <ErrorModal
         isOpen={showErrorModal}

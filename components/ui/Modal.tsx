@@ -23,6 +23,7 @@ export function SuccessModal({ isOpen, onClose, redirectUrl }: ModalProps) {
       className="flex fixed inset-0 z-50 p-4 items-center justify-center"
       onClick={onClose}
     >
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       <div
         className="relative flex flex-col gap-4 p-6 max-w-sm w-full rounded-2xl shadow-lg border border-zinc-200 bg-white"
         onClick={(e) => e.stopPropagation()}
@@ -43,7 +44,7 @@ export function SuccessModal({ isOpen, onClose, redirectUrl }: ModalProps) {
           }}
           className="px-4 py-2 rounded-xl text-white bg-amber-500 hover:bg-amber-600"
         >
-          OK
+          Continue
         </button>
       </div>
     </div>
@@ -69,6 +70,7 @@ export function ErrorModal({ isOpen, onClose }: ModalProps) {
       className="flex fixed inset-0 z-50 p-4 items-center justify-center"
       onClick={onClose}
     >
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       <div
         className="relative flex flex-col gap-4 p-6 max-w-sm w-full rounded-2xl shadow-lg border border-zinc-200 bg-white"
         onClick={(e) => e.stopPropagation()}
@@ -76,17 +78,17 @@ export function ErrorModal({ isOpen, onClose }: ModalProps) {
         <h2
           className={`text-2xl font-semibold text-zinc-800 ${cormorantGaramond.className}`}
         >
-          TITLE
+          Booking Unsuccessful!
         </h2>
         <p className="text-zinc-500">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-          quos.
+          We couldn’t complete your booking. Please try again or contact support
+          if the issue continues.
         </p>
         <button
           onClick={onClose}
           className="px-4 py-2 rounded-xl text-white bg-amber-500 hover:bg-amber-600"
         >
-          Close
+          Try Again
         </button>
       </div>
     </div>
