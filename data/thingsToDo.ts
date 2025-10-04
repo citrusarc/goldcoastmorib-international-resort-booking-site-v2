@@ -1,6 +1,6 @@
-import { ActivityItem } from "@/types";
+import { ThingsToDoItem } from "@/types";
 
-export const activities: ActivityItem[] = [
+export const thingsToDo: ThingsToDoItem[] = [
   {
     id: "team-building-activities",
     name: "Team Building Activities",

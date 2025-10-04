@@ -14,7 +14,7 @@ export default function AccomodationsPage() {
         <Image
           fill
           src="/Images/accomodations-hero-banner.jpg"
-          alt="Gold Coast Morib International Resort Hero Banner"
+          alt="Gold Coast Morib International Resort Accomodations Hero Banner"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-black/15" />

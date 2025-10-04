@@ -168,7 +168,7 @@ function BookingContent() {
         <Image
           fill
           src="/Images/booking-hero-banner.jpg"
-          alt="Gold Coast Morib International Resort Hero Banner"
+          alt="Gold Coast Morib International Resort Booking Hero Banner"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-black/15" />

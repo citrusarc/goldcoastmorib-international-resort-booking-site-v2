@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 
-import { activities } from "@/data/activities";
+import { thingsToDo } from "@/data/thingsToDo";
 import { cormorantGaramond } from "@/config/fonts";
 
 export default function ThingsToDoPage() {
@@ -82,7 +82,7 @@ export default function ThingsToDoPage() {
         </div>
       </div>
 
-      {activities.map((item, index) => {
+      {thingsToDo.map((item, index) => {
         const isEven = index % 2 === 0;
         return (
           <div
@@ -105,7 +105,7 @@ export default function ThingsToDoPage() {
               <Image
                 fill
                 src={isEven ? item.image1 : item.image2}
-                alt="Gold Coast Morib International Resort Activity Image 1"
+                alt="Gold Coast Morib International Resort Things To Do Banner 1"
                 className="object-cover"
               />
             </div>
@@ -126,7 +126,7 @@ export default function ThingsToDoPage() {
               <Image
                 fill
                 src={isEven ? item.image2 : item.image1}
-                alt="Gold Coast Morib International Resort Activity Image 2"
+                alt="Gold Coast Morib International Resort Things To Do Banner 2"
                 className="object-cover"
               />
             </div>

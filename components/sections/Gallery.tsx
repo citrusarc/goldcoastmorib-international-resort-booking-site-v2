@@ -31,7 +31,7 @@ export default function GallerySection() {
             <Image
               fill
               src="/Images/gallery-banner-1.jpg"
-              alt="Gold Coast Morib International Resort Gallery Image 1"
+              alt="Gold Coast Morib International Resort Gallery Banner 1"
               className="object-cover"
             />
           </motion.div>
@@ -47,7 +47,7 @@ export default function GallerySection() {
               <Image
                 fill
                 src="/Images/gallery-banner-2.jpg"
-                alt="Gold Coast Morib International Resort Gallery Image 2"
+                alt="Gold Coast Morib International Resort Gallery Banner 2"
                 className="object-cover"
               />
             </div>
@@ -55,7 +55,7 @@ export default function GallerySection() {
               <Image
                 fill
                 src="/Images/gallery-banner-3.jpg"
-                alt="Gold Coast Morib International Resort Gallery Image 3"
+                alt="Gold Coast Morib International Resort Gallery Banner 3"
                 className="object-cover"
               />
             </div>

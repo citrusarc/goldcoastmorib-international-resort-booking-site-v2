@@ -33,7 +33,7 @@ export default function OverviewSection() {
         <Image
           fill
           src="/Images/overview-banner-1.png"
-          alt="Gold Coast Morib International Resort Overview"
+          alt="Gold Coast Morib International Resort Overview Banner"
           className="object-cover"
         />
       </div>

@@ -39,7 +39,7 @@ export default function TheResortPage() {
           <Image
             fill
             src="/Images/resort-banner-1.jpg"
-            alt="Gold Coast Morib International Resort View"
+            alt="Gold Coast Morib International Resort The Resort Hero Banner"
             className="object-cover"
           />
         </div>
