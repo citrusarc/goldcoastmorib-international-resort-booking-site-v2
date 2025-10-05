@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       status,
     } = body;
 
-    // // Validate required fields
+    // Validate required fields
     const requiredFields = {
       roomId,
       checkin,
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     };
     const missingFields = Object.entries(requiredFields)
       .filter(
-        ([_, value]) => !value || (typeof value === "string" && !value.trim())
+        ([, value]) => !value || (typeof value === "string" && !value.trim())
       )
       .map(([key]) => key);
 
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // // Validate email format
+    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // // Validate phone format
+    // Validate phone format
     const phoneRegex = /^\+?[0-9]{7,15}$/;
     if (!phoneRegex.test(phone)) {
       return NextResponse.json(
@@ -92,7 +92,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // // Validate dates
+    // Validate dates
     const checkinDate = new Date(checkin);
     const checkoutDate = new Date(checkout);
     if (isNaN(checkinDate.getTime()) || isNaN(checkoutDate.getTime())) {
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // // Validate earlyCheckIn
+    // Validate earlyCheckIn
     if (earlyCheckIn) {
       const [hours, minutes] = earlyCheckIn.split(":").map(Number);
       const earlyCheckInDate = new Date(checkin);
@@ -126,7 +126,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // // Fetch room details including totalUnits
+    // Fetch room details including totalUnits
     const { data: room, error: roomError } = await supabase
       .from("rooms")
       .select("id, name, price, totalUnits")
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // // Check room availability for the selected dates
+    // Check room availability for the selected dates
     const { data: existingBookings, error: checkError } = await supabase
       .from("bookings")
       .select("id, roomId")
@@ -160,26 +160,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    // // Removed duplicate user booking check to allow multiple bookings if units are available
-    // // Previous code:
-    // const { data: existingUserBooking, error: userBookingError } = await supabase
-    //   .from("bookings")
-    //   .select("id")
-    //   .eq("email", email)
-    //   .eq("roomId", roomId)
-    //   .eq("status", "confirmed")
-    //   .lte("checkInDate", checkout)
-    //   .gte("checkOutDate", checkin);
-    // if (userBookingError) {
-    //   throw new Error(`Supabase user booking check error: ${userBookingError.message}`);
-    // }
-    // if (existingUserBooking && existingUserBooking.length > 0) {
-    //   return NextResponse.json(
-    //     { error: "You already have a booking for these dates." },
-    //     { status: 400 }
-    //   );
-    // }
 
     const price =
       typeof room.price === "string" ? JSON.parse(room.price) : room.price;
@@ -203,7 +183,7 @@ export async function POST(req: NextRequest) {
       1000 + Math.random() * 9000
     )}`;
 
-    // // Save into bookings with breakdown
+    // Save into bookings with breakdown
     const { data, error } = await supabase
       .from("bookings")
       .insert([
@@ -232,7 +212,7 @@ export async function POST(req: NextRequest) {
 
     if (error) throw new Error(`Supabase insert error: ${error.message}`);
 
-    // // Handle email sending in try-catch
+    // Handle email sending in try-catch
     try {
       await transporter.sendMail({
         from: `"Gold Coast Morib International Resort" <${process.env.EMAIL_USER}>`,

@@ -20,8 +20,8 @@ export default function BookingDetailsPage() {
   const [room, setRoom] = useState<RoomItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [, setErrorMessage] = useState<string | null>(null);
+  const [, setSuccessMessage] = useState<string | null>(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [openPhoneDropdown, setOpenPhoneDropdown] = useState(false);
@@ -70,7 +70,6 @@ export default function BookingDetailsPage() {
     setErrors({ ...errors, [name]: undefined });
     setErrorMessage(null);
     setShowErrorModal(false);
-    console.log(errorMessage);
   };
 
   const handleBlur = (field: keyof BookingForms) => {
@@ -126,7 +125,6 @@ export default function BookingDetailsPage() {
         console.error("Error fetching room:", err);
         setErrorMessage("Failed to load room details");
         setShowErrorModal(true);
-        console.log(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -166,7 +164,6 @@ export default function BookingDetailsPage() {
     setSubmitting(true);
     setErrorMessage(null);
     setShowErrorModal(false);
-    console.log(errorMessage);
 
     const formErrors = validateForm();
     if (Object.keys(formErrors).length > 0) {
@@ -174,7 +171,6 @@ export default function BookingDetailsPage() {
       setErrorMessage("Please correct the errors in the form");
       setShowErrorModal(true);
       setSubmitting(false);
-      console.log(errorMessage);
       return;
     }
 
@@ -188,7 +184,6 @@ export default function BookingDetailsPage() {
         setErrorMessage("Missing check-in or check-out date");
         setShowErrorModal(true);
         setSubmitting(false);
-        console.log(errorMessage);
         return;
       }
 
@@ -198,14 +193,12 @@ export default function BookingDetailsPage() {
         setErrorMessage("Invalid date format");
         setShowErrorModal(true);
         setSubmitting(false);
-        console.log(errorMessage);
         return;
       }
       if (checkinDate >= checkoutDate) {
         setErrorMessage("Check-out date must be after check-in date");
         setShowErrorModal(true);
         setSubmitting(false);
-        console.log(errorMessage);
         return;
       }
 
@@ -213,7 +206,6 @@ export default function BookingDetailsPage() {
         setErrorMessage("Room not found");
         setShowErrorModal(true);
         setSubmitting(false);
-        console.log(errorMessage);
         return;
       }
 
@@ -254,7 +246,6 @@ export default function BookingDetailsPage() {
 
       setSuccessMessage("Booking confirmed!");
       setShowSuccessModal(true);
-      console.log(errorMessage);
     } catch (err: unknown) {
       console.error("Booking submission error:", err);
       const message =
@@ -267,7 +258,6 @@ export default function BookingDetailsPage() {
           : "Error submitting booking";
       setErrorMessage(message);
       setShowErrorModal(true);
-      console.log(errorMessage);
     } finally {
       setSubmitting(false);
     }

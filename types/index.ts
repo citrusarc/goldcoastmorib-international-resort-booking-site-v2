@@ -67,7 +67,7 @@ export type RoomItem = {
   isRecommended: boolean;
 };
 
-export type ActivityItem = {
+export type ThingsToDoItem = {
   id: string;
   name: string;
   image1: string;

@@ -194,6 +194,7 @@ function BookingContent() {
                     id="date-range"
                     type="text"
                     placeholder="Check-in date - Check-out date"
+                    value={dateRangeUI}
                     className={`p-4 w-full rounded-xl cursor-pointer border text-zinc-800 placeholder:text-zinc-400 focus:outline-none 
                       ${
                         errors.dates
