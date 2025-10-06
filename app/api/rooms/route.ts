@@ -27,7 +27,7 @@ export async function GET() {
     // Get all rooms with totalUnits
     const { data: rooms, error: roomError } = await supabase
       .from("rooms")
-      .select("*, totalUnits") // Include totalUnits explicitly
+      .select("*, totalUnits")
       .order("id", { ascending: true });
 
     if (roomError) {
@@ -58,14 +58,14 @@ export async function GET() {
     const availableRooms = (rooms || [])
       .map((r) => {
         const bookedCount = bookingCounts[r.id] || 0;
-        const availableUnits = r.totalUnits - bookedCount; // Calculate available units
+        const availableUnits = r.totalUnits - bookedCount;
         return {
           ...r,
-          available_units: availableUnits, // Add available_units to response
+          available_units: availableUnits,
           price: normalizePrice(r.price),
         };
       })
-      .filter((r) => r.available_units > 0); // Only include rooms with available units
+      .filter((r) => r.available_units > 0);
 
     return NextResponse.json(availableRooms);
   } catch (err: unknown) {

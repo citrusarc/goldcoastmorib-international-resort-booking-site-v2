@@ -24,7 +24,6 @@ function BookingContent() {
   const [filteredRooms, setFilteredRooms] = useState<RoomItem[]>([]);
   const [errors, setErrors] = useState<SearchErrors>({});
   const [loading, setLoading] = useState(true);
-  // // Added error state for user feedback
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const totalGuests = adult + children;
@@ -81,12 +80,12 @@ function BookingContent() {
       try {
         setLoading(true);
         const res = await fetch("/api/rooms");
-        if (!res.ok) throw new Error("Failed to fetch rooms"); // // Improved error handling
+        if (!res.ok) throw new Error("Failed to fetch rooms");
         const data = await res.json();
         setFilteredRooms(Array.isArray(data) ? data : data.rooms || []);
       } catch (err) {
-        console.error("Error fetching rooms:", err); // // Log errors
-        setErrorMessage("Failed to load rooms"); // // Show error to user
+        console.error("Error fetching rooms:", err);
+        setErrorMessage("Failed to load rooms");
       } finally {
         setLoading(false);
       }
@@ -107,7 +106,7 @@ function BookingContent() {
       newErrors.guests = "Please select at least 1 guest.";
     }
 
-    // // Validate dates
+    // Validate dates
     if (checkin && checkout) {
       const checkinDate = new Date(checkin);
       const checkoutDate = new Date(checkout);
@@ -120,12 +119,12 @@ function BookingContent() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      setErrorMessage("Please correct the errors in the form"); // // Show error to user
+      setErrorMessage("Please correct the errors in the form");
       return;
     }
 
     setErrors({});
-    setErrorMessage(null); // // Clear error message
+    setErrorMessage(null);
 
     let url = "/api/rooms";
     if (checkin && checkout) {
@@ -146,8 +145,8 @@ function BookingContent() {
         resultsRef.current.scrollIntoView({ behavior: "smooth" });
       }
     } catch (err) {
-      console.error("Error searching rooms:", err); // // Log errors
-      setErrorMessage("Failed to search rooms"); // // Show error to user
+      console.error("Error searching rooms:", err);
+      setErrorMessage("Failed to search rooms");
       setFilteredRooms([]);
     } finally {
       setLoading(false);
@@ -158,7 +157,6 @@ function BookingContent() {
 
   return (
     <section className="-mt-28 sm:-mt-40">
-      {/* // // Display error message */}
       {errorMessage && (
         <div className="p-4 w-full max-w-2xl mx-auto rounded-xl bg-red-100 text-red-600">
           {errorMessage}
@@ -210,7 +208,7 @@ function BookingContent() {
                         )?.value
                       ) {
                         setErrors((prev) => ({ ...prev, dates: undefined }));
-                        setErrorMessage(null); // // Clear error message
+                        setErrorMessage(null);
                       }
                     }}
                   />
@@ -268,7 +266,7 @@ function BookingContent() {
                                   ...prev,
                                   guests: undefined,
                                 }));
-                                setErrorMessage(null); // // Clear error message
+                                setErrorMessage(null);
                               }
                             }}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-800"
@@ -286,7 +284,7 @@ function BookingContent() {
                                   ...prev,
                                   guests: undefined,
                                 }));
-                                setErrorMessage(null); // // Clear error message
+                                setErrorMessage(null);
                               }
                             }}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-800"
@@ -312,7 +310,7 @@ function BookingContent() {
                                   ...prev,
                                   guests: undefined,
                                 }));
-                                setErrorMessage(null); // // Clear error message
+                                setErrorMessage(null);
                               }
                             }}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-800"
@@ -330,7 +328,7 @@ function BookingContent() {
                                   ...prev,
                                   guests: undefined,
                                 }));
-                                setErrorMessage(null); // // Clear error message
+                                setErrorMessage(null);
                               }
                             }}
                             className="w-8 h-8 flex items-center justify-center rounded-full border border-zinc-200 text-zinc-800"
@@ -441,7 +439,7 @@ function BookingContent() {
 
                       const safeAdult = adult > 0 ? adult : 1;
 
-                      // // Validate dates before navigation
+                      // Validate dates before navigation
                       const checkinDate = new Date(checkin);
                       const checkoutDate = new Date(checkout);
                       if (

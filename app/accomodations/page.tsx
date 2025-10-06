@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 
 import { cormorantGaramond } from "@/config/fonts";
 import { rooms } from "@/data/rooms";
+``;
 
 export default function AccomodationsPage() {
   return (
@@ -72,9 +73,9 @@ export default function AccomodationsPage() {
                 </span>
               </span>
             </p>
-            <Link href={`/booking?roomId=${item.id}`}>
+            <Link href={`/accomodations/${item.id}`}>
               <button className="px-6 py-4 w-full sm:w-fit text-white bg-amber-500 hover:bg-amber-600">
-                Check Availability
+                View Rooms
               </button>
             </Link>
           </div>
