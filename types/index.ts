@@ -102,7 +102,7 @@ export type BookingForms = {
   email: string;
   phone: string;
   earlyCheckIn?: string;
-  request?: string;
+  remarks?: string;
 };
 
 export type PhoneCodes = {
