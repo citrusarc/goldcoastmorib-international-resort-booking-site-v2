@@ -144,8 +144,8 @@ function BookingContent() {
         ? data
         : data.accomodations || [];
       const filtered = accomodations.filter(
-        (accomodation: AccomodationsItem) =>
-          totalGuests <= accomodation.maxGuests
+        (accomodations: AccomodationsItem) =>
+          totalGuests <= accomodations.maxGuests
       );
       setFilteredAccomodations(filtered);
       if (resultsRef.current) {
@@ -386,9 +386,9 @@ function BookingContent() {
               No rooms available for your selection.
             </p>
           ) : (
-            filteredAccomodations.map((accomodation, index) => (
+            filteredAccomodations.map((accomodations, index) => (
               <motion.div
-                key={accomodation.id}
+                key={accomodations.id}
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -402,8 +402,8 @@ function BookingContent() {
                 <div className="relative w-full aspect-[4/3]">
                   <Image
                     fill
-                    src={accomodation.image}
-                    alt={accomodation.alt}
+                    src={accomodations.image}
+                    alt={accomodations.alt}
                     className="object-cover object-center"
                   />
                 </div>
@@ -412,16 +412,16 @@ function BookingContent() {
                   <h2
                     className={`text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
                   >
-                    {accomodation.name}
+                    {accomodations.name}
                   </h2>
-                  <p className="text-zinc-500">{accomodation.description}</p>
+                  <p className="text-zinc-500">{accomodations.description}</p>
 
                   <p className="flex flex-col gap-2 text-zinc-500">
                     <span className="text-amber-500">Starting from</span>
                     <span>
                       <span className="text-xl sm:text-2xl text-zinc-800">
-                        {accomodation.price.currency}
-                        {accomodation.price.current}
+                        {accomodations.price.currency}
+                        {accomodations.price.current}
                       </span>
                       <span className="text-lg sm:text-2xl text-zinc-500">
                         /night
@@ -464,7 +464,7 @@ function BookingContent() {
                       }
 
                       router.push(
-                        `/booking/${accomodation.id}?checkin=${checkin}&checkout=${checkout}&adult=${safeAdult}&children=${children}`
+                        `/booking/${accomodations.id}?checkin=${checkin}&checkout=${checkout}&adult=${safeAdult}&children=${children}`
                       );
                     }}
                     className="mt-auto px-6 py-3 w-full font-medium rounded-xl text-white bg-amber-500 hover:bg-amber-600"

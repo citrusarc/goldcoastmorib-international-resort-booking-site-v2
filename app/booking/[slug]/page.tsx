@@ -17,7 +17,7 @@ export default function BookingDetailsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [accomodation, setAccomodation] = useState<AccomodationsItem | null>(
+  const [accomodations, setAccomodations] = useState<AccomodationsItem | null>(
     null
   );
   const [loading, setLoading] = useState(true);
@@ -122,7 +122,7 @@ export default function BookingDetailsPage() {
         const res = await fetch(`/api/accomodations/${slug}`);
         if (!res.ok) throw new Error("Failed to fetch accomodations");
         const data = await res.json();
-        setAccomodation(mapAccomodationsData(data));
+        setAccomodations(mapAccomodationsData(data));
       } catch (err) {
         console.error("Error fetching accomodations:", err);
         setErrorMessage("Failed to load accomodations details");
@@ -204,7 +204,7 @@ export default function BookingDetailsPage() {
         return;
       }
 
-      if (!accomodation?.id) {
+      if (!accomodations?.id) {
         setErrorMessage("Accomodations not found");
         setShowErrorModal(true);
         setSubmitting(false);
@@ -220,7 +220,7 @@ export default function BookingDetailsPage() {
         status: string;
         phone: string;
       } = {
-        accomodationsId: accomodation.id,
+        accomodationsId: accomodations.id,
         checkin,
         checkout,
         adults,
@@ -268,7 +268,8 @@ export default function BookingDetailsPage() {
 
   if (loading)
     return <p className="text-center py-20">Loading room details...</p>;
-  if (!accomodation) return <p className="text-center py-20">Room not found</p>;
+  if (!accomodations)
+    return <p className="text-center py-20">Room not found</p>;
 
   const inputStyle = (field?: keyof BookingForms) =>
     `p-4 w-full rounded-xl border text-zinc-800 placeholder:text-zinc-400 focus:outline-none 
@@ -295,8 +296,8 @@ export default function BookingDetailsPage() {
           <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden">
             <Image
               fill
-              src={accomodation.image}
-              alt={accomodation.alt}
+              src={accomodations.image}
+              alt={accomodations.alt}
               className="object-cover object-center"
             />
           </div>
@@ -304,12 +305,12 @@ export default function BookingDetailsPage() {
             <h2
               className={`text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
             >
-              {accomodation.name}
+              {accomodations.name}
             </h2>
-            <p className="text-zinc-500">{accomodation.description}</p>
+            <p className="text-zinc-500">{accomodations.description}</p>
 
             <ul className="flex flex-row sm:flex-col gap-4 justify-between sm:justify-start text-center sm:text-start">
-              {accomodation.facilities?.map((item) => {
+              {accomodations.facilities?.map((item) => {
                 if (!item.icon) return null;
                 const Icon = item.icon;
                 const itemClassName =
@@ -325,8 +326,8 @@ export default function BookingDetailsPage() {
             <p className="flex flex-col gap-2 mt-4 p-4 w-fit text-zinc-500 bg-amber-500/30">
               <span>
                 <span className="text-xl sm:text-2xl text-zinc-800">
-                  {accomodation.price.currency}
-                  {accomodation.price.current}
+                  {accomodations.price.currency}
+                  {accomodations.price.current}
                 </span>
                 <span className="text-lg sm:text-2xl text-zinc-500">
                   /night
@@ -402,8 +403,8 @@ export default function BookingDetailsPage() {
                 <div className="w-full border-t border-zinc-200" />
                 <div>
                   <p className="flex gap-2 text-center">
-                    {accomodation.price.currency}
-                    {accomodation.price.current}
+                    {accomodations.price.currency}
+                    {accomodations.price.current}
                     <span>per night</span>
                     <span>x</span>
                     <span>
@@ -411,8 +412,8 @@ export default function BookingDetailsPage() {
                     </span>
                   </p>
                   <p className="mt-4 text-2xl sm:text-4xl font-medium text-amber-500">
-                    Total Price: {accomodation.price.currency}
-                    {accomodation.price.current * (nights > 0 ? nights : 1)}
+                    Total Price: {accomodations.price.currency}
+                    {accomodations.price.current * (nights > 0 ? nights : 1)}
                   </p>
                 </div>
               </div>
