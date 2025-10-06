@@ -6,7 +6,7 @@ export function bookingEmailTemplate({
   firstName,
   bookingNumber,
   createdAt,
-  roomName,
+  accomodationsName,
   checkInDate,
   checkOutDate,
   adults,
@@ -41,7 +41,7 @@ export function bookingEmailTemplate({
           </tr>
           <tr style="background-color:#ffffff;">
             <td style="padding:8px; font-weight:bold;">Room Type</td>
-            <td style="padding:8px;">${roomName}</td>
+            <td style="padding:8px;">${accomodationsName}</td>
           </tr>
           <tr style="background-color:#f9f9f9;">
             <td style="padding:8px; font-weight:bold;">Check In</td>
@@ -62,7 +62,7 @@ export function bookingEmailTemplate({
             <td style="padding:8px;">${earlyCheckIn || "-"}</td>
           </tr>
           <tr style="background-color:#f9f9f9;">
-            <td style="padding:8px; font-weight:bold;">Special Request</td>
+            <td style="padding:8px; font-weight:bold;">Remarks</td>
             <td style="padding:8px;">${remarks || "-"}</td>
           </tr>
         </tbody>

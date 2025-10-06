@@ -1,7 +1,9 @@
 import { iconoirMap } from "@/lib/iconoirMap";
-import { RoomItem } from "@/types";
+import { AccomodationsItem } from "@/types";
 
-export function mapRoomData(raw: Record<string, unknown>): RoomItem {
+export function mapAccomodationsData(
+  raw: Record<string, unknown>
+): AccomodationsItem {
   return {
     ...raw,
     facilities: Array.isArray(raw.facilities)
@@ -12,5 +14,5 @@ export function mapRoomData(raw: Record<string, unknown>): RoomItem {
             : undefined,
         }))
       : [],
-  } as RoomItem;
+  } as AccomodationsItem;
 }

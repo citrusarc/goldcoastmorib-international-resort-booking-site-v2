@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     const email = searchParams.get("email");
     const status = searchParams.get("status");
 
-    let query = supabase.from("bookings").select("*, rooms(*)");
+    let query = supabase.from("bookings").select("*, accomodations(*)");
 
     if (email) query = query.eq("email", email);
     if (status) query = query.eq("status", status);
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const {
-      roomId,
+      accomodationsId,
       checkin,
       checkout,
       adults,
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
 
     // Validate required fields
     const requiredFields = {
-      roomId,
+      accomodationsId,
       checkin,
       checkout,
       firstName,
@@ -127,15 +127,19 @@ export async function POST(req: NextRequest) {
     }
 
     // Fetch room details including totalUnits
-    const { data: room, error: roomError } = await supabase
-      .from("rooms")
+    const { data: accomodation, error: accomodationError } = await supabase
+      .from("accomodations")
       .select("id, name, price, totalUnits")
-      .eq("id", roomId)
+      .eq("id", accomodationsId)
       .single();
 
-    if (roomError || !room) {
+    if (accomodationError || !accomodation) {
       return NextResponse.json(
-        { error: `Room not found: ${roomError?.message || "Unknown error"}` },
+        {
+          error: `Accomodations not found: ${
+            accomodationError?.message || "Unknown error"
+          }`,
+        },
         { status: 404 }
       );
     }
@@ -143,8 +147,8 @@ export async function POST(req: NextRequest) {
     // Check room availability for the selected dates
     const { data: existingBookings, error: checkError } = await supabase
       .from("bookings")
-      .select("id, roomId")
-      .eq("roomId", roomId)
+      .select("id, accomodationsId")
+      .eq("accomodationsId", accomodationsId)
       .eq("status", "confirmed")
       .lte("checkInDate", checkout)
       .gte("checkOutDate", checkin);
@@ -154,15 +158,17 @@ export async function POST(req: NextRequest) {
     }
 
     const bookedCount = existingBookings?.length || 0;
-    if (bookedCount >= room.totalUnits) {
+    if (bookedCount >= accomodation.totalUnits) {
       return NextResponse.json(
-        { error: "This room is fully booked for the selected dates." },
+        { error: "This accomodations is fully booked for the selected dates." },
         { status: 400 }
       );
     }
 
     const price =
-      typeof room.price === "string" ? JSON.parse(room.price) : room.price;
+      typeof accomodation.price === "string"
+        ? JSON.parse(accomodation.price)
+        : accomodation.price;
 
     const nights = Math.max(
       1,
@@ -174,7 +180,7 @@ export async function POST(req: NextRequest) {
     const pricePerNight = Number(price.current);
     if (isNaN(pricePerNight)) {
       return NextResponse.json(
-        { error: "Invalid room price format" },
+        { error: "Invalid accomodation price format" },
         { status: 500 }
       );
     }
@@ -189,7 +195,7 @@ export async function POST(req: NextRequest) {
       .insert([
         {
           bookingNumber,
-          roomId,
+          accomodationsId,
           checkInDate: checkin,
           checkOutDate: checkout,
           adults: Number(adults),
@@ -207,7 +213,7 @@ export async function POST(req: NextRequest) {
           currency: price.currency || "RM",
         },
       ])
-      .select("*, rooms(*)")
+      .select("*, accomodations(*)")
       .single();
 
     if (error) throw new Error(`Supabase insert error: ${error.message}`);
@@ -222,7 +228,7 @@ export async function POST(req: NextRequest) {
         html: bookingEmailTemplate({
           bookingNumber,
           firstName,
-          roomName: room?.name || "Room",
+          accomodationsName: accomodation?.name || "Accomodations",
           checkInDate: formatDate(checkinDate),
           checkOutDate: formatDate(checkoutDate),
           adults,

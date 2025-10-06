@@ -9,7 +9,7 @@ import "flatpickr/dist/flatpickr.min.css";
 import { NavArrowDown } from "iconoir-react";
 
 import { cormorantGaramond } from "@/config/fonts";
-import { RoomItem, SearchErrors } from "@/types";
+import { AccomodationsItem, SearchErrors } from "@/types";
 import { formatDate } from "@/utils/formatDate";
 
 function BookingContent() {
@@ -21,7 +21,9 @@ function BookingContent() {
   const [dateRangeUI, setDateRangeUI] = useState("");
   const [adult, setAdult] = useState(2);
   const [children, setChildren] = useState(0);
-  const [filteredRooms, setFilteredRooms] = useState<RoomItem[]>([]);
+  const [filteredAccomodations, setFilteredAccomodations] = useState<
+    AccomodationsItem[]
+  >([]);
   const [errors, setErrors] = useState<SearchErrors>({});
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -76,21 +78,23 @@ function BookingContent() {
   }, []);
 
   useEffect(() => {
-    async function fetchRooms() {
+    async function fetchAccomodations() {
       try {
         setLoading(true);
-        const res = await fetch("/api/rooms");
-        if (!res.ok) throw new Error("Failed to fetch rooms");
+        const res = await fetch("/api/accomodations");
+        if (!res.ok) throw new Error("Failed to fetch accomodations");
         const data = await res.json();
-        setFilteredRooms(Array.isArray(data) ? data : data.rooms || []);
+        setFilteredAccomodations(
+          Array.isArray(data) ? data : data.accomodations || []
+        );
       } catch (err) {
-        console.error("Error fetching rooms:", err);
-        setErrorMessage("Failed to load rooms");
+        console.error("Error fetching accomodations:", err);
+        setErrorMessage("Failed to load accomodations");
       } finally {
         setLoading(false);
       }
     }
-    fetchRooms();
+    fetchAccomodations();
   }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -126,28 +130,31 @@ function BookingContent() {
     setErrors({});
     setErrorMessage(null);
 
-    let url = "/api/rooms";
+    let url = "/api/accomodations";
     if (checkin && checkout) {
-      url = `/api/rooms/availability?checkin=${checkin}&checkout=${checkout}&guests=${totalGuests}`;
+      url = `/api/accomodations/availability?checkin=${checkin}&checkout=${checkout}&guests=${totalGuests}`;
     }
 
     try {
       setLoading(true);
       const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed to fetch rooms");
+      if (!res.ok) throw new Error("Failed to fetch accomodations");
       const data = await res.json();
-      const rooms = Array.isArray(data) ? data : data.rooms || [];
-      const filtered = rooms.filter(
-        (room: RoomItem) => totalGuests <= room.maxGuests
+      const accomodations = Array.isArray(data)
+        ? data
+        : data.accomodations || [];
+      const filtered = accomodations.filter(
+        (accomodation: AccomodationsItem) =>
+          totalGuests <= accomodation.maxGuests
       );
-      setFilteredRooms(filtered);
+      setFilteredAccomodations(filtered);
       if (resultsRef.current) {
         resultsRef.current.scrollIntoView({ behavior: "smooth" });
       }
     } catch (err) {
-      console.error("Error searching rooms:", err);
-      setErrorMessage("Failed to search rooms");
-      setFilteredRooms([]);
+      console.error("Error searching accomodations:", err);
+      setErrorMessage("Failed to search accomodations");
+      setFilteredAccomodations([]);
     } finally {
       setLoading(false);
     }
@@ -374,14 +381,14 @@ function BookingContent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {loading ? (
             <p className="text-zinc-500">Loading rooms...</p>
-          ) : filteredRooms.length === 0 ? (
+          ) : filteredAccomodations.length === 0 ? (
             <p className="text-zinc-500">
               No rooms available for your selection.
             </p>
           ) : (
-            filteredRooms.map((room, index) => (
+            filteredAccomodations.map((accomodation, index) => (
               <motion.div
-                key={room.id}
+                key={accomodation.id}
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -395,8 +402,8 @@ function BookingContent() {
                 <div className="relative w-full aspect-[4/3]">
                   <Image
                     fill
-                    src={room.image}
-                    alt={room.alt}
+                    src={accomodation.image}
+                    alt={accomodation.alt}
                     className="object-cover object-center"
                   />
                 </div>
@@ -405,16 +412,16 @@ function BookingContent() {
                   <h2
                     className={`text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
                   >
-                    {room.name}
+                    {accomodation.name}
                   </h2>
-                  <p className="text-zinc-500">{room.description}</p>
+                  <p className="text-zinc-500">{accomodation.description}</p>
 
                   <p className="flex flex-col gap-2 text-zinc-500">
                     <span className="text-amber-500">Starting from</span>
                     <span>
                       <span className="text-xl sm:text-2xl text-zinc-800">
-                        {room.price.currency}
-                        {room.price.current}
+                        {accomodation.price.currency}
+                        {accomodation.price.current}
                       </span>
                       <span className="text-lg sm:text-2xl text-zinc-500">
                         /night
@@ -457,7 +464,7 @@ function BookingContent() {
                       }
 
                       router.push(
-                        `/booking/${room.id}?checkin=${checkin}&checkout=${checkout}&adult=${safeAdult}&children=${children}`
+                        `/booking/${accomodation.id}?checkin=${checkin}&checkout=${checkout}&adult=${safeAdult}&children=${children}`
                       );
                     }}
                     className="mt-auto px-6 py-3 w-full font-medium rounded-xl text-white bg-amber-500 hover:bg-amber-600"

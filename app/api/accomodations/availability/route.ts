@@ -48,18 +48,18 @@ export async function GET(req: NextRequest) {
     }
 
     // fetch rooms that can host required guests
-    const { data: rooms, error: roomError } = await supabase
-      .from("rooms")
+    const { data: accomodations, error: accomodationError } = await supabase
+      .from("accomodations")
       .select("*")
       .gte("maxGuests", totalGuests);
 
-    if (roomError) throw roomError;
-    if (!rooms?.length) return NextResponse.json([]);
+    if (accomodationError) throw accomodationError;
+    if (!accomodations?.length) return NextResponse.json([]);
 
     // fetch overlapping bookings
     const { data: booked, error: bookingError } = await supabase
       .from("bookings")
-      .select("roomId")
+      .select("accomodationsId")
       .eq("status", "confirmed")
       .lte("checkInDate", checkout)
       .gte("checkOutDate", checkin);
@@ -69,22 +69,23 @@ export async function GET(req: NextRequest) {
     // count bookings per room
     const bookingCounts: Record<string, number> = {};
     booked?.forEach((b) => {
-      bookingCounts[b.roomId] = (bookingCounts[b.roomId] || 0) + 1;
+      bookingCounts[b.accomodationsId] =
+        (bookingCounts[b.accomodationsId] || 0) + 1;
     });
 
-    const availableRooms = rooms
-      .map((r) => {
-        const bookedCount = bookingCounts[r.id] || 0;
-        const availableUnits = r.totalUnits - bookedCount;
+    const availableAccomodations = accomodations
+      .map((item) => {
+        const bookedCount = bookingCounts[item.id] || 0;
+        const availableUnits = item.totalUnits - bookedCount;
         return {
-          ...r,
+          ...item,
           available_units: availableUnits,
-          price: normalizePrice(r.price),
+          price: normalizePrice(item.price),
         };
       })
       .filter((r) => r.available_units > 0);
 
-    return NextResponse.json(availableRooms);
+    return NextResponse.json(availableAccomodations);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unexpected error";
     console.error("Availability API error:", message);

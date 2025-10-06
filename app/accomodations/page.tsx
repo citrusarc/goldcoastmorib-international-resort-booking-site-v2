@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { cormorantGaramond } from "@/config/fonts";
-import { rooms } from "@/data/rooms";
+import { accomodations } from "@/data/accomodations";
 
 export default function AccomodationsPage() {
   return (
@@ -28,7 +28,7 @@ export default function AccomodationsPage() {
         </div>
       </div>
 
-      {rooms.map((item, index) => (
+      {accomodations.map((item, index) => (
         <motion.div
           key={item.id}
           initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}

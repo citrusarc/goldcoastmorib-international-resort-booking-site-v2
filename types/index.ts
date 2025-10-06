@@ -35,6 +35,7 @@ export type FooterItem = {
 export type CarouselItem = {
   name: string;
   src: string;
+  alt: string;
 };
 
 export type AutoCarouselItem = {
@@ -54,7 +55,7 @@ export type IconProps = {
   label?: string;
 };
 
-export type RoomItem = {
+export type AccomodationsItem = {
   id: string;
   name: string;
   image: string;
@@ -88,7 +89,7 @@ export type FloatingInputProps = {
 };
 
 export type BookingProps = {
-  roomId: RoomItem["id"] | "any";
+  accomodationsId: AccomodationsItem["id"] | "any";
   checkin: string;
   checkout: string;
   adults: number;
@@ -118,7 +119,7 @@ export type SearchErrors = {
 export type BookingEmailTemplateProps = {
   bookingNumber: string;
   firstName: string;
-  roomName: string;
+  accomodationsName: string;
   checkInDate: string;
   checkOutDate: string;
   adults: number;

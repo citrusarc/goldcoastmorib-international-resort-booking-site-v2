@@ -25,20 +25,20 @@ export async function GET() {
     const today = new Date().toISOString().split("T")[0];
 
     // Get all rooms with totalUnits
-    const { data: rooms, error: roomError } = await supabase
-      .from("rooms")
+    const { data: accomodations, error: accomodationError } = await supabase
+      .from("accomodations")
       .select("*, totalUnits")
       .order("id", { ascending: true });
 
-    if (roomError) {
-      console.error("Supabase room error:", roomError);
-      throw roomError;
+    if (accomodationError) {
+      console.error("Supabase accomodations error:", accomodationError);
+      throw accomodationError;
     }
 
     // Get all confirmed bookings that overlap today
     const { data: booked, error: bookingError } = await supabase
       .from("bookings")
-      .select("roomId")
+      .select("accomodationsId")
       .eq("status", "confirmed")
       .lte("checkInDate", today)
       .gte("checkOutDate", today);
@@ -51,11 +51,12 @@ export async function GET() {
     // Count bookings per room
     const bookingCounts: Record<string, number> = {};
     booked?.forEach((b) => {
-      bookingCounts[b.roomId] = (bookingCounts[b.roomId] || 0) + 1;
+      bookingCounts[b.accomodationsId] =
+        (bookingCounts[b.accomodationsId] || 0) + 1;
     });
 
     // Filter rooms with available units
-    const availableRooms = (rooms || [])
+    const availableAccomodations = (accomodations || [])
       .map((r) => {
         const bookedCount = bookingCounts[r.id] || 0;
         const availableUnits = r.totalUnits - bookedCount;
@@ -67,9 +68,9 @@ export async function GET() {
       })
       .filter((r) => r.available_units > 0);
 
-    return NextResponse.json(availableRooms);
+    return NextResponse.json(availableAccomodations);
   } catch (err: unknown) {
-    console.error("API /api/rooms error:", err);
+    console.error("API /api/accomodations error:", err);
     const message = err instanceof Error ? err.message : "Unexpected error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
