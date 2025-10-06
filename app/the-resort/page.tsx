@@ -184,7 +184,7 @@ export default function TheResortPage() {
             Enjoy fun activities, cozy accommodations, and moments that bring
             everyone together. <br />
             <br />
-            <Link href="/">
+            <Link href="/booking">
               <button className="px-6 py-4 w-full sm:w-fit text-amber-500 border border-amber-500 bg-white hover:text-white hover:border hover:bg-amber-500">
                 Start Your Story Today
               </button>

@@ -45,17 +45,19 @@ export function bookingEmailTemplate({
           </tr>
           <tr style="background-color:#f9f9f9;">
             <td style="padding:8px; font-weight:bold;">Check In</td>
-            <td style="padding:8px;">${checkInDate}</td>
+            <td style="padding:8px;">${checkInDate} (${
+    earlyCheckIn || "15:00 GMT+8"
+  })</td>
           </tr>
           <tr style="background-color:#ffffff;">
             <td style="padding:8px; font-weight:bold;">Check Out</td>
-            <td style="padding:8px;">${checkOutDate}</td>
+            <td style="padding:8px;">${checkOutDate} (12:00 GMT+8)</td>
           </tr>
           <tr style="background-color:#f9f9f9;">
             <td style="padding:8px; font-weight:bold;">Total Guests</td>
-            <td style="padding:8px;">${adults} Adult(s) ${
-    children || 0
-  } Child(ren)</td>
+            <td style="padding:8px;">${adults} Adult${adults !== 1 ? "s" : ""}${
+    children ? `, ${children} Child${children !== 1 ? "ren" : ""}` : ""
+  }</td>
           </tr>
           <tr style="background-color:#ffffff;">
             <td style="padding:8px; font-weight:bold;">Early Check In</td>

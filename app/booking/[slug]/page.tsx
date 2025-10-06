@@ -57,7 +57,7 @@ export default function BookingDetailsPage() {
     email: "",
     phone: "",
     earlyCheckIn: "",
-    request: "",
+    remarks: "",
   });
 
   const [errors, setErrors] = useState<Partial<BookingForms>>({});
@@ -230,7 +230,7 @@ export default function BookingDetailsPage() {
         email: form.email.trim(),
         phone: `${selectedCode.code}${form.phone.trim()}`,
         earlyCheckIn: form.earlyCheckIn || undefined,
-        request: form.request?.trim() || undefined,
+        remarks: form.remarks?.trim() || undefined,
         status: "confirmed",
       };
 
@@ -598,10 +598,10 @@ export default function BookingDetailsPage() {
                   <span className="text-zinc-400">(Optional)</span>
                 </label>
                 <textarea
-                  name="request"
+                  name="remarks"
                   placeholder="Remarks"
                   className={`${inputStyle()} h-56`}
-                  value={form.request ?? ""}
+                  value={form.remarks ?? ""}
                   onChange={handleChange}
                 />
               </div>
