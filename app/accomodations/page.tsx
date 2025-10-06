@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 
 import { cormorantGaramond } from "@/config/fonts";
 import { rooms } from "@/data/rooms";
-``;
 
 export default function AccomodationsPage() {
   return (
