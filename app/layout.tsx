@@ -9,7 +9,6 @@ import { cormorantGaramond } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
 import Navbar from "@/components/ui/Navbar";
 import FlyonuiScript from "@/components/ui/FlyonuiScript";
-``;
 import "@/app/globals.css";
 import SplashScreen from "@/components/ui/SplashScreen";
 
@@ -175,11 +174,11 @@ export default function RootLayout({
           })}
         </Script>
       </head>
-      <body className="relative antialiased overflow-x-hidden overflow-y-auto">
+      <body className="relative antialiased overflow-x-hidden overflow-y-auto max-w-full">
         <SplashScreen />
         <Navbar />
-        <main className="w-full max-w-full overflow-x-hidden">{children}</main>
-        <footer className="flex flex-col items-start justify-start px-4 py-8 sm:px-64 sm:py-24 gap-8 sm:gap-16 border-t border-zinc-200">
+        <main className="w-full max-w-full">{children}</main>
+        <footer className="flex flex-col items-start justify-start px-4 py-8 sm:px-64 sm:py-24 gap-8 sm:gap-16 overflow-x-hidden max-w-full border-t border-zinc-200">
           <div className="flex flex-col sm:flex-row gap-8 w-full max-w-full justify-between">
             <div className="flex flex-col gap-8 text-zinc-500">
               <Link

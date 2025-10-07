@@ -2,34 +2,35 @@
 
 import Image from "next/image";
 import Link from "next/link";
-// import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
 import { cormorantGaramond } from "@/config/fonts";
-// import { CarouselItem } from "@/types";
+import { CarouselItem } from "@/types";
 import { accomodations } from "@/data/accomodations";
 
-// const slidesData: CarouselItem[] = [
-//   {
-//     name: "Accomodations Image 1",
-//     src: "/Images/accomodations-banner-1.jpg",
-//     alt: "Accomodations Image 1",
-//   },
-//   {
-//     name: "Accomodations Image 2",
-//     src: "/Images/accomodations-banner-2.jpg",
-//     alt: "RooAccomodationsm Image 2",
-//   },
-//   {
-//     name: "Accomodations Image 3",
-//     src: "/Images/accomodations-banner-3.jpg",
-//     alt: "Accomodations Image 3",
-//   },
-// ];
+const slidesData: CarouselItem[] = [
+  {
+    name: "Accomodations Image 1",
+    src: "/Images/accomodations-banner-1.jpg",
+    alt: "Accomodations Image 1",
+  },
+  {
+    name: "Accomodations Image 2",
+    src: "/Images/accomodations-banner-1.jpg",
+    alt: "Accomodations Image 2",
+  },
+  {
+    name: "Accomodations Image 3",
+    src: "/Images/accomodations-banner-1.jpg",
+    alt: "Accomodations Image 3",
+  },
+];
 
 export default function AccomodationsDetailsPage() {
   const { slug } = useParams();
   const accomodation = accomodations.find((item) => item.id === slug);
+  const [current, setCurrent] = useState(0);
 
   if (!accomodation) {
     return (
@@ -38,22 +39,48 @@ export default function AccomodationsDetailsPage() {
       </section>
     );
   }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slidesData.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [slidesData.length]);
+
   return (
     <section className="flex flex-col p-4 sm:p-24 gap-8 sm:gap-16">
-      <div className="relative w-full h-[400px] sm:h-[640px] rounded-2xl overflow-hidden shadow-lg">
-        <Image
-          fill
-          src={accomodation.image}
-          alt={accomodation.alt}
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-black/20" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-          <h1 className={`text-5xl sm:text-7xl ${cormorantGaramond.className}`}>
-            {accomodation.name}
-          </h1>
+      <div className="relative w-full h-[560px] sm:h-[720px] overflow-hidden">
+        <div
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${current * 100}%)` }}
+        >
+          {slidesData.map((item, index) => (
+            <div
+              key={index}
+              className="relative w-full h-[640px] sm:h-[960px] flex-shrink-0"
+            >
+              <Image
+                fill
+                src={item.src}
+                alt={item.alt}
+                className="object-cover"
+              />
+            </div>
+          ))}
+        </div>
+        <div className="absolute flex gap-4 w-full justify-center bottom-6">
+          {slidesData.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrent(index)}
+              className={`w-3 h-3 rounded-full ${
+                index === current ? "bg-white" : "bg-white/50"
+              }`}
+            />
+          ))}
         </div>
       </div>
+
       <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 items-start sm:items-center">
         <div className="flex-1 flex flex-col gap-6">
           <p className="text-zinc-600 leading-relaxed">
