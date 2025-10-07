@@ -32,6 +32,13 @@ export default function AccomodationsDetailsPage() {
   const accomodation = accomodations.find((item) => item.id === slug);
   const [current, setCurrent] = useState(0);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slidesData.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   if (!accomodation) {
     return (
       <section className="px-4 py-16 text-center text-zinc-500">
@@ -39,13 +46,6 @@ export default function AccomodationsDetailsPage() {
       </section>
     );
   }
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slidesData.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [slidesData.length]);
 
   return (
     <section className="flex flex-col p-4 sm:p-24 gap-8 sm:gap-16">
@@ -83,6 +83,9 @@ export default function AccomodationsDetailsPage() {
 
       <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 items-start sm:items-center">
         <div className="flex-1 flex flex-col gap-6">
+          <h2 className={`text-2xl sm:text-4xl ${cormorantGaramond.className}`}>
+            {accomodation.name}
+          </h2>
           <p className="text-zinc-600 leading-relaxed">
             {accomodation.description}
           </p>
