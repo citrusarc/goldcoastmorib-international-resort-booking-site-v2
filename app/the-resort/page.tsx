@@ -47,7 +47,7 @@ export default function TheResortPage() {
         viewport={{ once: true, amount: 0.2 }}
         className="flex flex-col sm:flex-row gap-8 sm:gap-16"
       >
-        <div className="relative w-full sm:w-1/2 h-72 sm:h-[640px] ">
+        <div className="relative w-full sm:w-1/2 aspect-square">
           <Image
             fill
             src="/Images/resort-banner-1.jpg"

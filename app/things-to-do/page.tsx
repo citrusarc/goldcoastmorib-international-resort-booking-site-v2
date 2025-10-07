@@ -109,7 +109,7 @@ export default function ThingsToDoPage() {
                 className="object-cover"
               />
             </div>
-            <div className="flex flex-col gap-4 order-1 sm:order-2 z-10">
+            <div className="flex flex-col gap-4 order-1 sm:order-2 z-10 max-w-2xl">
               <h2
                 className={`text-4xl sm:text-6xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
               >
@@ -119,7 +119,7 @@ export default function ThingsToDoPage() {
               <p className="text-zinc-500">{item.description}</p>
             </div>
             <div
-              className={`relative w-full sm:w-1/2 h-72 sm:h-[640px] ${
+              className={`relative w-full sm:w-1/2 aspect-square ${
                 isEven ? "order-3" : "order-1"
               }`}
             >

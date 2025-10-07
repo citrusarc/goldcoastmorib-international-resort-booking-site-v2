@@ -79,7 +79,7 @@ export default function AccomodationsPage() {
               index % 2 !== 0 ? "sm:flex-row-reverse" : ""
             }`}
           >
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-8 max-w-2xl">
               <h2
                 className={`text-4xl sm:text-6xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
               >
@@ -119,7 +119,7 @@ export default function AccomodationsPage() {
                 </button>
               </Link>
             </div>
-            <div className="relative w-full sm:w-1/2 h-72 sm:h-[560px]">
+            <div className="relative w-full sm:w-1/2 aspect-square">
               <Image
                 fill
                 src={item.image}
