@@ -367,7 +367,6 @@ function BookingContent() {
           </div>
         </div>
       </div>
-
       <section
         id="results"
         ref={resultsRef}
@@ -407,7 +406,6 @@ function BookingContent() {
                     className="object-cover object-center"
                   />
                 </div>
-
                 <div className="flex flex-col flex-grow gap-4 p-4">
                   <h2
                     className={`text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
@@ -415,7 +413,6 @@ function BookingContent() {
                     {accomodations.name}
                   </h2>
                   <p className="text-zinc-500">{accomodations.description}</p>
-
                   <p className="flex flex-col gap-2 text-zinc-500">
                     <span className="text-amber-500">Starting from</span>
                     <span>
@@ -428,7 +425,6 @@ function BookingContent() {
                       </span>
                     </span>
                   </p>
-
                   <button
                     onClick={() => {
                       let [checkin, checkout] = dateRange
@@ -462,7 +458,6 @@ function BookingContent() {
                         );
                         return;
                       }
-
                       router.push(
                         `/booking/${accomodations.id}?checkin=${checkin}&checkout=${checkout}&adult=${safeAdult}&children=${children}`
                       );
