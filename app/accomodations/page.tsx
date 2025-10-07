@@ -94,7 +94,6 @@ export default function AccomodationsPage() {
                     "flex flex-col sm:flex-row gap-2 sm:gap-4 items-center text-zinc-500";
                   return (
                     <li key={item.label} className={itemClassName}>
-                      {/* Fix this */}
                       <Icon className="w-6 h-6" />
                       {item.label}
                     </li>

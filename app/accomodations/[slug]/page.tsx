@@ -49,7 +49,7 @@ export default function AccomodationsDetailsPage() {
 
   return (
     <section className="flex flex-col p-4 sm:p-24 gap-8 sm:gap-16">
-      <div className="relative w-full h-[560px] sm:h-[720px] overflow-hidden">
+      <div className="relative w-full h-[280px] sm:h-[640px] overflow-hidden">
         <div
           className="flex transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(-${current * 100}%)` }}
@@ -57,7 +57,7 @@ export default function AccomodationsDetailsPage() {
           {slidesData.map((item, index) => (
             <div
               key={index}
-              className="relative w-full h-[640px] sm:h-[960px] flex-shrink-0"
+              className="relative w-full h-[280px] sm:h-[640px] flex-shrink-0"
             >
               <Image
                 fill
@@ -80,55 +80,44 @@ export default function AccomodationsDetailsPage() {
           ))}
         </div>
       </div>
-
-      <div className="flex flex-col sm:flex-row gap-8 sm:gap-16 items-start sm:items-center">
-        <div className="flex-1 flex flex-col gap-6">
-          <h2 className={`text-2xl sm:text-4xl ${cormorantGaramond.className}`}>
-            {accomodation.name}
-          </h2>
-          <p className="text-zinc-600 leading-relaxed">
-            {accomodation.description}
-          </p>
-          <ul className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {accomodation.facilities?.map((item) => {
-              if (!item.icon) return null;
-              const Icon = item.icon;
-              return (
-                <li
-                  key={item.label}
-                  className="flex items-center gap-2 text-zinc-600"
-                >
-                  <Icon className="w-6 h-6 text-amber-500" />
-                  {item.label}
-                </li>
-              );
-            })}
-          </ul>
-          <div className="mt-4 flex flex-col gap-2 text-zinc-500">
-            <span className="text-amber-500">Starting from</span>
-            <span>
-              <span className="text-2xl sm:text-4xl text-zinc-800">
-                {accomodation.price.currency}
-                {accomodation.price.current}
-              </span>
-              <span className="text-xl sm:text-2xl text-zinc-500">/night</span>
+      <div className="flex flex-col gap-8">
+        <h2
+          className={`text-4xl sm:text-6xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
+        >
+          {accomodation.name}
+        </h2>
+        <p className="text-zinc-600 leading-relaxed">
+          {accomodation.description}
+        </p>
+        <ul className="flex flex-row sm:flex-col gap-4 justify-between sm:justify-start text-center sm:text-start">
+          {accomodation.facilities?.map((item) => {
+            if (!item.icon) return null;
+            const Icon = item.icon;
+            const itemClassName =
+              "flex flex-col sm:flex-row gap-2 sm:gap-4 items-center text-zinc-500";
+            return (
+              <li key={item.label} className={itemClassName}>
+                <Icon className="w-6 h-6" />
+                {item.label}
+              </li>
+            );
+          })}
+        </ul>
+        <p className="flex flex-col gap-2 text-zinc-500">
+          <span className="text-amber-500">Starting from</span>
+          <span>
+            <span className="text-2xl sm:text-4xl text-zinc-800">
+              {accomodation.price.currency}
+              {accomodation.price.current}
             </span>
-          </div>
-
-          <Link href={`/booking?accomodationsId=${accomodation.id}`}>
-            <button className="px-6 py-4 w-full sm:w-fit text-white bg-amber-500 hover:bg-amber-600">
-              Check Availability
-            </button>
-          </Link>
-        </div>
-        <div className="relative w-full sm:w-1/2 h-72 sm:h-[480px]">
-          <Image
-            fill
-            src={accomodation.image}
-            alt={accomodation.alt}
-            className="object-cover rounded-2xl"
-          />
-        </div>
+            <span className="text-xl sm:text-2xl text-zinc-500">/night</span>
+          </span>
+        </p>
+        <Link href={`/booking?accomodationsId=${accomodation.id}`}>
+          <button className="px-6 py-4 w-full sm:w-fit text-white bg-amber-500 hover:bg-amber-600">
+            Check Availability
+          </button>
+        </Link>
       </div>
     </section>
   );
