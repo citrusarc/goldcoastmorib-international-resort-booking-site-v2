@@ -1,11 +1,13 @@
 import Image from "next/image";
+import Link from "next/link";
+import { Bed, Swimming, Cutlery } from "iconoir-react";
 
 import { cormorantGaramond } from "@/config/fonts";
 
 export default function HeroSection() {
   return (
     <section className="-mt-28 sm:-mt-40">
-      <div className="relative w-full h-[640px] sm:h-[960px]">
+      <div className="relative w-full h-[960px]">
         <Image
           fill
           src="/Images/hero-banner-1.png"
@@ -20,6 +22,29 @@ export default function HeroSection() {
           >
             Gold Coast Morib <br /> International Resort
           </p>
+          <div className="flex flex-col sm:flex-row mt-16 gap-8">
+            <Link
+              href="/booking"
+              className="flex flex-col gap-4 px-16 py-6 max-w-2xl items-center justify-center text-zinc-800 bg-white hover:text-white hover:bg-amber-500"
+            >
+              <Bed className="w-8 h-8" />
+              Comfortable Stay
+            </Link>
+            <Link
+              href="/"
+              className="flex flex-col gap-4 px-16 py-6 max-w-2xl items-center justify-center text-zinc-800 bg-white hover:text-white hover:bg-amber-500"
+            >
+              <Swimming className="w-8 h-8" />
+              Leisure Time
+            </Link>
+            <Link
+              href="/"
+              className="flex flex-col gap-4 px-16 py-6 max-w-2xl items-center justify-center text-zinc-800 bg-white hover:text-white hover:bg-amber-500"
+            >
+              <Cutlery className="w-8 h-8" />
+              Elegant Meal
+            </Link>
+          </div>
         </div>
       </div>
     </section>
