@@ -20,8 +20,10 @@ function normalizePrice(price: unknown): PriceItem {
   return price as PriceItem;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const fetchAll = searchParams.get("all") === "true";
     const today = new Date().toISOString().split("T")[0];
 
     // Get all rooms with totalUnits
@@ -33,6 +35,14 @@ export async function GET() {
     if (accomodationError) {
       console.error("Supabase accomodations error:", accomodationError);
       throw accomodationError;
+    }
+
+    if (fetchAll) {
+      const allAccomodations = (accomodations || []).map((r) => ({
+        ...r,
+        price: normalizePrice(r.price),
+      }));
+      return NextResponse.json(allAccomodations);
     }
 
     // Get all confirmed bookings that overlap today

@@ -18,7 +18,7 @@ export default function AccomodationsPage() {
     async function fetchAccomodations() {
       try {
         setLoading(true);
-        const res = await fetch("/api/accomodations");
+        const res = await fetch("/api/accomodations?all=true");
         if (!res.ok) throw new Error("Failed to fetch accomodations");
         const data = await res.json();
         const mappedData = (
