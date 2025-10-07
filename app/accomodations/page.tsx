@@ -113,7 +113,7 @@ export default function AccomodationsPage() {
                 </span>
               </p>
               <Link href={`/accomodations/${item.id}`}>
-                <button className="px-6 py-4 w-full sm:w-fit text-white bg-amber-500 hover:bg-amber-600">
+                <button className="px-6 py-4 w-full sm:w-fit border text-amber-500 border-amber-500 bg-white hover:text-white hover:bg-amber-500">
                   View Rooms
                 </button>
               </Link>
