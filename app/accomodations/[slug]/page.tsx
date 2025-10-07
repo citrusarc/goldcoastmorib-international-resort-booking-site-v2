@@ -9,24 +9,6 @@ import { mapAccomodationsData } from "@/lib/mapAccomodationsData";
 import { AccomodationsItem, CarouselItem } from "@/types";
 import { cormorantGaramond } from "@/config/fonts";
 
-const slidesData: CarouselItem[] = [
-  {
-    name: "Accomodations Image 1",
-    src: "/Images/accomodations-banner-1.jpg",
-    alt: "Accomodations Image 1",
-  },
-  {
-    name: "Accomodations Image 2",
-    src: "/Images/accomodations-banner-1.jpg",
-    alt: "Accomodations Image 2",
-  },
-  {
-    name: "Accomodations Image 3",
-    src: "/Images/accomodations-banner-1.jpg",
-    alt: "Accomodations Image 3",
-  },
-];
-
 export default function AccomodationsDetailsPage() {
   const { slug } = useParams();
   const [accomodation, setAccomodation] = useState<AccomodationsItem | null>(
@@ -35,6 +17,7 @@ export default function AccomodationsDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [current, setCurrent] = useState(0);
+  const [slides, setSlides] = useState<CarouselItem[]>([]);
 
   useEffect(() => {
     async function fetchAccomodation() {
@@ -48,6 +31,16 @@ export default function AccomodationsDetailsPage() {
 
         const mappedData = mapAccomodationsData(data);
         setAccomodation(mappedData);
+        const imageCount = 5;
+        const dynamicSlides: CarouselItem[] = Array.from(
+          { length: imageCount },
+          (_, index) => ({
+            name: `${mappedData.name} Image ${index + 1}`,
+            src: `/Images/${slug}-${index + 1}.jpg`,
+            alt: `${mappedData.name} Image ${index + 1}`,
+          })
+        );
+        setSlides(dynamicSlides);
       } catch (err) {
         console.error("Error fetching accommodation:", err);
         setErrorMessage(
@@ -55,6 +48,13 @@ export default function AccomodationsDetailsPage() {
             ? err.message
             : "Failed to load accommodation details"
         );
+        setSlides([
+          {
+            name: "Fallback Image",
+            src: "/Images/fallback-image.jpg",
+            alt: "Fallback Image",
+          },
+        ]);
       } finally {
         setLoading(false);
       }
@@ -64,10 +64,10 @@ export default function AccomodationsDetailsPage() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slidesData.length);
+      setCurrent((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [slides]);
 
   if (loading) {
     return (
@@ -100,7 +100,7 @@ export default function AccomodationsDetailsPage() {
           className="flex transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(-${current * 100}%)` }}
         >
-          {slidesData.map((item, index) => (
+          {slides.map((item, index) => (
             <div
               key={index}
               className="relative w-full h-[280px] sm:h-[640px] flex-shrink-0"
@@ -115,7 +115,7 @@ export default function AccomodationsDetailsPage() {
           ))}
         </div>
         <div className="absolute flex gap-4 w-full justify-center bottom-6">
-          {slidesData.map((_, index) => (
+          {slides.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrent(index)}

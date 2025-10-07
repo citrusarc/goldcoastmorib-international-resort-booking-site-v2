@@ -62,8 +62,8 @@ export type AccomodationsItem = {
   alt: string;
   description?: string;
   facilities?: IconProps[];
-  maxGuests: number;
   price: PriceItem;
+  maxGuests: number;
   isDiscount: boolean;
   isRecommended: boolean;
   totalUnits?: number;
