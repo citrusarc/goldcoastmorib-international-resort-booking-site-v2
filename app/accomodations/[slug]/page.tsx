@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
+import { mapAccomodationsData } from "@/lib/mapAccomodationsData";
+import { AccomodationsItem, CarouselItem } from "@/types";
 import { cormorantGaramond } from "@/config/fonts";
-import { CarouselItem } from "@/types";
-import { accomodations } from "@/data/accomodations";
 
 const slidesData: CarouselItem[] = [
   {
@@ -29,8 +29,38 @@ const slidesData: CarouselItem[] = [
 
 export default function AccomodationsDetailsPage() {
   const { slug } = useParams();
-  const accomodation = accomodations.find((item) => item.id === slug);
+  const [accomodation, setAccomodation] = useState<AccomodationsItem | null>(
+    null
+  );
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    async function fetchAccomodation() {
+      try {
+        setLoading(true);
+        const res = await fetch(`/api/accomodations?slug=${slug}`);
+        if (!res.ok) throw new Error("Failed to fetch accommodation");
+
+        const data = await res.json();
+        if (!data) throw new Error("No accommodation found");
+
+        const mappedData = mapAccomodationsData(data);
+        setAccomodation(mappedData);
+      } catch (err) {
+        console.error("Error fetching accommodation:", err);
+        setErrorMessage(
+          err instanceof Error
+            ? err.message
+            : "Failed to load accommodation details"
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchAccomodation();
+  }, [slug]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,6 +68,22 @@ export default function AccomodationsDetailsPage() {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  if (loading) {
+    return (
+      <section className="px-4 py-16 text-center text-zinc-500">
+        Loading accommodation...
+      </section>
+    );
+  }
+
+  if (errorMessage) {
+    return (
+      <section className="px-4 py-16 text-center text-red-600">
+        {errorMessage}
+      </section>
+    );
+  }
 
   if (!accomodation) {
     return (
@@ -105,11 +151,26 @@ export default function AccomodationsDetailsPage() {
         </ul>
         <p className="flex flex-col gap-2 text-zinc-500">
           <span className="text-amber-500">Starting from</span>
-          <span>
+          {/* <span>
             <span className="text-2xl sm:text-4xl text-zinc-800">
               {accomodation.price.currency}
               {accomodation.price.current}
             </span>
+            <span className="text-xl sm:text-2xl text-zinc-500">/night</span>
+          </span> */}
+          <span>
+            {accomodation.price &&
+            accomodation.price.currency &&
+            accomodation.price.current ? (
+              <span className="text-2xl sm:text-4xl text-zinc-800">
+                {accomodation.price.currency}
+                {accomodation.price.current}
+              </span>
+            ) : (
+              <span className="text-2xl sm:text-4xl text-zinc-800">
+                Price unavailable
+              </span>
+            )}
             <span className="text-xl sm:text-2xl text-zinc-500">/night</span>
           </span>
         </p>

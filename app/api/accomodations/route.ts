@@ -24,7 +24,27 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const fetchAll = searchParams.get("all") === "true";
+    const slug = searchParams.get("slug");
     const today = new Date().toISOString().split("T")[0];
+
+    if (slug) {
+      const { data, error } = await supabase
+        .from("accomodations")
+        .select("*, totalUnits")
+        .eq("id", slug)
+        .single();
+      if (error || !data) {
+        console.error("Supabase single accommodation error:", error);
+        return NextResponse.json(
+          { error: "Accommodation not found" },
+          { status: 404 }
+        );
+      }
+      return NextResponse.json({
+        ...data,
+        price: normalizePrice(data.price),
+      });
+    }
 
     // Get all rooms with totalUnits
     const { data: accomodations, error: accomodationError } = await supabase
@@ -72,11 +92,11 @@ export async function GET(request: Request) {
         const availableUnits = r.totalUnits - bookedCount;
         return {
           ...r,
-          available_units: availableUnits,
+          availableUnits: availableUnits,
           price: normalizePrice(r.price),
         };
       })
-      .filter((r) => r.available_units > 0);
+      .filter((r) => r.availableUnits > 0);
 
     return NextResponse.json(availableAccomodations);
   } catch (err: unknown) {

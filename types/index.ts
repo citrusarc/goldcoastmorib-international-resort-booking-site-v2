@@ -66,6 +66,8 @@ export type AccomodationsItem = {
   price: PriceItem;
   isDiscount: boolean;
   isRecommended: boolean;
+  totalUnits?: number;
+  availableUnits?: number;
 };
 
 export type ThingsToDoItem = {
