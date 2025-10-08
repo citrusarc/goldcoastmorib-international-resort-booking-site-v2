@@ -37,7 +37,7 @@ export default function AccomodationsPage() {
   return (
     <section className="-mt-28 sm:-mt-40">
       {errorMessage && (
-        <div className="p-4 w-full max-w-2xl mx-auto rounded-xl bg-red-100 text-red-600">
+        <div className="relative p-4 w-full max-w-2xl mx-auto rounded-xl bg-red-100 text-red-600">
           {errorMessage}
         </div>
       )}
