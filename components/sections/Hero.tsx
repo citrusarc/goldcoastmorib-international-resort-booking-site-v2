@@ -31,18 +31,18 @@ export default function HeroSection() {
               Comfortable Stay
             </Link>
             <Link
-              href="/"
+              href="/theme-park"
               className="flex flex-col gap-4 px-16 py-6 max-w-2xl items-center justify-center text-zinc-800 bg-white hover:text-white hover:bg-amber-500"
             >
               <Swimming className="w-8 h-8" />
-              Leisure Time
+              Joyful Moments
             </Link>
             <Link
-              href="/"
+              href="/restaurant"
               className="flex flex-col gap-4 px-16 py-6 max-w-2xl items-center justify-center text-zinc-800 bg-white hover:text-white hover:bg-amber-500"
             >
               <Cutlery className="w-8 h-8" />
-              Elegant Meal
+              Delightful Dining
             </Link>
           </div>
         </div>

@@ -28,6 +28,24 @@ export const siteConfig = {
       href: "/things-to-do",
       status: { ...defaultStatus },
     },
+    {
+      id: "theme-park",
+      name: "Theme Park",
+      href: "/theme-park",
+      status: { ...defaultStatus },
+    },
+    {
+      id: "restaurant",
+      name: "Restaurant",
+      href: "/restaurant",
+      status: { ...defaultStatus },
+    },
+    {
+      id: "meetings-and-events",
+      name: "Meetings And Events",
+      href: "/meetings-and-events",
+      status: { ...defaultStatus },
+    },
   ] satisfies (ItemStatus | NavItem)[],
   footerItems: [
     {
@@ -49,6 +67,27 @@ export const siteConfig = {
       category: "explore",
       name: "Things To Do",
       href: "/things-to-do",
+      status: { ...defaultStatus },
+    },
+    {
+      id: "theme-park",
+      category: "explore",
+      name: "Theme Park",
+      href: "/theme-park",
+      status: { ...defaultStatus },
+    },
+    {
+      id: "restaurant",
+      category: "explore",
+      name: "Restaurant",
+      href: "/restaurant",
+      status: { ...defaultStatus },
+    },
+    {
+      id: "meetings-and-events",
+      category: "explore",
+      name: "Meetings And Events",
+      href: "/meetings-and-events",
       status: { ...defaultStatus },
     },
     {
