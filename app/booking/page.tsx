@@ -142,7 +142,7 @@ function BookingContent() {
       const data = await res.json();
       const accommodations = Array.isArray(data)
         ? data
-        : data.accomodations || [];
+        : data.accommodations || [];
       const filtered = accommodations.filter(
         (accommodations: AccommodationsItem) =>
           totalGuests <= accommodations.maxGuests

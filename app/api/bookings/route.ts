@@ -160,7 +160,9 @@ export async function POST(req: NextRequest) {
     const bookedCount = existingBookings?.length || 0;
     if (bookedCount >= accommodation.totalUnits) {
       return NextResponse.json(
-        { error: "This accomodations is fully booked for the selected dates." },
+        {
+          error: "This accommodations is fully booked for the selected dates.",
+        },
         { status: 400 }
       );
     }
@@ -194,23 +196,23 @@ export async function POST(req: NextRequest) {
       .from("bookings")
       .insert([
         {
-          bookingNumber,
           accommodationsId,
-          checkInDate: checkin,
-          checkOutDate: checkout,
-          adults: Number(adults),
-          children: Number(children),
+          bookingNumber,
           status: status || "confirmed",
           firstName: firstName.trim(),
           lastName: lastName.trim(),
           email: email.trim(),
           phone: phone.trim(),
-          remarks: remarks?.trim() || null,
-          earlyCheckIn: earlyCheckIn || null,
+          checkInDate: checkin,
+          checkOutDate: checkout,
           nights,
+          adults: Number(adults),
+          children: Number(children),
+          earlyCheckIn: earlyCheckIn || null,
+          remarks: remarks?.trim() || null,
+          currency: price.currency || "RM",
           pricePerNight,
           totalPrice,
-          currency: price.currency || "RM",
         },
       ])
       .select("*, accommodations(*)")
