@@ -38,28 +38,28 @@ export async function POST(req: NextRequest) {
 
     const {
       accommodationsId,
-      checkin,
-      checkout,
-      adults,
-      children,
+      status,
       firstName,
       lastName,
       email,
       phone,
+      checkin,
+      checkout,
+      adults,
+      children,
       earlyCheckIn,
       remarks,
-      status,
     } = body;
 
     // Validate required fields
     const requiredFields = {
       accommodationsId,
-      checkin,
-      checkout,
       firstName,
       lastName,
       email,
       phone,
+      checkin,
+      checkout,
     };
     const missingFields = Object.entries(requiredFields)
       .filter(
