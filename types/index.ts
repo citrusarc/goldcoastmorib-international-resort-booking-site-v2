@@ -55,7 +55,7 @@ export type IconProps = {
   label?: string;
 };
 
-export type AccomodationsItem = {
+export type AccommodationsItem = {
   id: string;
   name: string;
   image: string;
@@ -91,7 +91,7 @@ export type FloatingInputProps = {
 };
 
 export type BookingProps = {
-  accomodationsId: AccomodationsItem["id"] | "any";
+  accommodationsId: AccommodationsItem["id"] | "any";
   checkin: string;
   checkout: string;
   adults: number;
@@ -121,7 +121,7 @@ export type SearchErrors = {
 export type BookingEmailTemplateProps = {
   bookingNumber: string;
   firstName: string;
-  accomodationsName: string;
+  accommodationsName: string;
   checkInDate: string;
   checkOutDate: string;
   adults: number;

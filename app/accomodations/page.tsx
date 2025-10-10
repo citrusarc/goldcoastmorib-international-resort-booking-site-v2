@@ -6,33 +6,35 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import { cormorantGaramond } from "@/config/fonts";
-import { mapAccomodationsData } from "@/lib/mapAccomodationsData";
-import { AccomodationsItem } from "@/types";
+import { mapAccommodationsData } from "@/lib/mapAccommodationsData";
+import { AccommodationsItem } from "@/types";
 
-export default function AccomodationsPage() {
-  const [accomodations, setAccomodations] = useState<AccomodationsItem[]>([]);
+export default function AccommodationsPage() {
+  const [accommodations, setAccommodations] = useState<AccommodationsItem[]>(
+    []
+  );
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchAccomodations() {
+    async function fetchAccommodations() {
       try {
         setLoading(true);
-        const res = await fetch("/api/accomodations?all=true");
-        if (!res.ok) throw new Error("Failed to fetch accomodations");
+        const res = await fetch("/api/accommodations?all=true");
+        if (!res.ok) throw new Error("Failed to fetch accommodations");
         const data = await res.json();
         const mappedData = (
-          Array.isArray(data) ? data : data.accomodations || []
-        ).map((item: Record<string, unknown>) => mapAccomodationsData(item));
-        setAccomodations(mappedData);
+          Array.isArray(data) ? data : data.accommodations || []
+        ).map((item: Record<string, unknown>) => mapAccommodationsData(item));
+        setAccommodations(mappedData);
       } catch (err) {
-        console.error("Error fetching accomodations:", err);
-        setErrorMessage("Failed to load accomodations");
+        console.error("Error fetching accommodations:", err);
+        setErrorMessage("Failed to load accommodations");
       } finally {
         setLoading(false);
       }
     }
-    fetchAccomodations();
+    fetchAccommodations();
   }, []);
   return (
     <section className="-mt-28 sm:-mt-40">
@@ -44,8 +46,8 @@ export default function AccomodationsPage() {
       <div className="relative w-full h-[640px] sm:h-[960px]">
         <Image
           fill
-          src="/Images/accomodations-hero-banner.jpg"
-          alt="Gold Coast Morib International Resort Accomodations Hero Banner"
+          src="/Images/accommodations-hero-banner.jpg"
+          alt="Gold Coast Morib International Resort Accommodations Hero Banner"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-black/15" />
@@ -63,12 +65,12 @@ export default function AccomodationsPage() {
         <p className="text-center text-zinc-500 py-8">
           Loading accommodations...
         </p>
-      ) : accomodations.length === 0 ? (
+      ) : accommodations.length === 0 ? (
         <p className="text-center text-zinc-500 py-8">
           No accommodations available.
         </p>
       ) : (
-        accomodations.map((item, index) => (
+        accommodations.map((item, index) => (
           <motion.div
             key={item.id}
             initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
@@ -112,7 +114,7 @@ export default function AccomodationsPage() {
                   </span>
                 </span>
               </p>
-              <Link href={`/accomodations/${item.id}`}>
+              <Link href={`/accommodations/${item.id}`}>
                 <button className="px-6 py-4 w-full sm:w-fit border text-amber-500 border-amber-500 bg-white hover:text-white hover:bg-amber-500">
                   View Rooms
                 </button>

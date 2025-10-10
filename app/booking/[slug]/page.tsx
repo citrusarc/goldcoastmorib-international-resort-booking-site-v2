@@ -6,8 +6,8 @@ import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { NavArrowDown } from "iconoir-react";
 
 import { cormorantGaramond } from "@/config/fonts";
-import { mapAccomodationsData } from "@/lib/mapAccomodationsData";
-import { AccomodationsItem, BookingForms } from "@/types";
+import { mapAccommodationsData } from "@/lib/mapAccommodationsData";
+import { AccommodationsItem, BookingForms } from "@/types";
 import { phoneCodes } from "@/lib/phoneCodes";
 import { earlyCheckIn } from "@/lib/earlyCheckIn";
 import { SuccessModal, ErrorModal } from "@/components/ui/Modal";
@@ -17,9 +17,8 @@ export default function BookingDetailsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const [accomodations, setAccomodations] = useState<AccomodationsItem | null>(
-    null
-  );
+  const [accommodations, setAccommodations] =
+    useState<AccommodationsItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [, setErrorMessage] = useState<string | null>(null);
@@ -117,21 +116,21 @@ export default function BookingDetailsPage() {
   };
 
   useEffect(() => {
-    const fetchAccomodation = async () => {
+    const fetchAccommodation = async () => {
       try {
-        const res = await fetch(`/api/accomodations/${slug}`);
-        if (!res.ok) throw new Error("Failed to fetch accomodations");
+        const res = await fetch(`/api/accommodations/${slug}`);
+        if (!res.ok) throw new Error("Failed to fetch accommodations");
         const data = await res.json();
-        setAccomodations(mapAccomodationsData(data));
+        setAccommodations(mapAccommodationsData(data));
       } catch (err) {
-        console.error("Error fetching accomodations:", err);
-        setErrorMessage("Failed to load accomodations details");
+        console.error("Error fetching accommodations:", err);
+        setErrorMessage("Failed to load accommodations details");
         setShowErrorModal(true);
       } finally {
         setLoading(false);
       }
     };
-    if (slug) fetchAccomodation();
+    if (slug) fetchAccommodation();
   }, [slug]);
 
   const validateForm = () => {
@@ -204,15 +203,15 @@ export default function BookingDetailsPage() {
         return;
       }
 
-      if (!accomodations?.id) {
-        setErrorMessage("Accomodations not found");
+      if (!accommodations?.id) {
+        setErrorMessage("Accommodations not found");
         setShowErrorModal(true);
         setSubmitting(false);
         return;
       }
 
       const payload: BookingForms & {
-        accomodationsId: string;
+        accommodationsId: string;
         checkin: string;
         checkout: string;
         adults: number;
@@ -220,7 +219,7 @@ export default function BookingDetailsPage() {
         status: string;
         phone: string;
       } = {
-        accomodationsId: accomodations.id,
+        accommodationsId: accommodations.id,
         checkin,
         checkout,
         adults,
@@ -253,8 +252,8 @@ export default function BookingDetailsPage() {
       const message =
         err instanceof Error
           ? err.message ===
-            "This accomodation is fully booked for the selected dates."
-            ? "This accomodation is fully booked for the selected dates. Please choose different dates or another accomodation."
+            "This accommodation is fully booked for the selected dates."
+            ? "This accommodation is fully booked for the selected dates. Please choose different dates or another accommodation."
             : err.message === "You already have a booking for these dates."
             ? "You already have a booking for these dates. Please use a different email or modify your dates."
             : err.message
@@ -268,7 +267,7 @@ export default function BookingDetailsPage() {
 
   if (loading)
     return <p className="text-center py-20">Loading room details...</p>;
-  if (!accomodations)
+  if (!accommodations)
     return <p className="text-center py-20">Room not found</p>;
 
   const inputStyle = (field?: keyof BookingForms) =>
@@ -296,8 +295,8 @@ export default function BookingDetailsPage() {
           <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden">
             <Image
               fill
-              src={accomodations.image}
-              alt={accomodations.alt}
+              src={accommodations.image}
+              alt={accommodations.alt}
               className="object-cover object-center"
             />
           </div>
@@ -305,12 +304,12 @@ export default function BookingDetailsPage() {
             <h2
               className={`text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
             >
-              {accomodations.name}
+              {accommodations.name}
             </h2>
-            <p className="text-zinc-500">{accomodations.description}</p>
+            <p className="text-zinc-500">{accommodations.description}</p>
 
             <ul className="flex flex-row sm:flex-col gap-4 justify-between sm:justify-start text-center sm:text-start">
-              {accomodations.facilities?.map((item) => {
+              {accommodations.facilities?.map((item) => {
                 if (!item.icon) return null;
                 const Icon = item.icon;
                 const itemClassName =
@@ -326,8 +325,8 @@ export default function BookingDetailsPage() {
             <p className="flex flex-col gap-2 mt-4 p-4 w-fit text-zinc-500 bg-amber-500/30">
               <span>
                 <span className="text-xl sm:text-2xl text-zinc-800">
-                  {accomodations.price.currency}
-                  {accomodations.price.current}
+                  {accommodations.price.currency}
+                  {accommodations.price.current}
                 </span>
                 <span className="text-lg sm:text-2xl text-zinc-500">
                   /night
@@ -403,8 +402,8 @@ export default function BookingDetailsPage() {
                 <div className="w-full border-t border-zinc-200" />
                 <div>
                   <p className="flex gap-2 text-center">
-                    {accomodations.price.currency}
-                    {accomodations.price.current}
+                    {accommodations.price.currency}
+                    {accommodations.price.current}
                     <span>per night</span>
                     <span>x</span>
                     <span>
@@ -412,8 +411,8 @@ export default function BookingDetailsPage() {
                     </span>
                   </p>
                   <p className="mt-4 text-2xl sm:text-4xl font-medium text-amber-500">
-                    Total Price: {accomodations.price.currency}
-                    {accomodations.price.current * (nights > 0 ? nights : 1)}
+                    Total Price: {accommodations.price.currency}
+                    {accommodations.price.current * (nights > 0 ? nights : 1)}
                   </p>
                 </div>
               </div>

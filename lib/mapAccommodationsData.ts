@@ -1,5 +1,5 @@
 import { iconoirMap } from "@/lib/iconoirMap";
-import { AccomodationsItem, PriceItem } from "@/types";
+import { AccommodationsItem, PriceItem } from "@/types";
 
 function normalizePrice(price: unknown): PriceItem {
   if (typeof price === "string") {
@@ -20,9 +20,9 @@ function normalizePrice(price: unknown): PriceItem {
   return (price || { currency: "RM", current: 0, original: 0 }) as PriceItem;
 }
 
-export function mapAccomodationsData(
+export function mapAccommodationsData(
   raw: Record<string, unknown>
-): AccomodationsItem {
+): AccommodationsItem {
   return {
     id: raw.id as string,
     name: raw.name as string,

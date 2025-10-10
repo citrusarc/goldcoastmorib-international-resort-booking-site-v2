@@ -9,7 +9,7 @@ import "flatpickr/dist/flatpickr.min.css";
 import { NavArrowDown } from "iconoir-react";
 
 import { cormorantGaramond } from "@/config/fonts";
-import { AccomodationsItem, SearchErrors } from "@/types";
+import { AccommodationsItem, SearchErrors } from "@/types";
 import { formatDate } from "@/utils/formatDate";
 
 function BookingContent() {
@@ -21,8 +21,8 @@ function BookingContent() {
   const [dateRangeUI, setDateRangeUI] = useState("");
   const [adult, setAdult] = useState(2);
   const [children, setChildren] = useState(0);
-  const [filteredAccomodations, setFilteredAccomodations] = useState<
-    AccomodationsItem[]
+  const [filteredAccommodations, setFilteredAccommodations] = useState<
+    AccommodationsItem[]
   >([]);
   const [errors, setErrors] = useState<SearchErrors>({});
   const [loading, setLoading] = useState(true);
@@ -78,23 +78,23 @@ function BookingContent() {
   }, []);
 
   useEffect(() => {
-    async function fetchAccomodations() {
+    async function fetchAccommodations() {
       try {
         setLoading(true);
-        const res = await fetch("/api/accomodations");
-        if (!res.ok) throw new Error("Failed to fetch accomodations");
+        const res = await fetch("/api/accommodations");
+        if (!res.ok) throw new Error("Failed to fetch accommodations");
         const data = await res.json();
-        setFilteredAccomodations(
-          Array.isArray(data) ? data : data.accomodations || []
+        setFilteredAccommodations(
+          Array.isArray(data) ? data : data.accommodations || []
         );
       } catch (err) {
-        console.error("Error fetching accomodations:", err);
-        setErrorMessage("Failed to load accomodations");
+        console.error("Error fetching accommodations:", err);
+        setErrorMessage("Failed to load accommodations");
       } finally {
         setLoading(false);
       }
     }
-    fetchAccomodations();
+    fetchAccommodations();
   }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -130,31 +130,31 @@ function BookingContent() {
     setErrors({});
     setErrorMessage(null);
 
-    let url = "/api/accomodations";
+    let url = "/api/accommodations";
     if (checkin && checkout) {
-      url = `/api/accomodations/availability?checkin=${checkin}&checkout=${checkout}&guests=${totalGuests}`;
+      url = `/api/accommodations/availability?checkin=${checkin}&checkout=${checkout}&guests=${totalGuests}`;
     }
 
     try {
       setLoading(true);
       const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed to fetch accomodations");
+      if (!res.ok) throw new Error("Failed to fetch accommodations");
       const data = await res.json();
-      const accomodations = Array.isArray(data)
+      const accommodations = Array.isArray(data)
         ? data
         : data.accomodations || [];
-      const filtered = accomodations.filter(
-        (accomodations: AccomodationsItem) =>
-          totalGuests <= accomodations.maxGuests
+      const filtered = accommodations.filter(
+        (accommodations: AccommodationsItem) =>
+          totalGuests <= accommodations.maxGuests
       );
-      setFilteredAccomodations(filtered);
+      setFilteredAccommodations(filtered);
       if (resultsRef.current) {
         resultsRef.current.scrollIntoView({ behavior: "smooth" });
       }
     } catch (err) {
-      console.error("Error searching accomodations:", err);
-      setErrorMessage("Failed to search accomodations");
-      setFilteredAccomodations([]);
+      console.error("Error searching accommodations:", err);
+      setErrorMessage("Failed to search accommodations");
+      setFilteredAccommodations([]);
     } finally {
       setLoading(false);
     }
@@ -380,14 +380,14 @@ function BookingContent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {loading ? (
             <p className="text-zinc-500">Loading rooms...</p>
-          ) : filteredAccomodations.length === 0 ? (
+          ) : filteredAccommodations.length === 0 ? (
             <p className="text-zinc-500">
               No rooms available for your selection.
             </p>
           ) : (
-            filteredAccomodations.map((accomodations, index) => (
+            filteredAccommodations.map((accommodations, index) => (
               <motion.div
-                key={accomodations.id}
+                key={accommodations.id}
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -401,8 +401,8 @@ function BookingContent() {
                 <div className="relative w-full aspect-[4/3]">
                   <Image
                     fill
-                    src={accomodations.image}
-                    alt={accomodations.alt}
+                    src={accommodations.image}
+                    alt={accommodations.alt}
                     className="object-cover object-center"
                   />
                 </div>
@@ -410,15 +410,15 @@ function BookingContent() {
                   <h2
                     className={`text-4xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
                   >
-                    {accomodations.name}
+                    {accommodations.name}
                   </h2>
-                  <p className="text-zinc-500">{accomodations.description}</p>
+                  <p className="text-zinc-500">{accommodations.description}</p>
                   <p className="flex flex-col gap-2 text-zinc-500">
                     <span className="text-amber-500">Starting from</span>
                     <span>
                       <span className="text-xl sm:text-2xl text-zinc-800">
-                        {accomodations.price.currency}
-                        {accomodations.price.current}
+                        {accommodations.price.currency}
+                        {accommodations.price.current}
                       </span>
                       <span className="text-lg sm:text-2xl text-zinc-500">
                         /night
@@ -459,7 +459,7 @@ function BookingContent() {
                         return;
                       }
                       router.push(
-                        `/booking/${accomodations.id}?checkin=${checkin}&checkout=${checkout}&adult=${safeAdult}&children=${children}`
+                        `/booking/${accommodations.id}?checkin=${checkin}&checkout=${checkout}&adult=${safeAdult}&children=${children}`
                       );
                     }}
                     className="mt-auto px-6 py-3 w-full font-medium rounded-xl text-white bg-amber-500 hover:bg-amber-600"

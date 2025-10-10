@@ -5,13 +5,13 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
-import { mapAccomodationsData } from "@/lib/mapAccomodationsData";
-import { AccomodationsItem, CarouselItem } from "@/types";
+import { mapAccommodationsData } from "@/lib/mapAccommodationsData";
+import { AccommodationsItem, CarouselItem } from "@/types";
 import { cormorantGaramond } from "@/config/fonts";
 
-export default function AccomodationsDetailsPage() {
+export default function AccommodationsDetailsPage() {
   const { slug } = useParams();
-  const [accomodation, setAccomodation] = useState<AccomodationsItem | null>(
+  const [accommodation, setAccommodation] = useState<AccommodationsItem | null>(
     null
   );
   const [loading, setLoading] = useState(true);
@@ -20,17 +20,17 @@ export default function AccomodationsDetailsPage() {
   const [slides, setSlides] = useState<CarouselItem[]>([]);
 
   useEffect(() => {
-    async function fetchAccomodation() {
+    async function fetchAccommodation() {
       try {
         setLoading(true);
-        const res = await fetch(`/api/accomodations?slug=${slug}`);
+        const res = await fetch(`/api/accommodations?slug=${slug}`);
         if (!res.ok) throw new Error("Failed to fetch accommodation");
 
         const data = await res.json();
         if (!data) throw new Error("No accommodation found");
 
-        const mappedData = mapAccomodationsData(data);
-        setAccomodation(mappedData);
+        const mappedData = mapAccommodationsData(data);
+        setAccommodation(mappedData);
         const imageCount = 5;
         const dynamicSlides: CarouselItem[] = Array.from(
           { length: imageCount },
@@ -59,7 +59,7 @@ export default function AccomodationsDetailsPage() {
         setLoading(false);
       }
     }
-    fetchAccomodation();
+    fetchAccommodation();
   }, [slug]);
 
   useEffect(() => {
@@ -85,7 +85,7 @@ export default function AccomodationsDetailsPage() {
     );
   }
 
-  if (!accomodation) {
+  if (!accommodation) {
     return (
       <section className="px-4 py-16 text-center text-zinc-500">
         Room not found.
@@ -130,13 +130,13 @@ export default function AccomodationsDetailsPage() {
         <h2
           className={`text-4xl sm:text-6xl font-semibold ${cormorantGaramond.className} text-zinc-800`}
         >
-          {accomodation.name}
+          {accommodation.name}
         </h2>
         <p className="text-zinc-600 leading-relaxed">
-          {accomodation.description}
+          {accommodation.description}
         </p>
         <ul className="flex flex-row sm:flex-col gap-4 justify-between sm:justify-start text-center sm:text-start">
-          {accomodation.facilities?.map((item) => {
+          {accommodation.facilities?.map((item) => {
             if (!item.icon) return null;
             const Icon = item.icon;
             const itemClassName =
@@ -151,20 +151,13 @@ export default function AccomodationsDetailsPage() {
         </ul>
         <p className="flex flex-col gap-2 text-zinc-500">
           <span className="text-amber-500">Starting from</span>
-          {/* <span>
-            <span className="text-2xl sm:text-4xl text-zinc-800">
-              {accomodation.price.currency}
-              {accomodation.price.current}
-            </span>
-            <span className="text-xl sm:text-2xl text-zinc-500">/night</span>
-          </span> */}
           <span>
-            {accomodation.price &&
-            accomodation.price.currency &&
-            accomodation.price.current ? (
+            {accommodation.price &&
+            accommodation.price.currency &&
+            accommodation.price.current ? (
               <span className="text-2xl sm:text-4xl text-zinc-800">
-                {accomodation.price.currency}
-                {accomodation.price.current}
+                {accommodation.price.currency}
+                {accommodation.price.current}
               </span>
             ) : (
               <span className="text-2xl sm:text-4xl text-zinc-800">
@@ -174,7 +167,7 @@ export default function AccomodationsDetailsPage() {
             <span className="text-xl sm:text-2xl text-zinc-500">/night</span>
           </span>
         </p>
-        <Link href={`/booking?accomodationsId=${accomodation.id}`}>
+        <Link href={`/booking?accommodationsId=${accommodation.id}`}>
           <button className="px-6 py-4 w-full sm:w-fit text-white bg-amber-500 hover:bg-amber-600">
             Check Availability
           </button>

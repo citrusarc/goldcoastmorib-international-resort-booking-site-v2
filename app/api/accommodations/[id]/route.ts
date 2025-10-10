@@ -9,7 +9,7 @@ export async function GET(
     const { id } = await context.params;
 
     const { data, error } = await supabase
-      .from("accomodations")
+      .from("accommodations")
       .select("*")
       .eq("id", id)
       .single();
@@ -17,7 +17,7 @@ export async function GET(
     if (error) throw error;
     if (!data) {
       return NextResponse.json(
-        { error: "Accomodations not found" },
+        { error: "Accommodations not found" },
         { status: 404 }
       );
     }
@@ -41,7 +41,7 @@ export async function GET(
   } catch (err: unknown) {
     const message =
       err instanceof Error ? err.message : "Unknown error occurred";
-    console.error("Error fetching accomodations:", message);
+    console.error("Error fetching accommodations:", message);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

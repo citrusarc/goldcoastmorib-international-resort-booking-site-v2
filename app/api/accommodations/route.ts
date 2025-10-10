@@ -29,7 +29,7 @@ export async function GET(request: Request) {
 
     if (slug) {
       const { data, error } = await supabase
-        .from("accomodations")
+        .from("accommodations")
         .select("*, totalUnits")
         .eq("id", slug)
         .single();
@@ -47,28 +47,28 @@ export async function GET(request: Request) {
     }
 
     // Get all rooms with totalUnits
-    const { data: accomodations, error: accomodationError } = await supabase
-      .from("accomodations")
+    const { data: accommodations, error: accommodationError } = await supabase
+      .from("accommodations")
       .select("*, totalUnits")
       .order("id", { ascending: true });
 
-    if (accomodationError) {
-      console.error("Supabase accomodations error:", accomodationError);
-      throw accomodationError;
+    if (accommodationError) {
+      console.error("Supabase accommodations error:", accommodationError);
+      throw accommodationError;
     }
 
     if (fetchAll) {
-      const allAccomodations = (accomodations || []).map((r) => ({
+      const allAccommodations = (accommodations || []).map((r) => ({
         ...r,
         price: normalizePrice(r.price),
       }));
-      return NextResponse.json(allAccomodations);
+      return NextResponse.json(allAccommodations);
     }
 
     // Get all confirmed bookings that overlap today
     const { data: booked, error: bookingError } = await supabase
       .from("bookings")
-      .select("accomodationsId")
+      .select("accommodationsId")
       .eq("status", "confirmed")
       .lte("checkInDate", today)
       .gte("checkOutDate", today);
@@ -81,12 +81,12 @@ export async function GET(request: Request) {
     // Count bookings per room
     const bookingCounts: Record<string, number> = {};
     booked?.forEach((b) => {
-      bookingCounts[b.accomodationsId] =
-        (bookingCounts[b.accomodationsId] || 0) + 1;
+      bookingCounts[b.accommodationsId] =
+        (bookingCounts[b.accommodationsId] || 0) + 1;
     });
 
     // Filter rooms with available units
-    const availableAccomodations = (accomodations || [])
+    const availableAccommodations = (accommodations || [])
       .map((r) => {
         const bookedCount = bookingCounts[r.id] || 0;
         const availableUnits = r.totalUnits - bookedCount;
@@ -98,9 +98,9 @@ export async function GET(request: Request) {
       })
       .filter((r) => r.availableUnits > 0);
 
-    return NextResponse.json(availableAccomodations);
+    return NextResponse.json(availableAccommodations);
   } catch (err: unknown) {
-    console.error("API /api/accomodations error:", err);
+    console.error("API /api/accommodations error:", err);
     const message = err instanceof Error ? err.message : "Unexpected error";
     return NextResponse.json({ error: message }, { status: 500 });
   }

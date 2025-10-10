@@ -9,21 +9,21 @@ import { cormorantGaramond } from "@/config/fonts";
 import ImageCarousel from "@/components/ui/ImageCarousel";
 import { CarouselItem } from "@/types";
 
-const accomodationsData: CarouselItem[] = [
+const accommodationsData: CarouselItem[] = [
   {
     name: "Studio Suite",
-    src: "/Images/accomodations-banner-1.jpg",
-    alt: "Gold Coast Morib International Resort Accomodations Banner 1",
+    src: "/Images/accommodations-banner-1.jpg",
+    alt: "Gold Coast Morib International Resort Accommodations Banner 1",
   },
   {
     name: "Apartment",
-    src: "/Images/accomodations-banner-2.jpg",
-    alt: "Gold Coast Morib International Resort Accomodations Banner 2",
+    src: "/Images/accommodations-banner-2.jpg",
+    alt: "Gold Coast Morib International Resort Accommodations Banner 2",
   },
   {
     name: "Penthouse",
-    src: "/Images/accomodations-banner-3.jpg",
-    alt: "Gold Coast Morib International Resort Accomodations Banner 3",
+    src: "/Images/accommodations-banner-3.jpg",
+    alt: "Gold Coast Morib International Resort Accommodations Banner 3",
   },
 ];
 
@@ -164,7 +164,7 @@ export default function TheResortPage() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-8 items-center justify-center">
-            <ImageCarousel items={accomodationsData} />
+            <ImageCarousel items={accommodationsData} />
           </div>
         </div>
       </div>

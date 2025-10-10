@@ -48,18 +48,18 @@ export async function GET(req: NextRequest) {
     }
 
     // fetch rooms that can host required guests
-    const { data: accomodations, error: accomodationError } = await supabase
-      .from("accomodations")
+    const { data: accommodations, error: accommodationError } = await supabase
+      .from("accommodations")
       .select("*")
       .gte("maxGuests", totalGuests);
 
-    if (accomodationError) throw accomodationError;
-    if (!accomodations?.length) return NextResponse.json([]);
+    if (accommodationError) throw accommodationError;
+    if (!accommodations?.length) return NextResponse.json([]);
 
     // fetch overlapping bookings
     const { data: booked, error: bookingError } = await supabase
       .from("bookings")
-      .select("accomodationsId")
+      .select("accommodationsId")
       .eq("status", "confirmed")
       .lte("checkInDate", checkout)
       .gte("checkOutDate", checkin);
@@ -69,11 +69,11 @@ export async function GET(req: NextRequest) {
     // count bookings per room
     const bookingCounts: Record<string, number> = {};
     booked?.forEach((b) => {
-      bookingCounts[b.accomodationsId] =
-        (bookingCounts[b.accomodationsId] || 0) + 1;
+      bookingCounts[b.accommodationsId] =
+        (bookingCounts[b.accommodationsId] || 0) + 1;
     });
 
-    const availableAccomodations = accomodations
+    const availableAccommodations = accommodations
       .map((item) => {
         const bookedCount = bookingCounts[item.id] || 0;
         const availableUnits = item.totalUnits - bookedCount;
@@ -85,7 +85,7 @@ export async function GET(req: NextRequest) {
       })
       .filter((r) => r.available_units > 0);
 
-    return NextResponse.json(availableAccomodations);
+    return NextResponse.json(availableAccommodations);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unexpected error";
     console.error("Availability API error:", message);

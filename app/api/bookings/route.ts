@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     const email = searchParams.get("email");
     const status = searchParams.get("status");
 
-    let query = supabase.from("bookings").select("*, accomodations(*)");
+    let query = supabase.from("bookings").select("*, accommodations(*)");
 
     if (email) query = query.eq("email", email);
     if (status) query = query.eq("status", status);
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const {
-      accomodationsId,
+      accommodationsId,
       checkin,
       checkout,
       adults,
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
 
     // Validate required fields
     const requiredFields = {
-      accomodationsId,
+      accommodationsId,
       checkin,
       checkout,
       firstName,
@@ -127,17 +127,17 @@ export async function POST(req: NextRequest) {
     }
 
     // Fetch room details including totalUnits
-    const { data: accomodation, error: accomodationError } = await supabase
-      .from("accomodations")
+    const { data: accommodation, error: accommodationError } = await supabase
+      .from("accommodations")
       .select("id, name, price, totalUnits")
-      .eq("id", accomodationsId)
+      .eq("id", accommodationsId)
       .single();
 
-    if (accomodationError || !accomodation) {
+    if (accommodationError || !accommodation) {
       return NextResponse.json(
         {
-          error: `Accomodations not found: ${
-            accomodationError?.message || "Unknown error"
+          error: `Accommodations not found: ${
+            accommodationError?.message || "Unknown error"
           }`,
         },
         { status: 404 }
@@ -147,8 +147,8 @@ export async function POST(req: NextRequest) {
     // Check room availability for the selected dates
     const { data: existingBookings, error: checkError } = await supabase
       .from("bookings")
-      .select("id, accomodationsId")
-      .eq("accomodationsId", accomodationsId)
+      .select("id, accommodationsId")
+      .eq("accommodationsId", accommodationsId)
       .eq("status", "confirmed")
       .lte("checkInDate", checkout)
       .gte("checkOutDate", checkin);
@@ -158,7 +158,7 @@ export async function POST(req: NextRequest) {
     }
 
     const bookedCount = existingBookings?.length || 0;
-    if (bookedCount >= accomodation.totalUnits) {
+    if (bookedCount >= accommodation.totalUnits) {
       return NextResponse.json(
         { error: "This accomodations is fully booked for the selected dates." },
         { status: 400 }
@@ -166,9 +166,9 @@ export async function POST(req: NextRequest) {
     }
 
     const price =
-      typeof accomodation.price === "string"
-        ? JSON.parse(accomodation.price)
-        : accomodation.price;
+      typeof accommodation.price === "string"
+        ? JSON.parse(accommodation.price)
+        : accommodation.price;
 
     const nights = Math.max(
       1,
@@ -180,7 +180,7 @@ export async function POST(req: NextRequest) {
     const pricePerNight = Number(price.current);
     if (isNaN(pricePerNight)) {
       return NextResponse.json(
-        { error: "Invalid accomodation price format" },
+        { error: "Invalid accommodation price format" },
         { status: 500 }
       );
     }
@@ -195,7 +195,7 @@ export async function POST(req: NextRequest) {
       .insert([
         {
           bookingNumber,
-          accomodationsId,
+          accommodationsId,
           checkInDate: checkin,
           checkOutDate: checkout,
           adults: Number(adults),
@@ -213,7 +213,7 @@ export async function POST(req: NextRequest) {
           currency: price.currency || "RM",
         },
       ])
-      .select("*, accomodations(*)")
+      .select("*, accommodations(*)")
       .single();
 
     if (error) throw new Error(`Supabase insert error: ${error.message}`);
@@ -228,7 +228,7 @@ export async function POST(req: NextRequest) {
         html: bookingEmailTemplate({
           bookingNumber,
           firstName,
-          accomodationsName: accomodation?.name || "Accomodations",
+          accommodationsName: accommodation?.name || "Accommodations",
           checkInDate: formatDate(checkinDate),
           checkOutDate: formatDate(checkoutDate),
           adults,

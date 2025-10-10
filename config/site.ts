@@ -17,9 +17,9 @@ export const siteConfig = {
       status: { ...defaultStatus },
     },
     {
-      id: "accomodations",
-      name: "Accomodations",
-      href: "/accomodations",
+      id: "accommodations",
+      name: "Accommodations",
+      href: "/accommodations",
       status: { ...defaultStatus },
     },
     {
@@ -56,10 +56,10 @@ export const siteConfig = {
       status: { ...defaultStatus },
     },
     {
-      id: "accomodations",
+      id: "accommodations",
       category: "explore",
-      name: "Accomodations",
-      href: "/accomodations",
+      name: "Accommodations",
+      href: "/accommodations",
       status: { ...defaultStatus },
     },
     {
