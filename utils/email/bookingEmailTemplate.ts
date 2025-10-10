@@ -62,7 +62,7 @@ export function bookingEmailTemplate({
           <tr style="background-color:#ffffff;">
             <td style="padding:8px; font-weight:bold;">Early Check In</td>
             <td style="padding:8px;">${
-              earlyCheckIn ? `${earlyCheckIn} GMT+8` : "-"
+              earlyCheckIn ? `${earlyCheckIn} (GMT+8)` : "-"
             }</td>
           </tr>
           <tr style="background-color:#f9f9f9;">
