@@ -20,8 +20,6 @@ export type NavItem = {
   status?: ItemStatus;
 };
 
-export type FooterCategory = "explore" | "legal";
-
 export type FooterItem = {
   id: string;
   category: string;
