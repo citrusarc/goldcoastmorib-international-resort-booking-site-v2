@@ -2,7 +2,7 @@ import { ItemStatus, NavItem, FooterItem } from "@/types";
 
 export type SiteConfig = typeof siteConfig;
 
-const defaultStatus = {
+const defaultStatus: ItemStatus = {
   isDisabled: false,
   isHidden: false,
   isComingSoon: false,
@@ -46,7 +46,7 @@ export const siteConfig = {
       href: "/meetings-and-events",
       status: { ...defaultStatus },
     },
-  ] satisfies (ItemStatus | NavItem)[],
+  ] satisfies NavItem[],
   footerItems: [
     {
       id: "the-resort",
@@ -111,5 +111,5 @@ export const siteConfig = {
       href: "/privacy-policy",
       status: { ...defaultStatus },
     },
-  ],
+  ] satisfies FooterItem[],
 };
