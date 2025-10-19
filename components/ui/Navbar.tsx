@@ -9,6 +9,7 @@ import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
 import { cormorantGaramond } from "@/config/fonts";
+import path from "path";
 
 export default function Navbar() {
   const [scroll, setScroll] = useState(false);
@@ -18,6 +19,7 @@ export default function Navbar() {
   const navItems = siteConfig.navItems.filter((item) => !item.status?.isHidden);
   const isHome = pathname === "/";
   const isAccommodation = pathname === "/accommodations";
+  const isMeetingsAnsEvents = pathname === "/meetings-and-events";
   const isBooking = pathname === "/booking";
 
   useEffect(() => {
@@ -37,7 +39,9 @@ export default function Navbar() {
     <nav
       className={clsx(
         "sticky top-0 z-50 flex p-4 sm:py-6 sm:px-24 items-center justify-between w-full transition-colors duration-300",
-        scroll || openMobileMenu || !(isHome || isAccommodation || isBooking)
+        scroll ||
+          openMobileMenu ||
+          !(isHome || isAccommodation || isMeetingsAnsEvents || isBooking)
           ? "text-zinc-800 border-zinc-800 bg-white"
           : "text-white border-white bg-transparent"
       )}
@@ -65,20 +69,32 @@ export default function Navbar() {
       </Link>
       <div className="hidden sm:flex flex-col flex-1 ml-8">
         <div className="flex flex-row gap-4 p-2 items-center justify-end">
-          {navItems.map((item) => (
-            <Link
-              key={item.id}
-              href={item.href}
-              className="hover:text-amber-500"
-            >
-              {item.name}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.id}
+                href={item.href}
+                className={clsx(
+                  "hover:text-amber-500",
+                  isActive && "text-amber-500"
+                )}
+              >
+                {item.name}
+              </Link>
+            );
+          })}
           <Link href="/booking">
             <button
               className={clsx(
                 "px-4 py-2 hover:text-white hover:bg-amber-500",
-                scroll || !(isHome || isAccommodation || isBooking)
+                scroll ||
+                  !(
+                    isHome ||
+                    isAccommodation ||
+                    isMeetingsAnsEvents ||
+                    isBooking
+                  )
                   ? "text-white bg-zinc-800"
                   : "text-zinc-800 bg-white"
               )}
@@ -90,7 +106,8 @@ export default function Navbar() {
         <div
           className={clsx(
             "w-full border-t",
-            scroll || !(isHome || isAccommodation || isBooking)
+            scroll ||
+              !(isHome || isAccommodation || isMeetingsAnsEvents || isBooking)
               ? "border-red-500"
               : ""
           )}
@@ -132,16 +149,22 @@ export default function Navbar() {
           )}
         >
           <div className="flex flex-col gap-8 p-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.id}
-                href={item.href}
-                onClick={() => setOpenMobileMenu(false)}
-                className="hover:text-amber-500"
-              >
-                {item.name}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  onClick={() => setOpenMobileMenu(false)}
+                  className={clsx(
+                    "hover:text-amber-500",
+                    isActive && "text-amber-500"
+                  )}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
             <Link href="/booking" onClick={() => setOpenMobileMenu(false)}>
               <button className="px-4 py-2 text-white bg-zinc-800 hover:bg-amber-500 w-full">
                 Book Now
