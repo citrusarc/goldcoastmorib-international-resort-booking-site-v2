@@ -127,7 +127,7 @@ export default function RestaurantPage() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col mb-24 gap-8 sm:gap-16">
+      <div className="flex flex-col my-24 gap-8 sm:gap-16">
         <div className="flex flex-col gap-4">
           <span className="text-lg sm:text-xl text-amber-500">Activities</span>
           <h2
