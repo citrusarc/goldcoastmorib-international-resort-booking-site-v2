@@ -225,7 +225,7 @@ export async function POST(req: NextRequest) {
       await transporter.sendMail({
         from: `"Gold Coast Morib International Resort" <${process.env.EMAIL_USER}>`,
         to: email,
-        cc: process.env.ADMIN_EMAIL,
+        bcc: process.env.ADMIN_EMAIL,
         subject: "Booking Confirmation",
         html: bookingEmailTemplate({
           bookingNumber,
